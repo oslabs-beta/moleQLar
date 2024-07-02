@@ -1,5 +1,6 @@
 import React from 'react';
 import bigLogo from './Logos/bigLogo.png'
+import Navbar from '../Navbar/Navbar';
 
 const MainPage = () => {
   return (
