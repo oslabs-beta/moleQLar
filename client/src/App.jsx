@@ -1,11 +1,29 @@
-import React from "react";
-import Cards from "./components/Card/Card";
+import React, { createContext, useContext, useState, useEffect } from "react";
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
+import ProvideAuth from "./components/ProvideAuth/ProvideAuth";
+
+import Signup from "./components/Signup/Signup";
+import Login from "./components/Login/Login";
+
+// A wrapper for <Route> that redirects to the login page if the user is not authenticated.
+const PrivateRoute = ({ children }) => {
+    let auth = useAuth();
+    return auth.user ? children : <Navigate to="/login" />;
+};
+
 const App = () =>{
     return(
-        <div>
-        Hello World
-        <Cards/>
-        </div>
+        <ProvideAuth>
+            <Router>
+                <div className="App">
+                    <Routes>
+                        <Route path="/" element={<Home />} />
+                        <Route path="/signup" element={<Signup />} />
+                        <Route path="/login" element={<Login />} />
+                    </Routes>
+                </div>
+            </Router>
+        </ProvideAuth>
     )
 }
 
