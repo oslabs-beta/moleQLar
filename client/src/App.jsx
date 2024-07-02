@@ -1,10 +1,12 @@
 import React from "react";
-import Cards from "./components/Card/Card";
+import MainPage from "./components/MainPage.jsx";
+import Navbar from './components/NavBar.jsx';
+import './components/Styles/styles.css'
 const App = () =>{
     return(
-        <div>
-        Hello World
-        <Cards/>
+        <div className="App">
+       <Navbar/>
+       <MainPage/>
         </div>
     )
 }
