@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
+
 import ProvideAuth from "./components/ProvideAuth/ProvideAuth";
 import MainPage from "./components/MainPage/MainPage.jsx";
 import Navbar from './components/NavBar.jsx';
