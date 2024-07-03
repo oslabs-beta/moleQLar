@@ -2,68 +2,102 @@
 // 2) Use pg-dump to create an output file
 // 3) Build an algorithm to traverse the output file and autobuild our node-graph
 
-const fs = require('fs');
-const readline = require('readline');
+// const fs = require("fs");
+// const readline = require("readline");
 
 // load schema dump file
-const file_name = 'sample_pg_dump.sql';
-const file_path = path.resolve(__dirname, file_name);
-console.log(file_path);
+// const file_name = "sample_pg_dump.sql";
+// const file_path = path.resolve(__dirname, file_name);
+// console.log(file_path);
 
 // iterate over file synchronously
-const sqlDump = fs.readFileSync(file_path, 'utf-8');
+// const sqlDump = fs.readFileSync(file_path, "utf-8");
 
 //declare objects to hold tables and relationships
-const tables = {};
-let currentTable;
-const relationships = {};
+export function parseSqlSchema(sql) {
+  const tables = {};
+  let currentTable;
+  const relationships = [];
 
-//split dump file into each line
-sqlDump.split(/\r?\n/).forEach((line) => {
-  //add all tables to tables object
-  if (line.startsWith('CREATE TABLE')) {
-    //grab table name
-    let tableName = line.substring(20, line.length - 2);
-    currentTable = tableName;
-    //add tableName to tables object
-    tables[currentTable] = [];
-  } else if (line.startsWith('\t')) {
-    //add each field to current table
-    lineArray = line.split(' ');
-    //make sure field is valid
-    if (lineArray.length < 5) {
-      const fieldName = lineArray[0].substring(2, lineArray[0].length - 1);
-      const fieldType = lineArray[1];
-      const required = lineArray.length === 4;
-      //add new field object to associated fields array on table object
-      tables[currentTable].push({
-        name: fieldName,
-        type: fieldType,
-        required: required,
-      });
+  // Split dump file into each line
+  sql.split(/\r?\n/).forEach((line) => {
+    // Add all tables to tables object
+    if (line.startsWith("CREATE TABLE")) {
+      // Grab table name
+      let tableName = line.match(/CREATE TABLE (\w+\.)?(\w+)/)[2];
+      currentTable = tableName;
+      // Add tableName to tables object
+      tables[currentTable] = [];
+    } else if (line.trim().startsWith('"')) {
+      // Add each field to current table
+      const lineArray = line.trim().split(" ");
+      // Make sure field is valid
+      if (lineArray.length >= 2) {
+        const fieldName = lineArray[0].replace(/"/g, '');
+        const fieldType = lineArray[1];
+        const required = line.toLowerCase().includes("not null");
+        // Add new field object to associated fields array on table object
+        tables[currentTable].push({
+          name: fieldName,
+          type: fieldType,
+          required: required,
+        });
+      }
     }
-  }
-  //grab relationships from alter tables (primary/foreign keys)
-  else if (line.startsWith('ALTER TABLE')) {
-    lineArray = line.split(' ');
-    //target main table and main table field for relationship
-    const mainTable = lineArray[2].substring(7);
-    const mainTableField = lineArray[8].substring(2, lineArray[8].length - 2);
+    // Grab relationships from alter tables (primary/foreign keys)
+    else if (line.startsWith("ALTER TABLE")) {
+      const match = line.match(/ALTER TABLE (\w+\.)?(\w+).*FOREIGN KEY \("(\w+)"\) REFERENCES (\w+\.)?(\w+)\("(\w+)"\)/);
+      if (match) {
+        const [, , sourceTable, sourceField, , targetTable, targetField] = match;
+        relationships.push({
+          source: sourceTable,
+          sourceHandle: sourceField,
+          target: targetTable,
+          targetHandle: targetField,
+        });
+      }
+    }
+  });
 
-    const openParenIndex = lineArray[10].indexOf('(');
-    //target secondary table and secondary table field for relationship
-    const secondaryTable = lineArray[10].substring(7, openParenIndex);
-    const secondaryTableField = lineArray[10].substring(
-      openParenIndex + 2,
-      lineArray[10].length - 3
-    );
-    //add link onto relationships object
-    relationships[mainTable] = secondaryTable;
-  }
-});
+  // Calculate grid layout
+  const gridLayout = (nodes, columns = 3, width = 250, height = 300) => {
+    return nodes.map((node, index) => {
+      const column = index % columns;
+      const row = Math.floor(index / columns);
+      return {
+        ...node,
+        position: {
+          x: column * width,
+          y: row * height
+        }
+      };
+    });
+  };
 
-console.log(tables);
-console.log(relationships);
+  // Create nodes for React Flow
+  const nodes = gridLayout(Object.entries(tables).map(([tableName, columns]) => ({
+    id: tableName,
+    type: "table",
+    data: {
+      label: tableName,
+      columns: columns,
+    },
+  })));
+
+  // Create edges for React Flow
+  const edges = relationships.map((rel, index) => ({
+    id: `e${index}`,
+    source: rel.source,
+    sourceHandle: rel.sourceHandle,
+    target: rel.target,
+    targetHandle: rel.targetHandle,
+    type: 'smoothstep',
+    animated: true,
+    style: { stroke: '#fff' },
+  }));
+
+  return { nodes, edges };
+}
 
 //{name: "name, type: "type", required: }
 //types in GraphQL : String, Int, Float, Boolean, ID, and []

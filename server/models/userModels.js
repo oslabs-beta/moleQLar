@@ -1,7 +1,8 @@
 const { Pool } = require('pg');
 
 const PG_URI =
-  '';
+'postgres://postgres.dxnepolfyojkljqhwdwy:SiBrk82yClT09hb6@aws-0-ap-southeast-1.pooler.supabase.com:6543/postgres';
+
 
 const pool = new Pool({
   connectionString: PG_URI,
@@ -14,7 +15,7 @@ const pool = new Pool({
 // require it in controller to be the access point to our database
 module.exports = {
   query: (text, params, callback) => {
-    console.log('executed query', text);
+    // console.log('executed query', text);
     return pool.query(text, params, callback);
   },
   testConnection: async () => {
