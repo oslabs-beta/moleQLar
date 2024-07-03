@@ -1,14 +1,18 @@
 import React from 'react';
-import jonathanImg from './TeamPics/Jonathan.png';
-import mingzhuImg from './TeamPics/Mingzhu.png';
-import ericImg from './TeamPics/Erick.png';
-import brianImg from './TeamPics/Brian.png';
-import danImg from './TeamPics/Dan.png';
-import githubLogo from './Logos/githubLogo.png';
-import linkedInLogo from './Logos/linkedin.png';
+import jonathanImg from '../../assets/team-pics/Jonathan.png';
+import mingzhuImg from '../../assets/team-pics/Mingzhu.png';
+import ericImg from '../../assets/team-pics/Erick.png';
+import brianImg from '../../assets/team-pics/Brian.png';
+import danImg from '../../assets/team-pics/Dan.png';
+import githubLogo from '../../assets/logos/githubLogo.png';
+import linkedInLogo from '../../assets/logos/linkedin.png';
+
+import Navbar from '../Navbar/Navbar';
 
 const Team = () => {
   return (
+    <>
+    <Navbar />
     <section className="team-section">
       <h2>Meet the team</h2>
       <div className="team-grid">
@@ -79,6 +83,7 @@ const Team = () => {
         </div>
       </div>
     </section>
+    </>
   );
 };
 

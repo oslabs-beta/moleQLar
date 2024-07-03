@@ -1,6 +1,6 @@
 body {
     margin: 0;
-    font-family: Arial, sans-serif;
+    font-family: 'Outfit', sans-serif;
     background-color: white;
     color: black;
   }
@@ -73,7 +73,7 @@ body {
   
   .main-content h1 {
     font-size: 48px;
-    color: purple;
+    color: 190624;
   }
   
   .main-content p {
@@ -96,13 +96,13 @@ body {
   
   .upload-btn {
     background-color: transparent;
-    color: purple;
-    border: 2px solid purple;
+    color: $color-primary;
+    border: 2px solid $color-primary;
   }
   
   .login-btn {
-    background-color: purple;
-    color: white;
+    background-color: $color-primary;
+    color: $color-white;
     border: none;
   }
   

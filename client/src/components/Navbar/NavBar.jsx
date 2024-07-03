@@ -1,8 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import githubLogo from './Logos/githubLogo.png';
-import linkedInLogo from './Logos/linkedin.png';
-import smallLogo from './Logos/smallLogo.png'
+import githubLogo from '../../assets/logos/githubLogo.png';
+import linkedInLogo from '../../assets/logos/linkedin.png';
+import smallLogo from '../../assets/logos/smallLogo.png'
 
 const Navbar = () => {
     return (
