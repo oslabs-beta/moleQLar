@@ -5,7 +5,7 @@ import Navbar from '../Navbar/Navbar';
 const About = () => {
   return (
     <>
-    <Navbar />
+    {/* <Navbar /> */}
     <section className="about-section">
       <h2>We’re changing the way people think about GraphQL</h2>
       <p>

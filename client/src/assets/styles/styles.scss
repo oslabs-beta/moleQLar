@@ -64,7 +64,6 @@ body {
     padding: 50px 20px;
     background-color: white;
     height: calc(100vh - 60px);
-    
   }
   
   .main-content {
@@ -99,11 +98,24 @@ body {
     color: $color-primary;
     border: 2px solid $color-primary;
   }
+
+  .upload-btn:hover {
+    background-color: $color-primary; 
+    color: white;
+    transform: scale(1.05); 
+  }
   
   .login-btn {
     background-color: $color-primary;
     color: $color-white;
     border: none;
+  }
+
+  .login-btn:hover {
+    background-color: white; 
+    color: $color-primary;
+    border: 2px solid $color-primary;
+    transform: scale(1.05); 
   }
   
   .bigLogo img {
