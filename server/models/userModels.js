@@ -1,8 +1,16 @@
 const { Pool } = require('pg');
 
 const PG_URI =
-'postgres://postgres.dxnepolfyojkljqhwdwy:SiBrk82yClT09hb6@aws-0-ap-southeast-1.pooler.supabase.com:6543/postgres';
+'postgresql://postgres.cysmoheuclhnggrbjhqy:codesmithgroup1@aws-0-us-west-1.pooler.supabase.com:6543/postgres';
 
+// CREATE TABLE Users ( 
+//   id SERIAL PRIMARY KEY, 
+//   username VARCHAR(255) UNIQUE NOT NULL, 
+//   firstname VARCHAR(255),
+//   lastname VARCHAR(255), 
+//   email VARCHAR(255), 
+//   password VARCHAR(255) NOT NULL,
+//   role VARCHAR(255) ); 
 
 const pool = new Pool({
   connectionString: PG_URI,
