@@ -3,9 +3,12 @@ import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-d
 
 import ProvideAuth from "./components/ProvideAuth/ProvideAuth";
 import MainPage from "./components/MainPage/MainPage.jsx";
-import Navbar from './components/NavBar.jsx';
-import Signup from "./components/Signup/Signup";
+import Navbar from './components/Navbar/Navbar.jsx';
+import Signup from "./components/Signup/Signup.jsx";
 import Login from "./components/Login/Login";
+
+
+import './assets/styles/globalStyles.scss';
 
 // A wrapper for <Route> that redirects to the login page if the user is not authenticated.
 const PrivateRoute = ({ children }) => {
@@ -16,7 +19,6 @@ const PrivateRoute = ({ children }) => {
 const App = () =>{
     return(
         <ProvideAuth>
-            <Router>
                 <div className="App">
                     <Routes>
                         <Route path="/" element={<MainPage />} />
@@ -24,27 +26,8 @@ const App = () =>{
                         <Route path="/login" element={<Login />} />
                     </Routes>
                 </div>
-            </Router>
         </ProvideAuth>
     )
 }
 
 export default App;
-
-
-
-
-
-// import React from "react";
-
-// import './components/Styles/styles.css'
-// const App = () =>{
-//     return(
-//         <div className="App">
-//        <Navbar/>
-//        <MainPage/>
-//         </div>
-//     )
-// }
-
-// export default App;
