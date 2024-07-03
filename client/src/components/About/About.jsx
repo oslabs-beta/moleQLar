@@ -1,7 +1,11 @@
 import React from 'react';
 
+import Navbar from '../Navbar/Navbar';
+
 const About = () => {
   return (
+    <>
+    <Navbar />
     <section className="about-section">
       <h2>We’re changing the way people think about GraphQL</h2>
       <p>
@@ -17,6 +21,7 @@ const About = () => {
         <p>moleQLar is a software solution focused on improving developer experience with GraphQL and PostgreSQL. Join us in revolutionizing data interaction.</p>
       </div>
     </section>
+    </>
   );
 };
 

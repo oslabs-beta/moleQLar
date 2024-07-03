@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import axios from 'axios';
 
+import Navbar from '../Navbar/Navbar';
+
 function Signup() {
     const [formData, setFormData] = useState({ firstName: '', lastName: '', username: '', password: '' });
   
