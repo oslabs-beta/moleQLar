@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import smallLogo from '../../assets/logos/smallLogo.png';
 import { AuthContext } from '../../contexts/AuthContext';
-import './LoggedinNavbar.css';
+import '../../assets/styles/LoggedinNav.scss';
 
 const LoggedinNavbar = () => {
   const { isAuth, username, logout } = useContext(AuthContext);
