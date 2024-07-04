@@ -12,7 +12,7 @@ import ReactFlow, {
 } from "reactflow";
 import { Box, Button } from "@mui/material";
 import { parseSqlSchema } from "../algorithms/schema_parser";
-import TableList from "./TableList";
+import ObjectTypeList from "./ObjectTypeList";
 
 const TableNode = React.memo(({ data, id, selected }) => (
   <div
@@ -246,7 +246,7 @@ const SchemaVisualizer = ({ sqlContents }) => {
       }}
     >
       <Box sx={{ display: "flex", height: "calc(100% - 60px)" }}>
-        <TableList
+        <ObjectTypeList
           tables={nodes}
           onSelectTable={selectNode}
           onDeleteTable={deleteNode}
