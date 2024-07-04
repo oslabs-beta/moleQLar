@@ -8,6 +8,7 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import bigLogo from '../../assets/logos/bigLogo.png';
 import { AuthContext } from "../../contexts/AuthContext";
+import Navbar from '../Navbar/NavBar';
 
 const theme = createTheme({
   palette: {
@@ -56,6 +57,8 @@ function Login() {
   };
 
   return (
+    <>
+    <Navbar/>
     <ThemeProvider theme={theme}>
       <div className="login-div" style={{ display: 'flex', height: '100vh' }}>
         <div className="bigLogo" style={{ width: '50%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
@@ -119,6 +122,7 @@ function Login() {
         
       </div>
     </ThemeProvider>
+    </>
   );
 }
 

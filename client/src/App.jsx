@@ -3,12 +3,13 @@ import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom';
 
 // import ProvideAuth from "./components/ProvideAuth/ProvideAuth";
 import MainPage from "./components/MainPage/MainPage.jsx";
-import Navbar from './components/Navbar/Navbar.jsx';
+import Navbar from './components/Navbar/NavBar.jsx';
 import Signup from "./components/Signup/Signup.jsx";
 import Login from "./components/Login/Login";
 import Team from './components/TeamPage/TeamPage.jsx';
 import About from './components/About/About.jsx';
-import UploadSqlSChemaPage from "./components/UploadSqlSchema/UploadSqlSChemaPage.jsx";
+import Dashboard from './components/Dashboard/Dashboard.jsx';
+// import UploadSqlSChemaPage from "./components/UploadSqlSchema/UploadSqlSChemaPage.jsx";
 import { AuthProvider } from "./contexts/AuthContext.js";
 
 import './assets/styles/globalStyles.scss';
@@ -23,14 +24,15 @@ const App = () =>{
     return(
         <BrowserRouter>
             <AuthProvider>
-                <Navbar /> 
+                {/* <Navbar />  */}
                 <Routes>
                     <Route path="/" element={<MainPage />} />
                     <Route path="/team" element={<Team />} />   
                     <Route path="/signup" element={<Signup />} />
                     <Route path="/login" element={<Login />} />
                     <Route path="/about" element={<About />} />
-                    <Route path="/dashboard" element={<UploadSqlSChemaPage />} />
+                    <Route path="/dashboard" element={<Dashboard />} />
+                    {/* <Route path="/dashboard" element={<UploadSqlSChemaPage />} /> */}
                 </Routes>
             </AuthProvider>
         </BrowserRouter>
