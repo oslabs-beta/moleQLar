@@ -1,11 +1,11 @@
 import React from 'react';
 
-import Navbar from '../Navbar/Navbar';
+import Navbar from '../Navbar/NavBar';
 
 const About = () => {
   return (
     <>
-    {/* <Navbar /> */}
+    <Navbar />
     <section className="about-section">
       <h2>We’re changing the way people think about GraphQL</h2>
       <p>

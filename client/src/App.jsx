@@ -3,7 +3,7 @@ import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom';
 
 // import ProvideAuth from "./components/ProvideAuth/ProvideAuth";
 import MainPage from "./components/MainPage/MainPage.jsx";
-import Navbar from './components/Navbar/Navbar.jsx';
+import Navbar from './components/Navbar/NavBar.jsx';
 import Signup from "./components/Signup/Signup.jsx";
 import Login from "./components/Login/Login";
 import Team from './components/TeamPage/TeamPage.jsx';
@@ -23,7 +23,7 @@ const App = () =>{
     return(
         <BrowserRouter>
             <AuthProvider>
-                <Navbar /> 
+                {/* <Navbar />  */}
                 <Routes>
                     <Route path="/" element={<MainPage />} />
                     <Route path="/team" element={<Team />} />   

@@ -1,13 +1,13 @@
 import React from 'react';
 import bigLogo from '../../assets/logos/bigLogo.png'
-import Navbar from '../Navbar/Navbar';
+import Navbar from '../Navbar/NavBar';
 import { useNavigate } from 'react-router-dom';
 
 const MainPage = () => {
   const navigate = useNavigate();
   return (
     <>
-      {/* <Navbar/> */}
+       <Navbar/> 
       <section className="main-page">
         <div className="main-content">
           <h1>Implementation in seconds</h1>
