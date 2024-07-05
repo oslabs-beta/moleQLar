@@ -6,9 +6,9 @@ import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import bigLogo from '../../assets/logos/bigLogo.png';
+import heroImg from '../../assets/logos/hero-img.png';
 import { AuthContext } from "../../contexts/AuthContext";
-import Navbar from '../Navbar/NavBar';
+import Navbar from '../Navbar/Navbar';
 
 const theme = createTheme({
   palette: {
@@ -61,8 +61,8 @@ function Login() {
     <Navbar/>
     <ThemeProvider theme={theme}>
       <div className="login-div" style={{ display: 'flex', height: '100vh' }}>
-        <div className="bigLogo" style={{ width: '50%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-          <img src={bigLogo} alt="Main Graphic" style={{ maxWidth: '100%', maxHeight: '100%' }} />
+        <div className="hero-img" style={{ width: '50%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+          <img src={heroImg} alt="Main Graphic" style={{ maxWidth: '100%', maxHeight: '100%' }} />
         </div>
         <Box
           sx={{

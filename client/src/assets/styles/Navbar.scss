@@ -1,0 +1,77 @@
+.navbar {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: $color-white;
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+}
+
+.smallLogo {
+    width: 2rem;
+    height: 2.4rem;
+    margin-right: 10px;
+}
+
+.navbar .logo {
+    font-size: 35px;
+    font-weight: bold;
+    color: $color-black;
+    text-decoration: none;
+}
+
+.logo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    // border: solid 1px green;
+}
+
+.logo-text {
+    transform: translateY(-.04em);
+}
+
+.nav-links {
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+    width: 22rem;
+    // background-color: red;
+}
+
+.nav-link {
+    text-decoration: none;
+    color: $color-black;
+    font-size: 23px;
+    font-weight: bold;
+    opacity: 50%;
+
+    
+}
+
+.active {
+    opacity: 100%;
+}
+
+
+.social-icons {
+    width: 7rem;
+    display: flex;
+    justify-content: space-between;
+}
+
+.navbar .social-icons a {
+    // margin-left: 15px;
+    color: $color-black;
+}
+
+.githubLogo,
+.linkedIn {
+    width: 2.4rem;
+    height: 2.4rem;
+}
