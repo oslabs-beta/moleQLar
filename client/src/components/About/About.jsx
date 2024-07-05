@@ -1,6 +1,6 @@
 import React from 'react';
 
-import Navbar from '../Navbar/NavBar';
+import Navbar from '../Navbar/Navbar';
 
 const About = () => {
   return (
