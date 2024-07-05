@@ -1,6 +1,6 @@
 import React from 'react';
 import bigLogo from '../../assets/logos/bigLogo.png'
-import Navbar from '../Navbar/NavBar';
+import Navbar from '../Navbar/Navbar';
 import { useNavigate } from 'react-router-dom';
 
 const MainPage = () => {

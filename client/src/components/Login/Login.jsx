@@ -8,7 +8,7 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import bigLogo from '../../assets/logos/bigLogo.png';
 import { AuthContext } from "../../contexts/AuthContext";
-import Navbar from '../Navbar/NavBar';
+import Navbar from '../Navbar/Navbar';
 
 const theme = createTheme({
   palette: {

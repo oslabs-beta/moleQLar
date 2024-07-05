@@ -7,7 +7,7 @@ import danImg from '../../assets/team-pics/Dan.png';
 import githubLogo from '../../assets/logos/githubLogo.png';
 import linkedInLogo from '../../assets/logos/linkedin.png';
 
-import Navbar from '../Navbar/NavBar';
+import Navbar from '../Navbar/Navbar';
 
 const Team = () => {
   return (

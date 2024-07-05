@@ -11,7 +11,7 @@ import Typography from '@mui/material/Typography';
 import Alert from '@mui/material/Alert';
 import CircularProgress from '@mui/material/CircularProgress';
 import bigLogo from '../../assets/logos/bigLogo.png';
-import Navbar from '../Navbar/NavBar';
+import Navbar from '../Navbar/Navbar';
 
 const theme = createTheme({
   palette: {
