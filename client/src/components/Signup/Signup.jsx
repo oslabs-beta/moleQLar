@@ -10,8 +10,8 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Alert from '@mui/material/Alert';
 import CircularProgress from '@mui/material/CircularProgress';
-import bigLogo from '../../assets/logos/bigLogo.png';
-import Navbar from '../Navbar/NavBar';
+import heroImg from '../../assets/logos/hero-img.png';
+import Navbar from '../Navbar/Navbar';
 
 const theme = createTheme({
   palette: {
@@ -85,8 +85,8 @@ function Signup() {
 
     <ThemeProvider theme={theme}>
       <div className="login-div">
-        <div className="bigLogo">
-          <img src={bigLogo} alt="Main Graphic" />
+        <div className="hero-img">
+          <img src={heroImg} alt="Main Graphic" />
         </div>
 
         <Box

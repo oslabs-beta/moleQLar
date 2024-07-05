@@ -18,13 +18,13 @@ const Navbar = () => {
           !isAuth && (
             <>
               <li>
-                <Link to="/">Home</Link>
+                <Link className="nav-link active" to="/">Home</Link>
               </li>
               <li>
-                <Link to="/team">Team</Link>
+                <Link className="nav-link" to="/team">Team</Link>
               </li>
               <li>
-                <Link to="/about">About</Link>
+                <Link className="nav-link" to="/about">About</Link>
               </li>
             </>
           )
@@ -34,10 +34,10 @@ const Navbar = () => {
           isAuth && (
             <>
               <li>
-                <Link to="/dashboard">Dashboard</Link>
+                <Link className="nav-link" to="/dashboard">Dashboard</Link>
               </li>
               <li>
-                <Link to="" onClick={logout}>
+                <Link className="nav-link" to="" onClick={logout}>
                   Logout
                 </Link>
               </li>
