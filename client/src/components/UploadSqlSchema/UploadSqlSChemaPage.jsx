@@ -28,7 +28,7 @@ const UploadSqlSChemaPage = () => {
   });
 
   return (
-    <Box sx={{ p: 3 }}>
+    <Box sx={{ width:'100%', height:'100%', p: 3 }}>
       <Paper
         {...getRootProps()}
         sx={{

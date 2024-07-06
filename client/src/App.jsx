@@ -3,7 +3,6 @@ import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom';
 
 // import ProvideAuth from "./components/ProvideAuth/ProvideAuth";
 import MainPage from "./components/Main/Main.jsx";
-// import Navbar from './components/Navbar/Navbar.jsx';
 import Signup from "./components/Signup/Signup.jsx";
 import Login from "./components/Login/Login.jsx";
 import Team from './components/Team/Team.jsx';
