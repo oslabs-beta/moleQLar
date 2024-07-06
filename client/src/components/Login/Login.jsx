@@ -9,6 +9,7 @@ import Typography from '@mui/material/Typography';
 import heroImg from '../../assets/logos/hero-img.png';
 import { AuthContext } from "../../contexts/AuthContext";
 import Navbar from '../Navbar/Navbar';
+import './login.scss';
 
 const theme = createTheme({
   palette: {

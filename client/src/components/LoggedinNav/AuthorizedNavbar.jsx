@@ -2,9 +2,9 @@ import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import smallLogo from '../../assets/logos/smallLogo.png';
 import { AuthContext } from '../../contexts/AuthContext';
-import '../../assets/styles/LoggedinNav.scss';
+import './authorizednavbar.scss';
 
-const LoggedinNavbar = () => {
+const AuthorizedNavbar = () => {
   const { isAuth, username, logout } = useContext(AuthContext);
   return (
     <nav className="navbar">
@@ -26,4 +26,4 @@ const LoggedinNavbar = () => {
   );
 };
 
-export default LoggedinNavbar;
+export default AuthorizedNavbar;

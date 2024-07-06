@@ -1,6 +1,7 @@
 import React from 'react';
 
 import Navbar from '../Navbar/Navbar';
+import './about.scss';
 
 const About = () => {
   return (
