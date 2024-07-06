@@ -2,13 +2,13 @@ import React from 'react';
 import heroImg from '../../assets/logos/hero-img.png'
 import Navbar from '../Navbar/Navbar';
 import { useNavigate } from 'react-router-dom';
-import './mainPage.scss';
+import './main.scss';
 
-const MainPage = () => {
+const Main = () => {
   const navigate = useNavigate();
   return (
     <>
-    <Navbar/>
+      <Navbar/>
       <div className="container">
         {/* <section className="main-page"> */}
           <section className="hero-section">
@@ -30,4 +30,4 @@ const MainPage = () => {
   );
 };
 
-export default MainPage;
+export default Main;
