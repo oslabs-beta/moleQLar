@@ -10,41 +10,22 @@ const Navbar = () => {
   const { isAuth, username, logout } = useContext(AuthContext);
   return (
     <nav className="navbar">
-      <div className="logo-container">
-        <img src={smallLogo} alt="Small Logo" className="smallLogo" />
-        <div className="logo">moleQLar</div>
-      </div>
+      <Link to="/">
+        <div className="logo-container">
+          <img src={smallLogo} alt="Small Logo" className="smallLogo" />
+          <div className="logo">moleQLar</div>
+        </div>
+      </Link>
       <ul className="nav-links">
-        {
-          !isAuth && (
-            <>
-              <li>
-                <Link className="nav-link active" to="/">Home</Link>
-              </li>
-              <li>
-                <Link className="nav-link" to="/team">Team</Link>
-              </li>
-              <li>
-                <Link className="nav-link" to="/about">About</Link>
-              </li>
-            </>
-          )
-        }
-       
-        {
-          isAuth && (
-            <>
-              <li>
-                <Link className="nav-link" to="/dashboard">Dashboard</Link>
-              </li>
-              <li>
-                <Link className="nav-link" to="" onClick={logout}>
-                  Logout
-                </Link>
-              </li>
-            </>
-          )
-        }
+            <li>
+              <Link className="nav-link active" to="/">Home</Link>
+            </li>
+            <li>
+              <Link className="nav-link" to="/team">Team</Link>
+            </li>
+            <li>
+              <Link className="nav-link" to="/about">About</Link>
+            </li>
       </ul>
       <div className="social-icons">
         <a href="https://github.com" target="_blank">
@@ -55,6 +36,7 @@ const Navbar = () => {
         </a>
       </div>
     </nav>
+    
   );
 };
 
