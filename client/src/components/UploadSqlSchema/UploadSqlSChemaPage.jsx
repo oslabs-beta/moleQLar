@@ -28,7 +28,7 @@ const UploadSqlSChemaPage = () => {
   });
 
   return (
-    <Box sx={{ p: 3 }}>
+    <Box sx={{ width:'100%', height:'100%', p: 3 }}>
       <Paper
         {...getRootProps()}
         sx={{
@@ -49,6 +49,7 @@ const UploadSqlSChemaPage = () => {
             : "+ Click or drag to add SQL files"}
         </Typography>
       </Paper>
+      {/* {sqlContents.length} */}
       {sqlContents.length > 0 && (
         <Box mt={3}>
           {/* <Typography variant="h6">Schema Visualization:</Typography> */}

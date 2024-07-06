@@ -1,3 +1,5 @@
+@import "../../assets/styles/globalstyles.scss";
+
 .navbar {
     width: 100%;
     display: flex;
@@ -10,6 +12,7 @@
 .logo-container {
     display: flex;
     align-items: center;
+    // border: 2px solid red;
 }
 
 .smallLogo {
@@ -70,8 +73,7 @@
     color: $color-black;
 }
 
-.githubLogo,
-.linkedIn {
+.githubLogo, .linkedIn {
     width: 2.4rem;
     height: 2.4rem;
 }
