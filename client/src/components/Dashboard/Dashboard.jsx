@@ -5,8 +5,8 @@ import LoggedinNavbar from '../LoggedinNav/LoggedinNav';
 function Dashboard() {
   return (
     <>
-    <LoggedinNavbar/>
-    <UploadSqlSChemaPage />
+      <LoggedinNavbar/>
+      <UploadSqlSChemaPage />
     </>
   );
 }

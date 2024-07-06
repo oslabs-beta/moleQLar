@@ -8,6 +8,7 @@ import githubLogo from '../../assets/logos/githubLogo.png';
 import linkedInLogo from '../../assets/logos/linkedin.png';
 
 import Navbar from '../Navbar/Navbar';
+import './team.scss';
 
 const Team = () => {
   return (

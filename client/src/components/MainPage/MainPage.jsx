@@ -2,6 +2,7 @@ import React from 'react';
 import heroImg from '../../assets/logos/hero-img.png'
 import Navbar from '../Navbar/Navbar';
 import { useNavigate } from 'react-router-dom';
+import './mainPage.scss';
 
 const MainPage = () => {
   const navigate = useNavigate();
