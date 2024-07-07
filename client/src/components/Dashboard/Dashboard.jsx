@@ -1,12 +1,12 @@
 import React, { useContext, useState } from 'react';
-import UploadSqlSChemaPage from "../UploadSqlSchema/UploadSqlSChemaPage";
-import LoggedinNavbar from '../LoggedinNav/LoggedinNav';
+import UploadSqlSchema from "../UploadSqlSchema/UploadSqlSchema";
+import AuthorizedNavbar from '../AuthorizedNavbar/AuthorizedNavbar';
 
 function Dashboard() {
   return (
     <>
-    <LoggedinNavbar/>
-    <UploadSqlSChemaPage />
+      <AuthorizedNavbar/>
+      <UploadSqlSchema />
     </>
   );
 }

@@ -95,8 +95,10 @@ export function parseSqlSchema(sql) {
   //can export when "generate" button functionality exists
 
   const schemaString = () => {
+    //declare base strings to begin schema generation
     let gql_schema = `#graphql\n`;
     let query_string = `  type Query {\n`;
+    //for each table from SQL schema, create GraphQL Type
     for (let key in tables) {
       //plural form of type
       query_string += `    ${pluralize(key)}: [${pluralize
@@ -111,18 +113,46 @@ export function parseSqlSchema(sql) {
       gql_schema += `  type ${pluralize
         .singular(key)
         .replace(/^./, key[0].toUpperCase())} {\n`;
+      //add id line to remove underscore
       gql_schema += '    id: ID!\n';
 
-      //for each field in the table except id
+      //add each field in table to schema
       for (let i = 1; i < tables[key].length; i++) {
+        //check if field is required in query
         const required = tables[key][i].required ? '!' : '';
         gql_schema += `    ${tables[key][i].name}: ${tables[key][i].type}${required}\n`;
       }
-      //add nested relationships
+      //add relationships to schema
+      relationships.forEach((connection) => {
+        //source is foreign key, destination primary
+        //many to one relationship
+        if (connection.source === key) {
+          gql_schema += `    ${connection.target.replace(
+            /^./,
+            connection.target[0].toLowerCase()
+          )}: ${connection.target}!\n`;
+          console.log(
+            connection.source,
+            'links with ',
+            `    ${connection.target.replace(
+              /^./,
+              connection.target[0].toLowerCase()
+            )}: ${connection.target}!\n`
+          );
+        }
+        //one to many relationship
+        if (connection.target === key) {
+          gql_schema += `    ${pluralize(connection.source).replace(
+            /^./,
+            connection.source[0].toLowerCase()
+          )}: [${connection.source}!]\n`;
+        }
+      });
 
       gql_schema += `  }\n`;
     }
     query_string += `  }\n`;
+    //add strings together and return
     gql_schema += query_string;
     return gql_schema;
   };
