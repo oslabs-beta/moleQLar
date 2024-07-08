@@ -1,3 +1,4 @@
+import axios from 'axios';
 import React, { useContext, useState } from 'react';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Button from '@mui/material/Button';
@@ -7,14 +8,15 @@ import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import heroImg from '../../assets/logos/hero-img.png';
-import { AuthContext } from "../../contexts/AuthContext";
+import { useAuth } from "../../contexts/AuthContext";
 import Navbar from '../Navbar/Navbar';
-import './login.scss';
+
+import { useNavigate } from 'react-router-dom';
 
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#9c27b0',
+      main: '#C978FB',
     },
   },
 });
@@ -22,39 +24,11 @@ const theme = createTheme({
 function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const { login } = useContext(AuthContext);
+  const { login } = useAuth();  // defined in AuthContext
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    try {
-      const response = await fetch('http://localhost:3000/login', {
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-        },
-        method: 'POST',
-        body: JSON.stringify({
-          username: username,
-          password: password,
-        }),
-      });
-      if (response.ok) {
-        const data = await response.json();
-        if (data.success) {
-          const userId = data.data.userId;
-          const username = data.data.username;
-          console.log("User ID:", userId);
-          console.log("Username:", username);
-
-          login(username, userId);
-        }
-      } else {
-        console.error("Failed to login, status:", response.status);
-      }
-    } catch (err) {
-      console.error("Error during fetch:", err);
-    }
+    login(username, password);
   };
 
   return (
@@ -63,7 +37,7 @@ function Login() {
     <ThemeProvider theme={theme}>
       <div className="login-div" style={{ display: 'flex', height: '100vh' }}>
         <div className="hero-img" style={{ width: '50%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-          <img src={heroImg} alt="Main Graphic" style={{ maxWidth: '100%', maxHeight: '100%' }} />
+          <img src={heroImg} alt="molecule image" style={{ maxWidth: '100%', maxHeight: '100%' }} />
         </div>
         <Box
           sx={{

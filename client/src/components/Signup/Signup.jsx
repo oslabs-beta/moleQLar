@@ -48,7 +48,7 @@ function Signup() {
     if (!formData.email.trim()) newErrors.email = 'Email is required';
     else if (!/\S+@\S+\.\S+/.test(formData.email)) newErrors.email = 'Email is invalid';
     if (!formData.password) newErrors.password = 'Password is required';
-    else if (formData.password.length < 6) newErrors.password = 'Password must be at least 6 characters';
+    // else if (formData.password.length < 6) newErrors.password = 'Password must be at least 6 characters';
     if (formData.password !== formData.confirmPassword) newErrors.confirmPassword = 'Passwords do not match';
     
     setErrors(newErrors);
@@ -61,7 +61,8 @@ function Signup() {
       setIsLoading(true);
       setSubmitError('');
       try {
-        const response = await axios.post('http://localhost:3000/signup', formData);
+        // const response = await axios.post('http://localhost:3000/signup', formData);
+        const response = await axios.post('/api/auth/signup', formData);
         setSubmitSuccess(true);
         navigate("/login");
       } catch (error) {
