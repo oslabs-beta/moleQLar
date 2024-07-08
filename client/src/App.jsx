@@ -7,6 +7,7 @@ import Signup from "./components/Signup/Signup.jsx";
 import Login from "./components/Login/Login.jsx";
 import Team from './components/Team/Team.jsx';
 import About from './components/About/About.jsx';
+import Dashboard from './components/Dashboard/Dashboard.jsx';
 // import UploadSqlSchema from "./components/UploadSqlSchema/UploadSqlSchema.jsx";
 import Graph from './components/Graph/Graph.jsx';
 import { AuthProvider, useAuth } from "./contexts/AuthContext.js";
@@ -31,6 +32,7 @@ const App = () =>{
                     <Route path="/login" element={<Login />} />
                     <Route path="/about" element={<About />} />
                     <Route path="/graph" element={<Graph />} />
+                    <Route path="/dashboard" element={<Dashboard />} />
                     {/* private routes */}
                     {/* <Route element={<PrivateRoutes />}> */}
                         {/* <Route> */}
