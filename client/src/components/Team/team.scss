@@ -1,60 +1,73 @@
-@import "../../assets/styles/globalstyles.scss";
+@import '../../assets/styles/globalstyles.scss';
 
 .team-section {
-    text-align: center;
-    padding: 50px 20px;
-  }
-  
-  .team-section h2 {
-    font-size: 32px;
-    margin-bottom: 40px;
-  }
-  
-  .team-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 40px;
-    justify-items: center;
-  }
-  
-  .team-member {
-    text-align: center;
-  }
-  
-  .profile-img {
-    width: 150px;
-    height: 150px;
-    border-radius: 50%;
-    object-fit: cover;
-  }
-  
-  .team-member h3 {
-    font-size: 18px;
-    margin: 10px 0 5px;
-  }
-  
-  .team-member p {
-    font-size: 14px;
-    color: gray;
-  }
-  
-  .social-links {
-    display: flex;
-    justify-content: center;
-    margin-top: 10px;
-  }
-  
-  .social-links a {
-    margin: 0 5px;
-  }
-  
-  .social-logo {
-    width: 1.8rem;
-    height: 1.8rem;
-    transition: transform 100ms ease;
+  width: 100%;
+  text-align: center;
+  padding: 50px 20px;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  align-items: center;
+}
 
-    &:hover {
-      transform: translateY(-1px);
-      transition: transform 100ms ease;
-    }
+.team-section h2 {
+  font-size: 3rem;
+  margin-bottom: 4rem;
+}
+
+.team-grid {
+  // display: grid;
+  // grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  // gap: 40px;
+  // justify-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  width: 100%;
+  max-width: 900px;
+  // border: 2px solid red;
+}
+
+.team-member {
+  text-align: center;
+  min-width: 300px;
+  height: 400px;
+}
+
+.profile-img {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.team-member h3 {
+  font-size: 18px;
+  margin: 10px 0 5px;
+}
+
+.team-member p {
+  font-size: 14px;
+  color: gray;
+}
+
+.social-links {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.social-links a {
+  margin: 0 5px;
+}
+
+.social-logo {
+  width: 1.8rem;
+  height: 1.8rem;
+  transition: transform 100ms ease;
+
+  &:hover {
+    transform: translateY(-1px);
+    transition: transform 100ms ease;
   }
+}

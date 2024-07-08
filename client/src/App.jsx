@@ -7,9 +7,9 @@ import Signup from "./components/Signup/Signup.jsx";
 import Login from "./components/Login/Login.jsx";
 import Team from './components/Team/Team.jsx';
 import About from './components/About/About.jsx';
-// import UploadSqlSChemaPage from "./components/UploadSqlSchema/UploadSqlSChemaPage.jsx";
+// import UploadSqlSchema from "./components/UploadSqlSchema/UploadSqlSchema.jsx";
 import Dashboard from './components/Dashboard/Dashboard.jsx';
-import { AuthProvider } from "./contexts/AuthContext.js";
+import { AuthProvider, useAuth } from "./contexts/AuthContext.js";
 
 // import './assets/styles/globalStyles.scss';
 
@@ -24,7 +24,6 @@ const App = () =>{
     return(
         <BrowserRouter>
             <AuthProvider>
-                {/* <Navbar />  */}
                 <Routes>
                     <Route path="/" element={<MainPage />} />
                     <Route path="/team" element={<Team />} />   
@@ -35,7 +34,7 @@ const App = () =>{
                     {/* private routes */}
                     {/* <Route element={<PrivateRoutes />}> */}
                         {/* <Route> */}
-                            {/* <Route path="/dashboard" element={<UploadSqlSChemaPage />} /> */}
+                            {/* <Route path="/dashboard" element={<UploadSqlSchema />} /> */}
                         {/* </Route> */}
                     {/* </Route> */}
                 </Routes>

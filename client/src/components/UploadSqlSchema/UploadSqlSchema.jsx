@@ -1,9 +1,9 @@
-import React, { useState, useCallback } from "react";
-import { Box, Typography, Paper } from "@mui/material";
-import { useDropzone } from "react-dropzone";
-import SchemaVisualizer from "../NodeSchema/SchemaVisualizer";
+import React, { useState, useCallback } from 'react';
+import { Box, Typography, Paper } from '@mui/material';
+import { useDropzone } from 'react-dropzone';
+import SchemaVisualizer from '../NodeSchema/SchemaVisualizer';
 
-const UploadSqlSChemaPage = () => {
+const UploadSqlSchema = () => {
   const [sqlContents, setSqlContents] = useState([]);
 
   // onDrop is called when a file is dropped
@@ -21,32 +21,32 @@ const UploadSqlSChemaPage = () => {
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
     accept: {
-      "application/sql": [".sql"],
-      "text/plain": [".sql"],
+      'application/sql': ['.sql'],
+      'text/plain': ['.sql'],
     },
     multiple: true,
   });
 
   return (
-    <Box sx={{ width:'100%', height:'100%', p: 3 }}>
+    <Box sx={{ width: '100%', height: '100%', p: 3 }}>
       <Paper
         {...getRootProps()}
         sx={{
           p: 3,
-          textAlign: "center",
-          cursor: "pointer",
-          backgroundColor: isDragActive ? "#e3f2fd" : "white",
-          border: "2px dashed #1976d2",
-          "&:hover": {
-            backgroundColor: "#e3f2fd",
+          textAlign: 'center',
+          cursor: 'pointer',
+          backgroundColor: isDragActive ? '#e3f2fd' : 'white',
+          border: '2px dashed #1976d2',
+          '&:hover': {
+            backgroundColor: '#e3f2fd',
           },
         }}
       >
         <input {...getInputProps()} />
         <Typography>
           {isDragActive
-            ? "Drop SQL files here"
-            : "+ Click or drag to add SQL files"}
+            ? 'Drop SQL files here'
+            : '+ Click or drag to add SQL files'}
         </Typography>
       </Paper>
       {/* {sqlContents.length} */}
@@ -60,4 +60,4 @@ const UploadSqlSChemaPage = () => {
   );
 };
 
-export default UploadSqlSChemaPage;
+export default UploadSqlSchema;

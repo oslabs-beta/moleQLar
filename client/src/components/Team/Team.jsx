@@ -15,7 +15,7 @@ const Team = () => {
     <>
       <Navbar />
       <section className="team-section">
-        <h2>Meet the team</h2>
+        <h2>Meet the Team</h2>
         <div className="team-grid">
           <div className="team-member">
             <img
@@ -60,7 +60,7 @@ const Team = () => {
           </div>
           <div className="team-member">
             <img src={ericImg} alt="Eric Alvarez" className="profile-img" />
-            <h3>Eric Alvarez</h3>
+            <h3>Erick Alvarez</h3>
             <p>Software Engineer</p>
             <div className="social-links">
               <a
