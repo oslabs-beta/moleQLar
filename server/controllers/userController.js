@@ -13,7 +13,7 @@ userController.hashing = async (req, res, next) => {
     return next();
   } catch (err) {
     return next({
-      log: 'Error in userController.hasing',
+      log: 'Error in userController.hashing',
       message: { err: 'Error hashing password' },
     });
   }
