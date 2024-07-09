@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Button from '@mui/material/Button';
@@ -12,6 +12,7 @@ import Alert from '@mui/material/Alert';
 import CircularProgress from '@mui/material/CircularProgress';
 import heroImg from '../../assets/logos/hero-img.png';
 import Navbar from '../Navbar/Navbar';
+import { useAuth } from '../../contexts/AuthContext'
 
 const theme = createTheme({
   palette: {
@@ -33,6 +34,13 @@ function Signup() {
   const [isLoading, setIsLoading] = useState(false);
   const [submitError, setSubmitError] = useState('');
   const [submitSuccess, setSubmitSuccess] = useState(false);
+  const { isAuth, signup } = useAuth()
+
+  useEffect(() => {
+    if (isAuth) {
+      navigate('/dashboard');
+    }
+  }, [])
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -48,7 +56,7 @@ function Signup() {
     if (!formData.email.trim()) newErrors.email = 'Email is required';
     else if (!/\S+@\S+\.\S+/.test(formData.email)) newErrors.email = 'Email is invalid';
     if (!formData.password) newErrors.password = 'Password is required';
-    else if (formData.password.length < 6) newErrors.password = 'Password must be at least 6 characters';
+    // else if (formData.password.length < 6) newErrors.password = 'Password must be at least 6 characters';
     if (formData.password !== formData.confirmPassword) newErrors.confirmPassword = 'Passwords do not match';
     
     setErrors(newErrors);
@@ -61,24 +69,18 @@ function Signup() {
       setIsLoading(true);
       setSubmitError('');
       try {
-        const response = await axios.post('http://localhost:3000/signup', formData);
+        await signup(formData);  // send POST request to server
         setSubmitSuccess(true);
-        navigate("/login");
       } catch (error) {
         console.error(error);
         setSubmitError(error.response?.data?.message || 'An error occurred during signup');
       } finally {
         setIsLoading(false);
       }
+      return navigate("/dashboard");
     }
   };
-  {/* <form onSubmit={handleSubmit}>
-        <input type="text" name="firstName" placeholder="First Name" onChange={handleChange} required />
-        <input type="text" name="lastName" placeholder="Last Name" onChange={handleChange} required />
-        <input type="text" name="username" placeholder="Username" onChange={handleChange} required />
-        <input type="password" name="password" placeholder="Password" onChange={handleChange} required />
-        <button type="submit">Sign Up</button>
-      </form> */}
+
   return (
    <>
     <Navbar />
