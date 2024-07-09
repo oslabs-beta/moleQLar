@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Button from '@mui/material/Button';
@@ -12,6 +12,7 @@ import Alert from '@mui/material/Alert';
 import CircularProgress from '@mui/material/CircularProgress';
 import heroImg from '../../assets/logos/hero-img.png';
 import Navbar from '../Navbar/Navbar';
+import { useAuth } from '../../contexts/AuthContext'
 
 const theme = createTheme({
   palette: {
@@ -33,6 +34,13 @@ function Signup() {
   const [isLoading, setIsLoading] = useState(false);
   const [submitError, setSubmitError] = useState('');
   const [submitSuccess, setSubmitSuccess] = useState(false);
+  const { isAuth } = useAuth();
+
+  useEffect(() => {
+    if (isAuth) {
+      navigate('/dashboard');
+    }
+  }, [])
 
   const handleChange = (e) => {
     const { name, value } = e.target;

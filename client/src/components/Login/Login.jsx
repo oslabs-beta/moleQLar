@@ -1,5 +1,4 @@
-import axios from 'axios';
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
@@ -24,11 +23,20 @@ const theme = createTheme({
 function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const { login } = useAuth();  // defined in AuthContext
+  const { isAuth, login } = useAuth();  // defined in AuthContext
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (isAuth) {
+      navigate('/dashboard');
+    }
+  }, [])
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     login(username, password);
+    navigate('/dashboard')  // redirect to /Graph
   };
 
   return (

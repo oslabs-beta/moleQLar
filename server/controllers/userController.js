@@ -15,7 +15,7 @@ userController.hashing = async (req, res, next) => {
     return next();
   } catch (err) {
     return next({
-      log: 'Error in userController.hasing',
+      log: 'Error in userController.hashing',
       message: { err: 'Error hashing password' },
     });
   }
@@ -68,7 +68,10 @@ userController.loginUser = async (req, res, next) => {
     // validate password
     const isMatch = await bcrypt.compare(password, dbPassword);
     if (isMatch) res.locals.user = { username };
-   
+    else {
+      // invalid credentials
+      return res.status(401).json({ message: 'Invalid username or password' });
+    }
     return next();
   } catch (err) {
     console.log(err);
@@ -80,39 +83,51 @@ userController.loginUser = async (req, res, next) => {
   }
 };
 
-userController.generateJWT = (req, res, next) => {
-  console.log('generating JWT');
+userController.signJWT = (req, res, next) => {
+  console.log('userController.signJWT - signing JWT');
   // generate JWT
   // state
   const state = { 
     ...res.locals.user,
   }
+  // sign token
   const token = jwt.sign(state, JWT_SECRET, { expiresIn: '1h' });
-  res.locals.user.token = token;
+  // add token to response header
+  res.setHeader('authorization', `Bearer ${token}`);
   return next();
 } 
 
 userController.validateJWT = async (req, res, next) => {
+  console.log('userController.validateJWT');
   // check that JWT exists in client's local storage
-  const token = req.header('Authorization').replace('Bearer ', '');
-  if (!token) {
-    // return res.status(401).json({ message: 'No token, authorization denied' });
+  // console.log('Inside validateJWT');
+  // console.log('req.headers:', req.headers);
+  const token = req.headers['authorization'].replace('Bearer ', '');
+  // console.log('token:', token)
+  if (token === 'null' && !JSON.parse(token)) {
+    console.log('No token found');
+    // denied - no token
+    res.locals.user = null;
+    return res.status(401).json({ message: 'No token, authorization denied' });
   }
-
   // check that token is valid
   try {
     const decoded = jwt.verify(token, JWT_SECRET);
-    req.user = decoded;
-    // res.json({
-    //   message: 'Protected route accessed',
-    //   user: req.user
-    // }) 
+    // success
+    // send username back to the client
+    res.locals.user = { username: decoded.username }
+    return next();
   } catch (err) {
-    // res.status(401).json({
-    //   message: 'Token is not valid'
-    // });
+    console.log('userController - err.name:', err.name)
+    // Handle specific JWT errors
+    if (err.name === 'TokenExpiredError') {
+      return res.status(401).json({ message: 'Token expired, authorization denied' });
+    } else if (err.name === 'JsonWebTokenError') {
+      return res.status(401).json({ message: 'Invalid token, authorization denied' });
+    } else {
+      return res.status(500).json({ message: 'Internal server error' });
+    }
   }
-  return next();  // TODO
 }
 
 module.exports = userController;

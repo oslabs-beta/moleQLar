@@ -1,4 +1,5 @@
 const { Pool } = require('pg');
+require('dotenv').config();
 
 const PG_URI = process.env.SQL_DATABASE_URI;
 // 'postgresql://postgres.cysmoheuclhnggrbjhqy:codesmithgroup1@aws-0-us-west-1.pooler.supabase.com:6543/postgres';
