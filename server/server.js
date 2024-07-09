@@ -11,6 +11,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cors());
 app.use("/", userRoutes);
+const path = require('path');
 
 
 // Creates a new Sequalize Instance w/ Parameters
@@ -27,10 +28,16 @@ app.use("/", userRoutes);
 
 // app.use('/auth', authRoutes);
 
+app.use(express.static(path.join(__dirname, 'build')));
+
 app.get("/testdb", async (req, res) => {
   const result = await db.query("SELECT * FROM users LIMIT 1");
   console.log("result", result);
   res.status(200).json(result);
+});
+
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
 
 // Global error handler:
