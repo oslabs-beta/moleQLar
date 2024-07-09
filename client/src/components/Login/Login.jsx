@@ -35,8 +35,8 @@ function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    login(username, password);
-    navigate('/dashboard')  // redirect to /Graph
+    await login(username, password);
+    return navigate('/dashboard')  // redirect to /Graph
   };
 
   return (

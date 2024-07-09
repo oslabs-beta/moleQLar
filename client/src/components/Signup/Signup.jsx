@@ -34,7 +34,7 @@ function Signup() {
   const [isLoading, setIsLoading] = useState(false);
   const [submitError, setSubmitError] = useState('');
   const [submitSuccess, setSubmitSuccess] = useState(false);
-  const { isAuth } = useAuth();
+  const { isAuth, signup } = useAuth()
 
   useEffect(() => {
     if (isAuth) {
@@ -69,25 +69,18 @@ function Signup() {
       setIsLoading(true);
       setSubmitError('');
       try {
-        // const response = await axios.post('http://localhost:3000/signup', formData);
-        const response = await axios.post('/api/auth/signup', formData);
+        await signup(formData);  // send POST request to server
         setSubmitSuccess(true);
-        navigate("/login");
       } catch (error) {
         console.error(error);
         setSubmitError(error.response?.data?.message || 'An error occurred during signup');
       } finally {
         setIsLoading(false);
       }
+      return navigate("/dashboard");
     }
   };
-  {/* <form onSubmit={handleSubmit}>
-        <input type="text" name="firstName" placeholder="First Name" onChange={handleChange} required />
-        <input type="text" name="lastName" placeholder="Last Name" onChange={handleChange} required />
-        <input type="text" name="username" placeholder="Username" onChange={handleChange} required />
-        <input type="password" name="password" placeholder="Password" onChange={handleChange} required />
-        <button type="submit">Sign Up</button>
-      </form> */}
+
   return (
    <>
     <Navbar />

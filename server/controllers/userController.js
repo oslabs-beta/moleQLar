@@ -33,7 +33,7 @@ userController.createUser = async (req, res, next) => {
   db.query(query, params)
     .then((createdUser) => {
       res.locals.user = {
-        username: createdUser.rows[0],
+        ...createdUser.rows[0],
       }
       return next();
     })
@@ -50,7 +50,7 @@ userController.createUser = async (req, res, next) => {
 userController.loginUser = async (req, res, next) => {
   const { username, password } = req.body;
   const loginQuery = `SELECT * FROM users WHERE username = '${username}'`;
-  console.log('username:', username); 
+  console.log('username:', username);
   console.log('password:', password);
   // error checking
   if (!username || !password) {
@@ -60,7 +60,6 @@ userController.loginUser = async (req, res, next) => {
       status: 400
     });
   }
-
   // vaidate credentials
   try {
     const result = await db.query(loginQuery);  // query db for user
@@ -100,10 +99,7 @@ userController.signJWT = (req, res, next) => {
 userController.validateJWT = async (req, res, next) => {
   console.log('userController.validateJWT');
   // check that JWT exists in client's local storage
-  // console.log('Inside validateJWT');
-  // console.log('req.headers:', req.headers);
   const token = req.headers['authorization'].replace('Bearer ', '');
-  // console.log('token:', token)
   if (token === 'null' && !JSON.parse(token)) {
     console.log('No token found');
     // denied - no token

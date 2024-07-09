@@ -3,7 +3,6 @@ import UploadSqlSchema from "../UploadSqlSchema/UploadSqlSchema";
 import AuthorizedNavbar from '../AuthorizedNavbar/AuthorizedNavbar';
 
 function Dashboard() {
-  console.log('rendering Dashboard')
   return (
     <>
       <AuthorizedNavbar/>
