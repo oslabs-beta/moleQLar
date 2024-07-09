@@ -18,6 +18,7 @@
     "@mui/material": "^5.15.21",
     "@testing-library/jest-dom": "^6.4.6",
     "@testing-library/react": "^16.0.0",
+    "@testing-library/user-event": "^14.5.2",
     "axios": "^1.7.2",
     "cross-env": "^7.0.3",
     "dotenv-webpack": "^8.1.0",
@@ -62,6 +63,8 @@
       "^.+\\.jsx?$": "babel-jest",
       "\\.(css|scss)$": "<rootDir>/node_modules/jest-css-modules-transform"
     },
-    "setupFiles": ["./jest.setup.js"]
+    "setupFiles": [
+      "./jest.setup.js"
+    ]
   }
 }
