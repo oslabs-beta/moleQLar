@@ -70,8 +70,6 @@ export const AuthProvider = ({ children }) => {
       }
     }
     verifyUser();
-    // console.log('Showing dashboard')
-    // navigate('/dashboard');
   }, []);
 
   const signup = async (formData) => {
