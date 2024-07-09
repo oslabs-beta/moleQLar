@@ -6,19 +6,10 @@ const pluralize = require('pluralize');
 // 2) Use pg-dump to create an output file
 // 3) Build an algorithm to traverse the output file and autobuild our node-graph
 
-// const fs = require("fs");
-// const readline = require("readline");
-
 // load schema dump file
-// const file_name = "sample_pg_dump.sql";
-// const file_path = path.resolve(__dirname, file_name);
-// console.log(file_path);
 
-// iterate over file synchronously
-// const sqlDump = fs.readFileSync(file_path, "utf-8");
-
-//declare objects to hold tables and relationships
 export function parseSqlSchema(sql) {
+  //declare objects to hold tables and relationships
   const tables = {};
   let currentTable;
   const relationships = [];
@@ -39,9 +30,10 @@ export function parseSqlSchema(sql) {
       //make table name singular and capitalize first letter
       //`    ${pluralize(key)}: [${pluralize.singular(key).replace(/^./, key[0].toUpperCase())}]\n`;
 
-      currentTable = pluralize
-        .singular(tableName)
-        .replace(/^./, tableName[0].toUpperCase());
+      // currentTable = pluralize
+      //   .singular(tableName)
+      //   .replace(/^./, tableName[0].toUpperCase());
+      currentTable = tableName;
       // Add tableName to tables object
       tables[currentTable] = [];
     } else if (line.trim().startsWith('"')) {
@@ -72,90 +64,16 @@ export function parseSqlSchema(sql) {
       if (match) {
         const [, , sourceTable, sourceField, , targetTable, targetField] =
           match;
+        //push new relationship onto object
         relationships.push({
-          source: pluralize
-            .singular(sourceTable)
-            .replace(/^./, sourceTable[0].toUpperCase()),
+          source: sourceTable,
           sourceHandle: sourceField,
-          target: pluralize
-            .singular(targetTable)
-            .replace(/^./, targetTable[0].toUpperCase()),
+          target: targetTable,
           targetHandle: targetField,
         });
       }
     }
   });
-
-  //(1 to 1) (1 to many) (many to 1) and (many to many)
-  //from Game (source) node to Review (target) node
-
-  //generate schema from tables object
-  //currently correctly adds types and fields with plural/singular form
-  //TODO: nested relationships for schema
-  //can export when "generate" button functionality exists
-
-  const schemaString = () => {
-    //declare base strings to begin schema generation
-    let gql_schema = `#graphql\n`;
-    let query_string = `  type Query {\n`;
-    //for each table from SQL schema, create GraphQL Type
-    for (let key in tables) {
-      //plural form of type
-      query_string += `    ${pluralize(key)}: [${pluralize
-        .singular(key)
-        .replace(/^./, key[0].toUpperCase())}]\n`;
-      //query for one element in type (by ID - singular form)
-      query_string += `    ${pluralize.singular(key)}(id: ID!): ${pluralize
-        .singular(key)
-        .replace(/^./, key[0].toUpperCase())}\n`;
-
-      //two spaces before each type, 4 spaces before each field
-      gql_schema += `  type ${pluralize
-        .singular(key)
-        .replace(/^./, key[0].toUpperCase())} {\n`;
-      //add id line to remove underscore
-      gql_schema += '    id: ID!\n';
-
-      //add each field in table to schema
-      for (let i = 1; i < tables[key].length; i++) {
-        //check if field is required in query
-        const required = tables[key][i].required ? '!' : '';
-        gql_schema += `    ${tables[key][i].name}: ${tables[key][i].type}${required}\n`;
-      }
-      //add relationships to schema
-      relationships.forEach((connection) => {
-        //source is foreign key, destination primary
-        //many to one relationship
-        if (connection.source === key) {
-          gql_schema += `    ${connection.target.replace(
-            /^./,
-            connection.target[0].toLowerCase()
-          )}: ${connection.target}!\n`;
-          console.log(
-            connection.source,
-            'links with ',
-            `    ${connection.target.replace(
-              /^./,
-              connection.target[0].toLowerCase()
-            )}: ${connection.target}!\n`
-          );
-        }
-        //one to many relationship
-        if (connection.target === key) {
-          gql_schema += `    ${pluralize(connection.source).replace(
-            /^./,
-            connection.source[0].toLowerCase()
-          )}: [${connection.source}!]\n`;
-        }
-      });
-
-      gql_schema += `  }\n`;
-    }
-    query_string += `  }\n`;
-    //add strings together and return
-    gql_schema += query_string;
-    return gql_schema;
-  };
 
   // Calculate grid layout
   const gridLayout = (nodes, columns = 3, width = 250, height = 300) => {
@@ -180,6 +98,8 @@ export function parseSqlSchema(sql) {
         .singular(tableName)
         .replace(/^./, tableName[0].toUpperCase()),
       type: 'table',
+      //added sqlTableName
+      dbTableName: tableName,
       data: {
         //changed tableName to this
         label: pluralize
@@ -193,18 +113,22 @@ export function parseSqlSchema(sql) {
   // Create edges for React Flow
   const edges = relationships.map((rel, index) => ({
     id: `e${index}`,
-    source: rel.source,
+    source: pluralize
+      .singular(rel.source)
+      .replace(/^./, rel.source[0].toUpperCase()),
     sourceHandle: rel.sourceHandle,
-    target: rel.target,
+    dbSourceTable: rel.source,
+    target: pluralize
+      .singular(rel.target)
+      .replace(/^./, rel.target[0].toUpperCase()),
     targetHandle: rel.targetHandle,
+    dbTargetTable: rel.target,
     type: 'smoothstep',
     animated: true,
     style: { stroke: '#fff' },
   }));
 
-  //generate graphql schema
-
-  return { nodes, edges, schemaString };
+  return { nodes, edges };
 }
 
 //{name: "name, type: "type", required: }

@@ -1,12 +1,13 @@
 const express = require("express");
+const app = express();
 const bodyParser = require("body-parser");
 const cors = require("cors");
-const userRoutes = require("./routes/users");
+// const userRoutes = require("./routes/users");
 // const { Sequelize } = require('sequelize');
 // const authRoutes = require('./routes/auth.js');
 // const User = require('./models/User.js');
-const db =  require("./models/userModels.js");
-const app = express();
+// const db =  require("./models/userModels.js");
+
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cors());
@@ -30,11 +31,16 @@ const path = require('path');
 
 app.use(express.static(path.join(__dirname, 'build')));
 
-app.get("/testdb", async (req, res) => {
-  const result = await db.query("SELECT * FROM users LIMIT 1");
-  console.log("result", result);
-  res.status(200).json(result);
-});
+// app.get("/testdb", async (req, res) => {
+//   const result = await db.query("SELECT * FROM users LIMIT 1");
+//   console.log("result", result);
+//   res.status(200).json(result);
+// });
+
+// Authorization Route
+const authRouter = require('./routes/authRouter');
+app.use('/api/auth', authRouter);
+
 
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, 'build', 'index.html'));
@@ -42,6 +48,7 @@ app.get("*", (req, res) => {
 
 // Global error handler:
 app.use((err, req, res, next) => {
+  console.log('GLOBAL ERROR HANDLER:', err);
   const defaultErr = {
     log: "Express error handler caught middleware error",
     status: 500,
