@@ -11,7 +11,6 @@ import About from './components/About/About.jsx';
 import Dashboard from './components/Dashboard/Dashboard.jsx';
 import Graph from './components/Graph/Graph.jsx';
 
-
 // A wrapper for <Route> that redirects to the login page if the user is not authenticated.
 const PrivateRoutes = () => {
     const { isAuth } = useAuth();

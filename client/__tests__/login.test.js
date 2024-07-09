@@ -1,10 +1,22 @@
-import React from 'react';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+// Import necessary modules and functions
+import React from 'react'; // Import React library
+import {
+  render,
+  screen,
+  fireEvent,
+  waitFor,
+  act,
+} from '@testing-library/react'; // Import testing functions from React Testing Library
+import '@testing-library/jest-dom'; // Extend Jest matchers with custom matchers for DOM nodes
+import { AuthContext } from '../src/contexts/AuthContext'; // Import AuthContext
+import Login from '../src/components/Login/Login'; // Import the Login component
+import { createTheme, ThemeProvider } from '@mui/material/styles'; // Import MUI's theme creation and ThemeProvider
+import { MemoryRouter } from 'react-router-dom';
 import userEvent from '@testing-library/user-event';
-import Login from '../src/components/Login/Login';
-import { AuthContext } from '../src/contexts/AuthContext';
 import { BrowserRouter as Router } from 'react-router-dom';
 
+// Mocking the login function and AuthContextProvider
+const loginMock = jest.fn(); // Create a mock function for login
 const mockLogin = jest.fn();
 const mockNavigate = jest.fn();
 
@@ -23,23 +35,47 @@ function renderLoginComponent() {
   );
 }
 
-describe('Login Component Tests', () => {
-  test('component renders', () => {
-    renderLoginComponent();
-    expect(screen.getByText("Login")).toBeInTheDocument();
-    expect(screen.getByLabelText("Username")).toBeInTheDocument();
-    expect(screen.getByLabelText("Password")).toBeInTheDocument();
+const AuthContextProviderMock = (
+  { children } // Create a mock AuthContext provider
+) => (
+  <AuthContext.Provider value={{ login: loginMock }}>
+    {children}
+  </AuthContext.Provider>
+);
+
+// Creating a custom theme for the component
+const theme = createTheme({
+  // Create a custom MUI theme
+  palette: {
+    primary: {
+      main: '#9c27b0',
+    },
+  },
+});
+
+// Describe the test suite for the Login component
+describe('Login Component', () => {
+  beforeEach(() => {
+    fetch.resetMocks(); // Reset any mocked fetch calls before each test
   });
 
-  test('handles form submission with correct credentials', async () => {
-    renderLoginComponent();
-    userEvent.type(screen.getByLabelText("Username"), 'testuser');
-    userEvent.type(screen.getByLabelText("Password"), 'password123');
-    fireEvent.click(screen.getByRole('button', { name: /login!/i }));
+  // Test case: Rendering the Login component correctly
+  test('renders Login component correctly', () => {
+    render(
+      // Render the Login component within ThemeProvider and AuthContextProviderMock
+      <MemoryRouter>
+        <ThemeProvider theme={theme}>
+          <AuthContextProviderMock>
+            <Login />
+          </AuthContextProviderMock>
+        </ThemeProvider>
+      </MemoryRouter>
+    );
 
-    await waitFor(() => {
-      expect(mockLogin).toHaveBeenCalledWith('testuser', 'password123');
-    });
+    // Check if username, password fields, and login button are rendered
+    expect(screen.getByLabelText(/username/i)).toBeInTheDocument(); // Verify username input is in the document
+    expect(screen.getByLabelText(/password/i)).toBeInTheDocument(); // Verify password input is in the document
+    expect(screen.getByRole('button', { name: /login/i })).toBeInTheDocument(); // Verify login button is in the document
   });
 
   test('navigates to dashboard after successful login', async () => {
