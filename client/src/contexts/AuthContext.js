@@ -29,8 +29,8 @@ export const AuthProvider = ({ children }) => {
             username: "",
             user_id: null,
           });
-          // return;
-          return navigate('/login');
+          return;
+          // return navigate('/login');
         } else {
           // successful login 
           const data = response.data;
@@ -61,7 +61,8 @@ export const AuthProvider = ({ children }) => {
       }
     }
     verifyUser();
-    navigate('/dashboard');
+    // console.log('Showing dashboard')
+    // navigate('/dashboard');
   }, []);
 
   const signup = async (formData) => {

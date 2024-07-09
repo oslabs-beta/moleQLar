@@ -2,7 +2,7 @@ import React, { createContext, useContext, useState, useEffect } from "react";
 import { BrowserRouter, Route, Routes, Outlet, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from "./contexts/AuthContext.js";
 
-import MainPage from "./components/Main/Main.jsx";
+import Main from "./components/Main/Main.jsx";
 import Signup from "./components/Signup/Signup.jsx";
 import Login from "./components/Login/Login.jsx";
 import Team from './components/Team/Team.jsx';
@@ -28,8 +28,8 @@ const App = () =>{
         <BrowserRouter>
             <AuthProvider>
                 <Routes>
-                    <Route path="/" element={<MainPage />} />
-                    <Route path="/team" element={<Team />} />   
+                    <Route path="/" element={<Main />} />
+                    <Route path="/team" element={<Team />} />
                     <Route path="/signup" element={<Signup />} />
                     <Route path="/login" element={<Login />} />
                     <Route path="/about" element={<About />} />
