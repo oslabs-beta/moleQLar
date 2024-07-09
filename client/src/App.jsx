@@ -10,7 +10,7 @@ import About from './components/About/About.jsx';
 // import UploadSqlSchema from "./components/UploadSqlSchema/UploadSqlSchema.jsx";
 import Dashboard from './components/Dashboard/Dashboard.jsx';
 import Graph from './components/Graph/Graph.jsx';
-import { AuthProvider, useAuth } from "./contexts/AuthContext.js";
+
 
 
 // A wrapper for <Route> that redirects to the login page if the user is not authenticated.
