@@ -18,6 +18,7 @@
     "@mui/material": "^5.15.21",
     "@testing-library/react": "^16.0.0",
     "axios": "^1.7.2",
+    "dotenv-webpack": "^8.1.0",
     "dropzone": "^6.0.0-beta.2",
     "pluralize": "^8.0.0",
     "react": "^18.3.1",
