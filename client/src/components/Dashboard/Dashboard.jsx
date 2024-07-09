@@ -10,7 +10,7 @@ function Dashboard() {
   const navigateToGraph = () =>{
     navigate('/graph')
   }
-
+  
   return (
     <>
       <AuthorizedNavbar />

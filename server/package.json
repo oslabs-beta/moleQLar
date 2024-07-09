@@ -4,14 +4,14 @@
   "main": "server.js",
   "scripts": {
     "start": "nodemon server.js",
-    "dev": "nodemon server.js"
+    "dev": "nodemon server.js",
+    "serve-client": "serve -s ../client/build",
+    "concurrently-dev": "concurrently \"npm run dev\" \"npm run serve-client\""
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": "",
   "dependencies": {
-    "bcrypt": "^5.1.1",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.2",
     "cors": "^2.8.5",
@@ -41,6 +41,8 @@
     "supertest": "^7.0.0",
     "webpack": "^5.92.0",
     "webpack-cli": "^5.1.4",
-    "webpack-dev-server": "^5.0.4"
+    "webpack-dev-server": "^5.0.4",
+    "concurrently": "^8.2.2",
+    "serve": "^14.2.3"
   }
 }
