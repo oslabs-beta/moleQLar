@@ -9,12 +9,20 @@ export const AuthProvider = ({ children }) => {
   const [authState, setAuthState] = useState({
     isAuth: false,
     username: "",
+    user_id: null,
+    loading: true, // Add loading state
   });
 
   useEffect(() => {
     async function verifyUser() {
       // check local storage
       const token = localStorage.getItem("token");
+
+      if (!token) {
+        setAuthState((prev_state) => ({ ...prev_state, loading: false }));
+        return;
+      }
+
       // verify user token
       let config = {
         headers: { 'authorization': `${token}` }
@@ -28,8 +36,8 @@ export const AuthProvider = ({ children }) => {
             isAuth: false,
             username: "",
             user_id: null,
+            loading: false, // Set loading to false when done
           });
-          // return;
           return navigate('/login');
         } else {
           // successful login 
@@ -41,6 +49,7 @@ export const AuthProvider = ({ children }) => {
             isAuth: true,
             username: data.username,
             user_id: data.user_id,
+            loading: false, // Set loading to false when done
           });
         }
       } catch (err) {
@@ -61,7 +70,6 @@ export const AuthProvider = ({ children }) => {
       }
     }
     verifyUser();
-    navigate('/dashboard');
   }, []);
 
   const signup = async (formData) => {
