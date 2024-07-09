@@ -14,7 +14,6 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     async function verifyUser() {
       // check local storage
-      const storedUsername = localStorage.getItem("username");
       const token = localStorage.getItem("token");
       // verify user token
       let config = {
@@ -28,6 +27,7 @@ export const AuthProvider = ({ children }) => {
           setAuthState({
             isAuth: false,
             username: "",
+            user_id: null,
           });
           // return;
           return navigate('/login');
@@ -35,10 +35,12 @@ export const AuthProvider = ({ children }) => {
           // successful login 
           const data = response.data;
           localStorage.setItem("username", data.username);
+          localStorage.setItem("user_id", data.user_id);
           localStorage.setItem("token", response.headers['authorization']);
           setAuthState({
             isAuth: true,
             username: data.username,
+            user_id: data.user_id,
           });
         }
       } catch (err) {
@@ -79,10 +81,11 @@ export const AuthProvider = ({ children }) => {
         setAuthState({
           isAuth: true,
           username: data.username,
-          token: data.token,
+          user_id: data.user_id,
         })
         console.log('signup - setting username/token');
         localStorage.setItem("username", data.username);
+        localStorage.setItem("user_id", data.user_id);
         localStorage.setItem("token", response.headers['authorization']);
         return; // success
       }
@@ -118,10 +121,11 @@ export const AuthProvider = ({ children }) => {
         setAuthState({
           isAuth: true,
           username: data.username,
-          token: data.token,
+          user_id: data.user_id,
         });
         console.log('login - setting username/token');
         localStorage.setItem("username", data.username);
+        localStorage.setItem("user_id", data.user_id);
         localStorage.setItem("token", response.headers['authorization']);
         // return navigate("/dashboard");
         return;  // success
@@ -147,9 +151,10 @@ export const AuthProvider = ({ children }) => {
     setAuthState({
       isAuth: false,
       username: "",
-      userId: "",
+      user_id: null,
     });
     localStorage.removeItem("username");
+    localStorage.removeItem("user_id");
     localStorage.removeItem("token");
     return navigate("/");
   };
