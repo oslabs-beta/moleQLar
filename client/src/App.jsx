@@ -7,14 +7,19 @@ import Signup from "./components/Signup/Signup.jsx";
 import Login from "./components/Login/Login.jsx";
 import Team from './components/Team/Team.jsx';
 import About from './components/About/About.jsx';
-// import UploadSqlSchema from "./components/UploadSqlSchema/UploadSqlSchema.jsx";
 import Dashboard from './components/Dashboard/Dashboard.jsx';
 import Graph from './components/Graph/Graph.jsx';
 
 
 // A wrapper for <Route> that redirects to the login page if the user is not authenticated.
 const PrivateRoutes = () => {
-    const { isAuth } = useAuth();
+    // const { isAuth, loading } = useAuth();
+    const { isAuth, loading } = useAuth();
+    if (loading) {
+        // Can return a loading spinner component or any loading UI here
+        console.log('Loading...');
+        return <div>Loading...</div>;
+    }
     console.log('PrivateRoutes - isAuth:', isAuth);
     if (!isAuth) {
         return <Navigate to="/login" />;
