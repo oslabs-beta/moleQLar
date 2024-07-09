@@ -78,6 +78,19 @@ describe('Login Component', () => {
     expect(screen.getByRole('button', { name: /login/i })).toBeInTheDocument(); // Verify login button is in the document
   });
 
+  // // Test Handles Form Submission w/ Correct Credentials
+  // test('handles form submission with correct credentials', async () => {
+  //   renderLoginComponent();
+  //   userEvent.type(screen.getByLabelText("Username"), 'test1');
+  //   userEvent.type(screen.getByLabelText("Password"), '111111');
+  //   fireEvent.click(screen.getByRole('button', { name: /login!/i }));
+
+  //   await waitFor(() => {
+  //     expect(mockLogin).toHaveBeenCalledWith('test1', '111111');
+  //   });
+  // });
+
+  // Navigate Test -> to '/dashboard' after successful login
   test('navigates to dashboard after successful login', async () => {
     mockLogin.mockImplementation(() => Promise.resolve());
     renderLoginComponent();
