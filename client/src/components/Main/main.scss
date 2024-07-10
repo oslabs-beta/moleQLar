@@ -58,31 +58,39 @@
   }
   
   .main-btns-container {
-    margin-top: 2.5em;
-    width: 70%;
-    display: flex;
-    justify-content: space-between;
+    margin-top: 2em;
+    // width: 70%;
+    // display: flex;
+    // justify-content: space-between;
     // background-color: red;
   }
 
-  .btn {
-    cursor: pointer;
-    padding: .6em 3.5em;
-    font-size: 1.4rem;
-    border-radius: .5rem;
-    font-weight: bold;
-    border: 2px solid $color-primary;
-    transition: transform 100ms ease-in;
-
-    &:hover {
-      transform: translateY(-1px);
+  .btn-home {
+      cursor: pointer;
+      border-radius: .5em;
       transition: transform 100ms ease-in;
-    }
+      font-size: 1.4em;
+      font-weight: 600;
+      padding: .5em 2em;
+
+      &:hover {
+        transform: translateY(-1px);
+        transition: transform 100ms ease-in;
+      }
   }
   
+  .btn-home {
+    width: 14rem;
+    height: 3.5rem;
+  }
+
   .btn-signup {
-    background-color: transparent;
+    background-color: $color-white;
     color: $color-primary;
+    margin-left: 2rem;
+    // border: .1em solid $color-primary;
+    border: none;
+    box-shadow: inset 0 0 0 0.1em $color-primary;
   }
   
   .btn-login {

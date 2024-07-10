@@ -33,6 +33,8 @@ const ObjectTypeList = ({
     onSelectTable(tableId);
   };
 
+
+  // TODO - pull graph name from the database
   return (
     <div className='sidebar'>
       {/* <Typography variant="h2">Nodes</Typography> */}

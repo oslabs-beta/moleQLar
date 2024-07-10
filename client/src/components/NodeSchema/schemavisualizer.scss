@@ -31,6 +31,32 @@
     right: 2rem;
 }
 
+.btn-graph {
+    cursor: pointer;
+    border-radius: .5em;
+    width: 12rem;
+    height: 3.5rem;
+    font-weight: 600;
+    font-size: 1.2rem;
+    color: $color-white;
+    transition: transform 100ms ease-in;
+
+    &:hover {
+      transform: translateY(-1px);
+      transition: transform 100ms ease-in;
+    }
+}
+
+.btn-save {
+    background-color: $color-primary;
+    margin-left: 1rem;
+}
+
+.btn-upload {
+    background-color: $color-white;
+    color: $color-primary;
+}
+
 .generate {
     width: min-content;
     height: min-content;
@@ -38,59 +64,12 @@
     bottom: 2rem;
 }
 
-.btn-primary {
-    background-color: $color-primary;
-    color: $color-white;
-    // border: none;
-    cursor: pointer;
-    // padding: .6em 3.5em;
-    // font-size: 1.4rem;
-    border-radius: .5em;
-    font-weight: bold;
-    // border: 2px solid $color-primary;
-    transition: transform 100ms ease-in;
-
-    
-    &:hover {
-      transform: translateY(-1px);
-      transition: transform 100ms ease-in;
-    }
-}
-
-.btn-secondary {
-    background-color: $color-white;
-    color: $color-primary;
-    // border: none;
-    cursor: pointer;
-    // padding: .6em 3.5em;
-    // font-size: 1.4rem;
-    border-radius: .5em;
-    font-weight: bold;
-    border: 2px solid $color-primary;
-    transition: transform 100ms ease-in;
-
-    &:hover {
-      transform: translateY(-1px);
-      transition: transform 100ms ease-in;
-    }
-}
-
-.btn-graph {
-    border: none;
-    width: 10em;
-    height: 3em;
-    font-size: 1.2rem;
-}
-
-.btn-save {
-    margin-left: 1rem;
-}
-
-.btn-upload {
-}
-
 .btn-generate {
+    background-color: $color-primary;
     border: $color-white solid .2em;
+    font-size: 1.4rem;
+    width: 14rem;
+    height: 4rem;
 }
 
 // buttons end

@@ -261,17 +261,17 @@ const SchemaVisualizer = ({ handleUploadBtn, sqlContents }) => {
         {/* <ReactFlowProvider> */}
           <Box className="node-graph-container" ref={reactFlowWrapper}>
             <div className="graph-btn-container">
-              <button className="btn-secondary btn-upload btn-graph"
+              <button className="btn-upload btn-graph"
                 onClick={handleUploadBtn}
               >
                 Upload SQL
               </button>
-              <button className="btn-primary btn-save btn-graph">
+              <button className="btn-save btn-graph">
                 Save
               </button>
             </div>
             <div className="graph-btn-container generate">
-              <button className="btn-primary btn-generate btn-graph">
+              <button className="btn-generate btn-graph">
                 Generate
               </button>
             </div>
