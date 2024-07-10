@@ -13,6 +13,7 @@ import ReactFlow, {
 import { Box, Button } from "@mui/material";
 import { parseSqlSchema } from "../algorithms/schema_parser";
 import ObjectTypeList from "./ObjectTypeList";
+import GenerateTab from "../GenerateTabs/genTab";
 
 const TableNode = React.memo(({ data, id, selected }) => (
   <div
@@ -137,6 +138,7 @@ const SchemaVisualizer = ({ sqlContents }) => {
   const [focusMode, setFocusMode] = useState(false);
   const reactFlowWrapper = useRef(null);
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
+  
 
   const deleteNode = useCallback(
     (id) => {
@@ -298,9 +300,14 @@ const SchemaVisualizer = ({ sqlContents }) => {
         <Button variant="contained" onClick={wholeView} disabled={!focusMode}>
           Whole View
         </Button>
+        <GenerateTab/>
       </Box>
     </Box>
   );
 };
 
 export default SchemaVisualizer;
+
+
+
+
