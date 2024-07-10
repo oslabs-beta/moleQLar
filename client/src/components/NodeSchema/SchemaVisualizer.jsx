@@ -13,6 +13,7 @@ import ReactFlow, {
 import { Box, Button } from "@mui/material";
 import { parseSqlSchema } from "../algorithms/schema_parser";
 import ObjectTypeList from "./ObjectTypeList";
+import './schemavisualizer.scss' // styles
 
 const TableNode = React.memo(({ data, id, selected }) => (
   <div
@@ -130,7 +131,7 @@ const edgeTypes = {
   custom: CustomEdge,
 };
 
-const SchemaVisualizer = ({ sqlContents }) => {
+const SchemaVisualizer = ({ handleUploadBtn, sqlContents }) => {
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const [selectedNode, setSelectedNode] = useState(null);
@@ -236,57 +237,72 @@ const SchemaVisualizer = ({ sqlContents }) => {
   }, [sqlContents, setNodes, setEdges, reactFlowInstance]);
 
   return (
-    <Box
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        height: "calc(100vh - 200px)",
-        width: "100%",
-        overflow: "hidden",
-      }}
+    <div
+      className='schema-visualizer'
+      // sx={{
+      //   display: "flex",
+      //   flexDirection: "row",
+      //   // height: "calc(100vh - 200px)",
+      //   justifyContent: 'space-between',
+      //   height: '100%',
+      //   width: "100%",
+      //   overflow: "hidden",
+      //   borderRadius: '0.4em',
+      //   border: '2px magenta solid',
+      // }}
     >
-      <Box sx={{ display: "flex", height: "calc(100% - 60px)" }}>
-        <ObjectTypeList
+      <ObjectTypeList
           tables={nodes}
           onSelectTable={selectNode}
           onDeleteTable={deleteNode}
           selectedTableId={selectedNode}
         />
-        <ReactFlowProvider>
-          <Box
-            sx={{
-              flexGrow: 1,
-              height: "100%",
-              border: "1px solid #333",
-              background: "#1a1a1a",
-            }}
-            ref={reactFlowWrapper}
-          >
+
+        {/* <ReactFlowProvider> */}
+          <Box className="node-graph-container" ref={reactFlowWrapper}>
+            <div className="graph-btn-container">
+              <button className="btn-upload btn-graph"
+                onClick={handleUploadBtn}
+              >
+                Upload SQL
+              </button>
+              <button className="btn-save btn-graph">
+                Save
+              </button>
+            </div>
+            <div className="graph-btn-container generate">
+              <button className="btn-generate btn-graph">
+                Generate
+              </button>
+            </div>
+
             <ReactFlow
+              className="node-graph"
               nodes={nodes}
               edges={edges}
               onNodesChange={onNodesChange}
               onEdgesChange={onEdgesChange}
               nodeTypes={nodeTypes}
               edgeTypes={edgeTypes}
-              fitView
-              style={{ background: "#1a1a1a" }}
+              // fitView
+              // style={{ background: "#1a1a1a" }}
               onNodeClick={(event, node) => selectNode(node.id)}
               onInit={setReactFlowInstance}
             >
-              <Background color="#333" gap={16} />
-              <Controls
+              {/* <Background color="#333" gap={16} /> */}
+              <Background color="#CCC" gap={16} />
+              {/* <Controls
                 style={{ background: "#333", color: "#fff", border: "none" }}
-              />
-              <MiniMap
+              /> */}
+              {/* <MiniMap
                 style={{ background: "#333", maskColor: "#666" }}
                 nodeColor="#666"
-              />
+              /> */}
             </ReactFlow>
           </Box>
-        </ReactFlowProvider>
-      </Box>
-      <Box
+        {/* </ReactFlowProvider> */}
+
+      {/* <Box
         sx={{
           display: "flex",
           justifyContent: "center",
@@ -298,8 +314,8 @@ const SchemaVisualizer = ({ sqlContents }) => {
         <Button variant="contained" onClick={wholeView} disabled={!focusMode}>
           Whole View
         </Button>
-      </Box>
-    </Box>
+      </Box> */}
+    </div>
   );
 };
 

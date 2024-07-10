@@ -38,7 +38,7 @@ export const AuthProvider = ({ children }) => {
             user_id: null,
             loading: false, // Set loading to false when done
           });
-          return navigate('/login');
+          // return navigate('/login');
         } else {
           // successful login 
           const data = response.data;
@@ -66,7 +66,6 @@ export const AuthProvider = ({ children }) => {
           console.log('Error message:', err.message);
         }
         // return navigate('/login');
-        return;  // success
       }
     }
     verifyUser();

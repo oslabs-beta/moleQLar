@@ -27,6 +27,7 @@ function Login() {
   const navigate = useNavigate();
 
   useEffect(() => {
+    console.log('login - isAuth:', isAuth);
     if (isAuth) {
       navigate('/dashboard');
     }
