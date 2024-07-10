@@ -16,6 +16,7 @@ import { schemaGenerator } from '../algorithms/schema_generator';
 import { resolverGenerator } from '../algorithms/resolver_generator';
 import NodeList from './NodeList';
 import './schemavisualizer.scss';
+import GenerateTab from "../GenerateTabs/genTab";
 
 const TableNode = React.memo(({ data, id, selected }) => (
   <div
@@ -140,6 +141,17 @@ const SchemaVisualizer = ({ sqlContents, handleUploadBtn }) => {
   const [focusMode, setFocusMode] = useState(false);
   const reactFlowWrapper = useRef(null);
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
+
+  // tab state variables
+  const [genTabOpen, setGenTabOpen] = useState(false);
+  const handleGenTabOpen = () =>{
+    setGenTabOpen(true)
+  };
+  const handleGenTabClose = () =>{
+    setGenTabOpen(false)
+  };
+
+  
 
   const deleteNode = useCallback(
     (id) => {
@@ -320,9 +332,9 @@ const SchemaVisualizer = ({ sqlContents, handleUploadBtn }) => {
             }}
             ref={reactFlowWrapper}
           >
-            <div className='graph-btn-container'>
-              <button className='btn-generate btn-graph'>Generate</button>
-              <button className='btn-save btn-graph'>Save</button>
+            <div className="graph-btn-container">
+              <button className="btn-generate btn-graph" onClick={handleGenTabOpen}>Generate</button>
+              <button className="btn-save btn-graph">Save</button>
             </div>
 
             <ReactFlow
@@ -361,8 +373,12 @@ const SchemaVisualizer = ({ sqlContents, handleUploadBtn }) => {
         <Button variant="contained" onClick={wholeView} disabled={!focusMode}>
           Whole View
         </Button>
+        <GenerateTab/>
+
       </Box> */}
+      <GenerateTab open={genTabOpen} onClose={handleGenTabClose}/>
     </Box>
+    
   );
 };
 
