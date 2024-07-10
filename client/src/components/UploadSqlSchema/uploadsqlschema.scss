@@ -1,1 +1,70 @@
 @import '../../assets/styles/globalstyles.scss';
+
+@mixin color-opacity($property, $color, $opacity) {
+    $r: red($color);
+    $g: green($color);
+    $b: blue($color);
+    // border-bottom: 2px solid rgba($r, $g, $b, $opacity);
+    #{$property}: rgba($r, $g, $b, $opacity);
+}
+
+.graph-container {
+    position: relative;
+    width: 100%;
+    flex-grow: 1;
+    // @include border-opacity($color-black, 10%);
+    // border-width: 2px;
+    // border-style: solid;
+    // @include color-opacity(border-color, $color-black, 10%);
+}
+
+.overlay {
+    position: absolute;
+    z-index: 10;
+    inset: 0; 
+    // background-color: $color-secondary;
+    @include color-opacity(background-color, $color-secondary, .8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.hidden {
+    inset: initial;
+}
+
+.drop-box-container {
+    width: 600px;
+    height: 500px;
+    border-radius: .4em;
+    padding: 1em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: $color-white;
+    // border: 10px solid green;
+}
+
+.drop-box {
+    cursor: 'pointer';
+    width: 90%;
+    height: 90%;
+    display: flex;
+    align-items: center;
+    opacity: 1;
+    background-color: $color-white;
+    border: 2px dashed #1976d2
+}
+
+.drop-box-input {
+    background-color: red;
+}
+
+.drop-box-text {
+    display: inline-block;
+    width: 100%;
+    height: min-content;
+    text-align: center;
+    color: $color-black;
+    opacity: 1;
+}

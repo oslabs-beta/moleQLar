@@ -13,10 +13,12 @@ import {
   TableHead,
   TableRow,
   Paper,
+  Typography
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
+import './objecttypelist.scss';  // styles
 
 const ObjectTypeList = ({
   tables,
@@ -32,14 +34,11 @@ const ObjectTypeList = ({
   };
 
   return (
-    <Box
-      sx={{
-        width: "300px",
-        height: "100%",
-        overflowY: "auto",
-        borderRight: "1px solid #ddd",
-      }}
-    >
+    <div className='sidebar'>
+      {/* <Typography variant="h2">Nodes</Typography> */}
+      <div className="tools">
+      </div>
+      <h1 className="sidebar-heading">Graph Name</h1>
       <List>
         {tables.map((table) => (
           <React.Fragment key={table.id}>
@@ -105,7 +104,7 @@ const ObjectTypeList = ({
           </React.Fragment>
         ))}
       </List>
-    </Box>
+    </div>
   );
 };
 
