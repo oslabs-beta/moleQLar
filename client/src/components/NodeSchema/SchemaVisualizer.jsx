@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState, useRef } from "react";
+import React, { useCallback, useEffect, useState, useRef } from 'react';
 import ReactFlow, {
   Background,
   Controls,
@@ -9,33 +9,35 @@ import ReactFlow, {
   getBezierPath,
   Handle,
   Position,
-} from "reactflow";
-import { Box, Button } from "@mui/material";
-import { parseSqlSchema } from "../algorithms/schema_parser";
-import NodeList from "./NodeList";
+} from 'reactflow';
+import { Box, Button } from '@mui/material';
+import { parseSqlSchema } from '../algorithms/schema_parser';
+import { schemaGenerator } from '../algorithms/schema_generator';
+import { resolverGenerator } from '../algorithms/resolver_generator';
+import NodeList from './NodeList';
 import './schemavisualizer.scss';
 import GenerateTab from "../GenerateTabs/genTab";
 
 const TableNode = React.memo(({ data, id, selected }) => (
   <div
     style={{
-      padding: "10px",
-      border: `2px solid ${selected ? "#ff00ff" : "#555"}`,
-      borderRadius: "5px",
-      background: "#333",
-      color: "#fff",
-      cursor: "move",
-      userSelect: "none",
-      fontSize: "12px",
-      position: "relative",
+      padding: '10px',
+      border: `2px solid ${selected ? '#ff00ff' : '#555'}`,
+      borderRadius: '5px',
+      background: '#333',
+      color: '#fff',
+      cursor: 'move',
+      userSelect: 'none',
+      fontSize: '12px',
+      position: 'relative',
     }}
   >
     <div
       style={{
-        fontWeight: "bold",
-        borderBottom: "1px solid #555",
-        marginBottom: "5px",
-        color: "#3a8",
+        fontWeight: 'bold',
+        borderBottom: '1px solid #555',
+        marginBottom: '5px',
+        color: '#3a8',
       }}
     >
       {data.label}
@@ -43,36 +45,36 @@ const TableNode = React.memo(({ data, id, selected }) => (
     {data.columns.map((col, index) => (
       <div key={index}>
         <Handle
-          type="source"
+          type='source'
           position={Position.Right}
           id={col.name}
-          style={{ background: "#555" }}
+          style={{ background: '#555' }}
         />
         <Handle
-          type="target"
+          type='target'
           position={Position.Left}
           id={col.name}
-          style={{ background: "#555" }}
+          style={{ background: '#555' }}
         />
-        <span style={{ color: "#6bf" }}>{col.name}</span>
-        <span style={{ color: "#f86" }}>({col.type})</span>
-        {col.required && <span style={{ color: "#fc6" }}> NOT NULL</span>}
+        <span style={{ color: '#6bf' }}>{col.name}</span>
+        <span style={{ color: '#f86' }}>({col.type})</span>
+        {col.required && <span style={{ color: '#fc6' }}> NOT NULL</span>}
       </div>
     ))}
   </div>
 ));
 
 const colorScheme = [
-  "#ff6b6b",
-  "#4ecdc4",
-  "#45aaf2",
-  "#feca57",
-  "#a55eea",
-  "#ff9ff3",
-  "#54a0ff",
-  "#5f27cd",
-  "#48dbfb",
-  "#ff9ff3",
+  '#ff6b6b',
+  '#4ecdc4',
+  '#45aaf2',
+  '#feca57',
+  '#a55eea',
+  '#ff9ff3',
+  '#54a0ff',
+  '#5f27cd',
+  '#48dbfb',
+  '#ff9ff3',
 ];
 
 const CustomEdge = ({
@@ -103,19 +105,19 @@ const CustomEdge = ({
           strokeWidth: 2,
           opacity: data.hidden ? 0.1 : 1,
         }}
-        className="react-flow__edge-path"
+        className='react-flow__edge-path'
         d={edgePath}
       />
       <text>
         <textPath
           href={`#${id}`}
           style={{
-            fontSize: "12px",
+            fontSize: '12px',
             fill: data.color,
             opacity: data.hidden ? 0.1 : 1,
           }}
-          startOffset="50%"
-          textAnchor="middle"
+          startOffset='50%'
+          textAnchor='middle'
         >
           {data.label}
         </textPath>
@@ -232,7 +234,7 @@ const SchemaVisualizer = ({ sqlContents, handleUploadBtn }) => {
 
       const newTableNode = {
         id: nodeId,
-        type: "table",
+        type: 'table',
         position,
         data: {
           label: newNode.name,
@@ -281,7 +283,7 @@ const SchemaVisualizer = ({ sqlContents, handleUploadBtn }) => {
 
       const coloredEdges = newEdges.map((edge, index) => ({
         ...edge,
-        type: "custom",
+        type: 'custom',
         data: {
           color: colorScheme[index % colorScheme.length],
           label: `${edge.sourceHandle} → ${edge.targetHandle}`,
@@ -304,14 +306,14 @@ const SchemaVisualizer = ({ sqlContents, handleUploadBtn }) => {
   return (
     <Box
       sx={{
-        display: "flex",
-        flexDirection: "column",
-        height: "calc(100vh - 200px)",
-        width: "100%",
-        overflow: "hidden",
+        display: 'flex',
+        flexDirection: 'column',
+        height: 'calc(100vh - 200px)',
+        width: '100%',
+        overflow: 'hidden',
       }}
     >
-      <Box sx={{ display: "flex", height: "calc(100% - 60px)" }}>
+      <Box sx={{ display: 'flex', height: 'calc(100% - 60px)' }}>
         <NodeList
           tables={nodes}
           onSelectTable={selectNode}
@@ -324,9 +326,9 @@ const SchemaVisualizer = ({ sqlContents, handleUploadBtn }) => {
           <Box
             sx={{
               flexGrow: 1,
-              height: "100%",
-              border: "1px solid #333",
-              background: "#1a1a1a",
+              height: '100%',
+              border: '1px solid #333',
+              background: '#1a1a1a',
             }}
             ref={reactFlowWrapper}
           >
@@ -334,7 +336,7 @@ const SchemaVisualizer = ({ sqlContents, handleUploadBtn }) => {
               <button className="btn-generate btn-graph" onClick={handleGenTabOpen}>Generate</button>
               <button className="btn-save btn-graph">Save</button>
             </div>
-            
+
             <ReactFlow
               nodes={nodes}
               edges={edges}
@@ -343,17 +345,17 @@ const SchemaVisualizer = ({ sqlContents, handleUploadBtn }) => {
               nodeTypes={nodeTypes}
               edgeTypes={edgeTypes}
               fitView
-              style={{ background: "#1a1a1a" }}
+              style={{ background: '#1a1a1a' }}
               onNodeClick={(event, node) => selectNode(node.id)}
               onInit={setReactFlowInstance}
             >
-              <Background color="#333" gap={16} />
+              <Background color='#333' gap={16} />
               <Controls
-                style={{ background: "#333", color: "#fff", border: "none" }}
+                style={{ background: '#333', color: '#fff', border: 'none' }}
               />
               <MiniMap
-                style={{ background: "#333", maskColor: "#666" }}
-                nodeColor="#666"
+                style={{ background: '#333', maskColor: '#666' }}
+                nodeColor='#666'
               />
             </ReactFlow>
           </Box>
