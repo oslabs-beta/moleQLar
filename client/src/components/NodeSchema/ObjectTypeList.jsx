@@ -107,6 +107,7 @@ const ObjectTypeList = ({
         </List>
       </div>
       <div className="sidebar-bottom">
+        <button className='btn-graph btn-add-node'>Add Node</button>
         <button className='btn-graph btn-clear'>Clear</button>
       </div>
     </div>
