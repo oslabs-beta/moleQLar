@@ -13,22 +13,44 @@ import {
   TableHead,
   TableRow,
   Paper,
+  Button,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
+import NodeDialog from "./AddNodeDialog";
 
-const ObjectTypeList = ({
+const NodeList = ({
   tables,
   onSelectTable,
   onDeleteTable,
+  onAddNode,
+  onEditNode,
   selectedTableId,
 }) => {
   const [openTable, setOpenTable] = useState(null);
+  const [isNodeDialogOpen, setIsNodeDialogOpen] = useState(false);
+  const [editingNode, setEditingNode] = useState(null);
 
   const handleClick = (tableId) => {
     setOpenTable(openTable === tableId ? null : tableId);
     onSelectTable(tableId);
+  };
+
+  const handleAddNode = (newNode) => {
+    onAddNode(newNode);
+  };
+
+  const handleEditNode = (nodeId, updatedNode) => {
+    onEditNode(nodeId, updatedNode);
+    setIsNodeDialogOpen(false);
+    setEditingNode(null);
+  };
+
+  const openEditDialog = (table) => {
+    setEditingNode(table);
+    setIsNodeDialogOpen(true);
   };
 
   return (
@@ -38,27 +60,24 @@ const ObjectTypeList = ({
         height: "100%",
         overflowY: "auto",
         borderRight: "1px solid #ddd",
+        display: "flex",
+        flexDirection: "column",
       }}
     >
-      <List>
+      <List sx={{ flexGrow: 1 }}>
         {tables.map((table) => (
           <React.Fragment key={table.id}>
             <ListItem
-              secondaryAction={
-                <IconButton
-                  edge="end"
-                  aria-label="delete"
-                  onClick={() => onDeleteTable(table.id)}
-                >
-                  <DeleteIcon />
-                </IconButton>
-              }
               sx={{
                 backgroundColor:
                   selectedTableId === table.id ? "#e3f2fd" : "transparent",
                 "&:hover": {
                   backgroundColor: "#f5f5f5",
                 },
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                pr: 1,
               }}
             >
               <ListItemText
@@ -70,9 +89,30 @@ const ObjectTypeList = ({
                     fontWeight:
                       selectedTableId === table.id ? "bold" : "normal",
                   },
+                  flexGrow: 1,
                 }}
               />
-              {openTable === table.id ? <ExpandLess /> : <ExpandMore />}
+              <Box sx={{ display: "flex", alignItems: "center" }}>
+                <IconButton
+                  size="small"
+                  onClick={() => openEditDialog(table)}
+                  sx={{ p: 0.5 }}
+                >
+                  <EditIcon fontSize="small" />
+                </IconButton>
+                <IconButton
+                  size="small"
+                  onClick={() => onDeleteTable(table.id)}
+                  sx={{ p: 0.5 }}
+                >
+                  <DeleteIcon fontSize="small" />
+                </IconButton>
+                {openTable === table.id ? (
+                  <ExpandLess fontSize="small" />
+                ) : (
+                  <ExpandMore fontSize="small" />
+                )}
+              </Box>
             </ListItem>
             <Collapse in={openTable === table.id} timeout="auto" unmountOnExit>
               <Box sx={{ margin: 1 }}>
@@ -105,8 +145,26 @@ const ObjectTypeList = ({
           </React.Fragment>
         ))}
       </List>
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={() => setIsNodeDialogOpen(true)}
+        sx={{ margin: 2 }}
+      >
+        Add New Node
+      </Button>
+      <NodeDialog
+        open={isNodeDialogOpen}
+        onClose={() => {
+          setIsNodeDialogOpen(false);
+          setEditingNode(null);
+        }}
+        onAddNode={handleAddNode}
+        onEditNode={handleEditNode}
+        editingNode={editingNode}
+      />
     </Box>
   );
 };
 
-export default ObjectTypeList;
+export default NodeList;

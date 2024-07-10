@@ -12,7 +12,7 @@ import ReactFlow, {
 } from "reactflow";
 import { Box, Button } from "@mui/material";
 import { parseSqlSchema } from "../algorithms/schema_parser";
-import ObjectTypeList from "./ObjectTypeList";
+import NodeList from "./NodeList";
 
 const TableNode = React.memo(({ data, id, selected }) => (
   <div
@@ -207,6 +207,59 @@ const SchemaVisualizer = ({ sqlContents }) => {
     }
   }, [setNodes, setEdges, reactFlowInstance]);
 
+  const addNode = useCallback(
+    (newNode) => {
+      const nodeId = `table-${nodes.length + 1}`;
+      const position = { x: 0, y: 0 };
+      if (reactFlowInstance) {
+        const { x, y } = reactFlowInstance.project({ x: 100, y: 100 });
+        position.x = x;
+        position.y = y;
+      }
+
+      const newTableNode = {
+        id: nodeId,
+        type: "table",
+        position,
+        data: {
+          label: newNode.name,
+          columns: newNode.fields.map((field) => ({
+            name: field.name,
+            type: field.type,
+            required: field.required,
+          })),
+        },
+      };
+
+      setNodes((nds) => [...nds, newTableNode]);
+    },
+    [nodes, reactFlowInstance, setNodes]
+  );
+
+  const editNode = useCallback(
+    (nodeId, updatedNode) => {
+      setNodes((nds) =>
+        nds.map((node) =>
+          node.id === nodeId
+            ? {
+                ...node,
+                data: {
+                  ...node.data,
+                  label: updatedNode.name,
+                  columns: updatedNode.fields.map((field) => ({
+                    name: field.name,
+                    type: field.type,
+                    required: field.required,
+                  })),
+                },
+              }
+            : node
+        )
+      );
+    },
+    [setNodes]
+  );
+
   useEffect(() => {
     if (sqlContents.length > 0) {
       const { nodes: newNodes, edges: newEdges } = parseSqlSchema(
@@ -246,10 +299,12 @@ const SchemaVisualizer = ({ sqlContents }) => {
       }}
     >
       <Box sx={{ display: "flex", height: "calc(100% - 60px)" }}>
-        <ObjectTypeList
+        <NodeList
           tables={nodes}
           onSelectTable={selectNode}
           onDeleteTable={deleteNode}
+          onAddNode={addNode}
+          onEditNode={editNode}
           selectedTableId={selectedNode}
         />
         <ReactFlowProvider>
