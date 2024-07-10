@@ -1,5 +1,7 @@
 import * as React from 'react';
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Tabs, Tab } from '@mui/material';
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Tabs, Tab, ButtonGroup } from '@mui/material';
+import '../NodeSchema/schemavisualizer.scss'
+
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -49,33 +51,36 @@ function BasicTabs() {
   );
 }
 
-export default function GenerateTab() {
-  const [open, setOpen] = React.useState(false);
+const GenerateTab = ({open,onClose}) => {
+  // const [open, setOpen] = React.useState(false);
 
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
+  // const handleClickOpen = () => {
+  //   setOpen(true);
+  // };
 
-  const handleClose = () => {
-    setOpen(false);
-  };
+  // const handleClose = () => {
+  //   setOpen(false);
+  // };
 
   return (
     <div>
-      <Button variant="contained" onClick={handleClickOpen}>
-        Generate
-      </Button>
-      <Dialog open={open} onClose={handleClose} maxWidth="md" fullWidth>
+    {/* <Button onClick={handleClickOpen}>
+      Generate
+    </Button> */}
+      <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
         <DialogTitle>Tabs</DialogTitle>
         <DialogContent>
           <BasicTabs />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} color="primary">
+          <Button onClick={onClose} color="primary">
             Close
           </Button>
         </DialogActions>
       </Dialog>
+    
     </div>
   );
 }
+
+export default GenerateTab;

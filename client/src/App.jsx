@@ -12,7 +12,6 @@ import Graph from './components/Graph/Graph.jsx';
 
 // A wrapper for <Route> that redirects to the login page if the user is not authenticated.
 const PrivateRoutes = () => {
-    // const { isAuth, loading } = useAuth();
     const { isAuth, loading } = useAuth();
     if (loading) {
         // Can return a loading spinner component or any loading UI here

@@ -12,7 +12,8 @@ import ReactFlow, {
 } from "reactflow";
 import { Box, Button } from "@mui/material";
 import { parseSqlSchema } from "../algorithms/schema_parser";
-import ObjectTypeList from "./ObjectTypeList";
+import NodeList from "./NodeList";
+import './schemavisualizer.scss';
 import GenerateTab from "../GenerateTabs/genTab";
 
 const TableNode = React.memo(({ data, id, selected }) => (
@@ -131,13 +132,23 @@ const edgeTypes = {
   custom: CustomEdge,
 };
 
-const SchemaVisualizer = ({ sqlContents }) => {
+const SchemaVisualizer = ({ sqlContents, handleUploadBtn }) => {
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const [selectedNode, setSelectedNode] = useState(null);
   const [focusMode, setFocusMode] = useState(false);
   const reactFlowWrapper = useRef(null);
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
+
+  // tab state variables
+  const [genTabOpen, setGenTabOpen] = useState(false);
+  const handleGenTabOpen = () =>{
+    setGenTabOpen(true)
+  };
+  const handleGenTabClose = () =>{
+    setGenTabOpen(false)
+  };
+
   
 
   const deleteNode = useCallback(
@@ -186,28 +197,81 @@ const SchemaVisualizer = ({ sqlContents }) => {
     [setNodes, setEdges, nodes, reactFlowInstance]
   );
 
-  const wholeView = useCallback(() => {
-    setFocusMode(false);
-    setSelectedNode(null);
-    setNodes((nds) =>
-      nds.map((node) => ({
-        ...node,
-        selected: false,
-      }))
-    );
-    setEdges((eds) =>
-      eds.map((edge) => ({
-        ...edge,
+  // const wholeView = useCallback(() => {
+  //   setFocusMode(false);
+  //   setSelectedNode(null);
+  //   setNodes((nds) =>
+  //     nds.map((node) => ({
+  //       ...node,
+  //       selected: false,
+  //     }))
+  //   );
+  //   setEdges((eds) =>
+  //     eds.map((edge) => ({
+  //       ...edge,
+  //       data: {
+  //         ...edge.data,
+  //         hidden: false,
+  //       },
+  //     }))
+  //   );
+  //   if (reactFlowInstance) {
+  //     reactFlowInstance.fitView({ padding: 0.2, includeHiddenNodes: true });
+  //   }
+  // }, [setNodes, setEdges, reactFlowInstance]);
+
+  const addNode = useCallback(
+    (newNode) => {
+      const nodeId = `table-${nodes.length + 1}`;
+      const position = { x: 0, y: 0 };
+      if (reactFlowInstance) {
+        const { x, y } = reactFlowInstance.project({ x: 100, y: 100 });
+        position.x = x;
+        position.y = y;
+      }
+
+      const newTableNode = {
+        id: nodeId,
+        type: "table",
+        position,
         data: {
-          ...edge.data,
-          hidden: false,
+          label: newNode.name,
+          columns: newNode.fields.map((field) => ({
+            name: field.name,
+            type: field.type,
+            required: field.required,
+          })),
         },
-      }))
-    );
-    if (reactFlowInstance) {
-      reactFlowInstance.fitView({ padding: 0.2, includeHiddenNodes: true });
-    }
-  }, [setNodes, setEdges, reactFlowInstance]);
+      };
+
+      setNodes((nds) => [...nds, newTableNode]);
+    },
+    [nodes, reactFlowInstance, setNodes]
+  );
+
+  const editNode = useCallback(
+    (nodeId, updatedNode) => {
+      setNodes((nds) =>
+        nds.map((node) =>
+          node.id === nodeId
+            ? {
+                ...node,
+                data: {
+                  ...node.data,
+                  label: updatedNode.name,
+                  columns: updatedNode.fields.map((field) => ({
+                    name: field.name,
+                    type: field.type,
+                    required: field.required,
+                  })),
+                },
+              }
+            : node
+        )
+      );
+    },
+    [setNodes]
+  );
 
   useEffect(() => {
     if (sqlContents.length > 0) {
@@ -248,10 +312,12 @@ const SchemaVisualizer = ({ sqlContents }) => {
       }}
     >
       <Box sx={{ display: "flex", height: "calc(100% - 60px)" }}>
-        <ObjectTypeList
+        <NodeList
           tables={nodes}
           onSelectTable={selectNode}
           onDeleteTable={deleteNode}
+          onAddNode={addNode}
+          onEditNode={editNode}
           selectedTableId={selectedNode}
         />
         <ReactFlowProvider>
@@ -264,6 +330,11 @@ const SchemaVisualizer = ({ sqlContents }) => {
             }}
             ref={reactFlowWrapper}
           >
+            <div className="graph-btn-container">
+              <button className="btn-generate btn-graph" onClick={handleGenTabOpen}>Generate</button>
+              <button className="btn-save btn-graph">Save</button>
+            </div>
+            
             <ReactFlow
               nodes={nodes}
               edges={edges}
@@ -288,7 +359,7 @@ const SchemaVisualizer = ({ sqlContents }) => {
           </Box>
         </ReactFlowProvider>
       </Box>
-      <Box
+      {/* <Box
         sx={{
           display: "flex",
           justifyContent: "center",
@@ -301,13 +372,12 @@ const SchemaVisualizer = ({ sqlContents }) => {
           Whole View
         </Button>
         <GenerateTab/>
-      </Box>
+
+      </Box> */}
+      <GenerateTab open={genTabOpen} onClose={handleGenTabClose}/>
     </Box>
+    
   );
 };
 
 export default SchemaVisualizer;
-
-
-
-

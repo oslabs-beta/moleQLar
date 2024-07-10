@@ -26,6 +26,7 @@ userController.createUser = async (req, res, next) => {
   const hashWord = res.locals.hashWord;
 
   // TODO - check that username doesn't already exist
+  // TODO - create unique user id for the new user
 
   // insert credentials into database
   const params = [username, hashWord, email];
