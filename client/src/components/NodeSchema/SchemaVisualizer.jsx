@@ -13,6 +13,7 @@ import ReactFlow, {
 import { Box, Button } from "@mui/material";
 import { parseSqlSchema } from "../algorithms/schema_parser";
 import NodeList from "./NodeList";
+import './schemavisualizer.scss';
 
 const TableNode = React.memo(({ data, id, selected }) => (
   <div
@@ -130,7 +131,7 @@ const edgeTypes = {
   custom: CustomEdge,
 };
 
-const SchemaVisualizer = ({ sqlContents }) => {
+const SchemaVisualizer = ({ sqlContents, handleUploadBtn }) => {
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const [selectedNode, setSelectedNode] = useState(null);
@@ -184,28 +185,28 @@ const SchemaVisualizer = ({ sqlContents }) => {
     [setNodes, setEdges, nodes, reactFlowInstance]
   );
 
-  const wholeView = useCallback(() => {
-    setFocusMode(false);
-    setSelectedNode(null);
-    setNodes((nds) =>
-      nds.map((node) => ({
-        ...node,
-        selected: false,
-      }))
-    );
-    setEdges((eds) =>
-      eds.map((edge) => ({
-        ...edge,
-        data: {
-          ...edge.data,
-          hidden: false,
-        },
-      }))
-    );
-    if (reactFlowInstance) {
-      reactFlowInstance.fitView({ padding: 0.2, includeHiddenNodes: true });
-    }
-  }, [setNodes, setEdges, reactFlowInstance]);
+  // const wholeView = useCallback(() => {
+  //   setFocusMode(false);
+  //   setSelectedNode(null);
+  //   setNodes((nds) =>
+  //     nds.map((node) => ({
+  //       ...node,
+  //       selected: false,
+  //     }))
+  //   );
+  //   setEdges((eds) =>
+  //     eds.map((edge) => ({
+  //       ...edge,
+  //       data: {
+  //         ...edge.data,
+  //         hidden: false,
+  //       },
+  //     }))
+  //   );
+  //   if (reactFlowInstance) {
+  //     reactFlowInstance.fitView({ padding: 0.2, includeHiddenNodes: true });
+  //   }
+  // }, [setNodes, setEdges, reactFlowInstance]);
 
   const addNode = useCallback(
     (newNode) => {
@@ -317,6 +318,16 @@ const SchemaVisualizer = ({ sqlContents }) => {
             }}
             ref={reactFlowWrapper}
           >
+            <div className="graph-btn-container">
+              <button className="btn-generate btn-graph"
+              >
+                Generate
+              </button>
+              <button className="btn-save btn-graph">
+                Save
+              </button>
+            </div>
+            
             <ReactFlow
               nodes={nodes}
               edges={edges}
@@ -341,7 +352,7 @@ const SchemaVisualizer = ({ sqlContents }) => {
           </Box>
         </ReactFlowProvider>
       </Box>
-      <Box
+      {/* <Box
         sx={{
           display: "flex",
           justifyContent: "center",
@@ -353,7 +364,7 @@ const SchemaVisualizer = ({ sqlContents }) => {
         <Button variant="contained" onClick={wholeView} disabled={!focusMode}>
           Whole View
         </Button>
-      </Box>
+      </Box> */}
     </Box>
   );
 };

@@ -148,7 +148,7 @@ const NodeDialog = ({
               </Select>
             </FormControl>
           </Grid>
-          <Grid item xs={12} sm={3}>
+          <Grid item xs={12} sm={2}>
             <FormControlLabel
               control={
                 <Checkbox
@@ -161,7 +161,7 @@ const NodeDialog = ({
               label="NOT NULL"
             />
           </Grid>
-          <Grid item xs={12} sm={1}>
+          <Grid item xs={12} sm={2}>
             <Button
               variant="contained"
               color="primary"

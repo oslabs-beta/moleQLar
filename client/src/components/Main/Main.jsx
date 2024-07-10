@@ -16,8 +16,8 @@ const Main = () => {
               <h1>Implementation<br /> in seconds</h1>
               <p>Automatically generate a GraphQL layer over your PostgreSQL database</p>
               <div className="main-btns-container">
-                <button className="btn btn-login" onClick={() => navigate("/login")}>Log In</button>
-                <button className="btn btn-signup" onClick={() => navigate("/signup")}>Sign Up</button>
+                <button className="btn-login btn-home" onClick={() => navigate("/login")}>Log In</button>
+                <button className="btn-signup btn-home" onClick={() => navigate("/signup")}>Sign Up</button>
               </div>
             </div>
             <div className="hero-img-container">

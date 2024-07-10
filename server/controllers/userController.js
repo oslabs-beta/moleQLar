@@ -1,7 +1,9 @@
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const saltRounds = 10;
 const db = require('../models/userModels');
 
+const jwt = require('jsonwebtoken');
+const JWT_SECRET = 'moleQLar';
 const userController = {};
 
 userController.hashing = async (req, res, next) => {
@@ -13,7 +15,7 @@ userController.hashing = async (req, res, next) => {
     return next();
   } catch (err) {
     return next({
-      log: 'Error in userController.hasing',
+      log: 'Error in userController.hashing',
       message: { err: 'Error hashing password' },
     });
   }
@@ -23,68 +25,113 @@ userController.createUser = async (req, res, next) => {
   const { username, email } = req.body;
   const hashWord = res.locals.hashWord;
 
+  // TODO - check that username doesn't already exist
+  // TODO - create unique user id for the new user
+
+  // insert credentials into database
   const params = [username, hashWord, email];
   const query = `INSERT INTO users(username, password, email) VALUES ($1, $2, $3) RETURNING *`;
-
   db.query(query, params)
     .then((createdUser) => {
-      res.locals.createdUser = createdUser.rows[0];
+      res.locals.user = {
+        ...createdUser.rows[0],
+      }
       return next();
     })
     .catch((err) => {
+      console.log(err);
       return next({
         log: 'Error in userController.createUser',
+        status: 500,
         message: { err: 'Error creating user'},
       });
     });
 };
 
-userController.verifyUser = async (req, res, next) => {
+userController.loginUser = async (req, res, next) => {
   const { username, password } = req.body;
-
   const loginQuery = `SELECT * FROM users WHERE username = '${username}'`;
-
-  if (!username) {
+  console.log('username:', username);
+  console.log('password:', password);
+  // error checking
+  if (!username || !password) {
     return next({
-      log: 'Error in userController.verifyUser, username is required',
-      messgae: 'username is required',
+      log: 'Error in userController.loginUser, username and password are required',
+      messgae: 'username and password are required',
       status: 400
     });
   }
-
+  // vaidate credentials
   try {
-    const result = await db.query(loginQuery);
-    //console.log(storedPass, ' this is storedPass');
-    // const dbPass = storedPass.rows[0].password;
-    //console.log(dbPass, ' this is dbPass');
-    const dbPassword = result.rows[0].password;
-
+    const result = await db.query(loginQuery);  // query db for user
+    const dbPassword = result.rows[0].password;  // save password
+    // validate password
     const isMatch = await bcrypt.compare(password, dbPassword);
-    //console.log(queryResult + ' this is queryResult');
-    //console.log(storedPass + 'this is storedpass');
-    // if (queryResult) {
-    // res.locals.loginPassword = dbPass;
-    // res.locals.userName = username
-    // }
-    // console.log('result!!!', result)
-    if (isMatch) {
-      res.locals.user = {
-        success: true,
-        message: "login successfully",
-        data: {
-          userId: result.rows[0].id,
-          username: result.rows[0].username,
-        },
-      };
-      return next();
+    if (!isMatch) {
+      // invalid credentials
+      return res.status(401).json({ message: 'Invalid username or password' });
     }
+    // send back user info the client
+    res.locals.user = {
+      username: username,
+      user_id: result.rows[0].user_id,
+    }
+    return next();
   } catch (err) {
+    console.log(err);
     return next({
-      log: `Error in userController.verifyUser, ${err}`,
+      log: `Error in userController.loginUser, ${err}`,
       message: { err: "Error occurred in post request to /login" },
       status: 500,
     });
   }
 };
+
+userController.signJWT = (req, res, next) => {
+  console.log('userController.signJWT - signing JWT');
+  // generate JWT
+  // state
+  const state = { 
+    ...res.locals.user,
+  }
+  // sign token
+  const token = jwt.sign(state, JWT_SECRET, { expiresIn: '1h' });
+  // add token to response header
+  res.setHeader('authorization', `Bearer ${token}`);
+  return next();
+} 
+
+userController.validateJWT = async (req, res, next) => {
+  console.log('userController.validateJWT');
+  // check that JWT exists in client's local storage
+  const token = req.headers['authorization'].replace('Bearer ', '');
+  if (token === 'null' && !JSON.parse(token)) {
+    console.log('No token found');
+    // denied - no token
+    res.locals.user = null;
+    return res.status(401).json({ message: 'No token, authorization denied' });
+  }
+  // check that token is valid
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET);
+    // success
+    // send username back to the client
+    res.locals.user = {
+      username: decoded.username,
+      user_id: decoded.user_id,
+    }
+    return next();
+  } catch (err) {
+    console.log('userController - err.name:', err.name)
+    // Handle specific JWT errors
+    if (err.name === 'TokenExpiredError') {
+      return res.status(401).json({ message: 'Token expired, authorization denied' });
+    } else if (err.name === 'JsonWebTokenError') {
+      return res.status(401).json({ message: 'Invalid token, authorization denied' });
+    } else {
+      return res.status(500).json({ message: 'Internal server error' });
+    }
+  }
+}
 
 module.exports = userController;

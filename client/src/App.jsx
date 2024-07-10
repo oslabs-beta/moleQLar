@@ -1,23 +1,29 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
-import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom';
+import { BrowserRouter, Route, Routes, Outlet, Navigate } from 'react-router-dom';
+import { AuthProvider, useAuth } from "./contexts/AuthContext.js";
 
-// import ProvideAuth from "./components/ProvideAuth/ProvideAuth";
-import MainPage from "./components/Main/Main.jsx";
+import Main from "./components/Main/Main.jsx";
 import Signup from "./components/Signup/Signup.jsx";
 import Login from "./components/Login/Login.jsx";
 import Team from './components/Team/Team.jsx';
 import About from './components/About/About.jsx';
-// import UploadSqlSchema from "./components/UploadSqlSchema/UploadSqlSchema.jsx";
 import Dashboard from './components/Dashboard/Dashboard.jsx';
-import { AuthProvider, useAuth } from "./contexts/AuthContext.js";
-
-// import './assets/styles/globalStyles.scss';
+import Graph from './components/Graph/Graph.jsx';
 
 // A wrapper for <Route> that redirects to the login page if the user is not authenticated.
-const PrivateRoutes = ({ children }) => {
-    let auth = useAuth();
-    console.log('CHECKING PRIVATE ROUTE:', auth);
-    return auth.user ? children : <Navigate to="/login" />;
+const PrivateRoutes = () => {
+    const { isAuth, loading } = useAuth();
+    if (loading) {
+        // Can return a loading spinner component or any loading UI here
+        console.log('Loading...');
+        return <div>Loading...</div>;
+    }
+    console.log('PrivateRoutes - isAuth:', isAuth);
+    if (!isAuth) {
+        return <Navigate to="/login" />;
+    }
+    // if logged in
+    return <Outlet />;
 };
 
 const App = () =>{
@@ -25,18 +31,17 @@ const App = () =>{
         <BrowserRouter>
             <AuthProvider>
                 <Routes>
-                    <Route path="/" element={<MainPage />} />
-                    <Route path="/team" element={<Team />} />   
+                    <Route path="/" element={<Main />} />
+                    <Route path="/team" element={<Team />} />
                     <Route path="/signup" element={<Signup />} />
                     <Route path="/login" element={<Login />} />
                     <Route path="/about" element={<About />} />
-                    <Route path="/dashboard" element={<Dashboard />} />
                     {/* private routes */}
-                    {/* <Route element={<PrivateRoutes />}> */}
-                        {/* <Route> */}
-                            {/* <Route path="/dashboard" element={<UploadSqlSchema />} /> */}
-                        {/* </Route> */}
-                    {/* </Route> */}
+                    <Route element={<PrivateRoutes />}>
+                        <Route path="/graph" element={<Graph />} />
+                        <Route path="/dashboard" element={<Dashboard />} />
+                        {/* Add more private routes here */}
+                    </Route>
                 </Routes>
             </AuthProvider>
         </BrowserRouter>

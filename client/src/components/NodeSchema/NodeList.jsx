@@ -84,10 +84,10 @@ const NodeList = ({
                 primary={table.data.label}
                 onClick={() => handleClick(table.id)}
                 sx={{
-                  cursor: "pointer",
-                  "& .MuiTypography-root": {
-                    fontWeight:
-                      selectedTableId === table.id ? "bold" : "normal",
+                  backgroundColor:
+                    selectedTableId === table.id ? "#e3f2fd" : "transparent",
+                  "&:hover": {
+                    backgroundColor: "#f5f5f5",
                   },
                   flexGrow: 1,
                 }}
