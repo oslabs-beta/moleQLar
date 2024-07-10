@@ -3,16 +3,16 @@
 .team-section {
   width: 100%;
   text-align: center;
-  padding: 50px 20px;
+  padding: 3.125rem 1.25rem;
   display: flex;
   flex-direction: column;
-  flex-grow: 1;
+  // flex-grow: 1;
   align-items: center;
 }
 
 .team-section h2 {
-  font-size: 3rem;
-  margin-bottom: 4rem;
+  font-size: 2rem;
+  margin-bottom: 2rem;
 }
 
 .team-grid {
@@ -22,48 +22,49 @@
   // justify-items: center;
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-around;
+  justify-content: center;
   width: 100%;
-  max-width: 900px;
+  max-width: 75rem;
   // border: 2px solid red;
 }
 
 .team-member {
   text-align: center;
-  min-width: 300px;
-  height: 400px;
+  width: 33.33%;
+  box-sizing: border-box;
+  padding: 0.625rem;
 }
 
 .profile-img {
-  width: 150px;
-  height: 150px;
+  width: 7.5rem;
+  height: 7.5rem;
   border-radius: 50%;
   object-fit: cover;
 }
 
 .team-member h3 {
-  font-size: 18px;
-  margin: 10px 0 5px;
+  font-size: 1rem;
+  margin: 0.625rem 0 0.3125rem;
 }
 
 .team-member p {
-  font-size: 14px;
+  font-size: 0.8rem;
   color: gray;
 }
 
 .social-links {
   display: flex;
   justify-content: center;
-  margin-top: 10px;
+  margin-top: 0.625rem;
 }
 
 .social-links a {
-  margin: 0 5px;
+  margin: 0 0.3125rem;
 }
 
 .social-logo {
-  width: 1.8rem;
-  height: 1.8rem;
+  width: 1.5rem;
+  height: 1.5rem;
   transition: transform 100ms ease;
 
   &:hover {
