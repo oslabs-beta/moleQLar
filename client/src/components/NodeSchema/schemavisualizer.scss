@@ -40,6 +40,7 @@
     font-size: 1.2rem;
     color: $color-white;
     transition: transform 100ms ease-in;
+    margin-top: 11rem;
 
     &:hover {
       transform: translateY(-1px);
@@ -52,11 +53,6 @@
     margin-left: 1rem;
 }
 
-.btn-upload {
-    background-color: $color-white;
-    color: $color-primary;
-}
-
 .generate {
     width: min-content;
     height: min-content;
@@ -66,10 +62,12 @@
 
 .btn-generate {
     background-color: $color-primary;
-    border: $color-white solid .2em;
-    font-size: 1.4rem;
-    width: 14rem;
-    height: 4rem;
+    margin-left: 1rem;
+    // background-color: $color-primary;
+    // border: $color-white solid .2em;
+    // font-size: 1.4rem;
+    // width: 14rem;
+    // height: 4rem;
 }
 
 // buttons end

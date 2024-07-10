@@ -2,13 +2,9 @@ import React, { useState, useCallback } from 'react';
 import { Box, Typography, Paper } from '@mui/material';
 import { useDropzone } from 'react-dropzone';
 import SchemaVisualizer from '../NodeSchema/SchemaVisualizer';
-import { red } from '@mui/material/colors';
-
-import './uploadsqlschema.scss' // styles
 
 const UploadSqlSchema = () => {
   const [sqlContents, setSqlContents] = useState([]);
-  const [overlayVisible, setOverlayVisible] = useState(false);
 
   // onDrop is called when a file is dropped
   const onDrop = useCallback((acceptedFiles) => {
@@ -19,8 +15,6 @@ const UploadSqlSchema = () => {
       };
       reader.readAsText(file);
     });
-    // hide overlay
-    setOverlayVisible(false);
   }, []);
 
   // useDropzone is to set up the drag and drop functionality
@@ -33,40 +27,37 @@ const UploadSqlSchema = () => {
     multiple: true,
   });
 
-  // upload SQL button functionality
-  const handleUploadBtn = (e) => {
-    e.preventDefault();
-    // toggle state
-    setOverlayVisible(true);
-  }
-
-  const handleOverlayClick =() => {
-    // toggle state
-    setOverlayVisible(false);
-  }
-
   return (
-    <div className='graph-container'>
-      
-      <SchemaVisualizer handleUploadBtn={handleUploadBtn} handleOverlayClick={handleOverlayClick} sqlContents={sqlContents} />
-      
-      <div className={`overlay ${overlayVisible ? '' : 'hidden'}`}
-        onClick={handleOverlayClick}
+    <Box sx={{ width: '100%', height: '100%', p: 3 }}>
+      <Paper
+        {...getRootProps()}
+        sx={{
+          p: 3,
+          textAlign: 'center',
+          cursor: 'pointer',
+          backgroundColor: isDragActive ? '#e3f2fd' : 'white',
+          border: '2px dashed #1976d2',
+          '&:hover': {
+            backgroundColor: '#e3f2fd',
+          },
+        }}
       >
-        <div className="drop-box-container">
-          <div
-            {...getRootProps()}
-            className={isDragActive ? 'drop-box drag-active' : 'drop-box drag-inactive'}
-          >
-            <input className="drop-box-input" {...getInputProps()} />
-            <p className='drop-box-text'>
-              {isDragActive ? 'Drop SQL files here' : '+ Click or drag to add SQL files'}
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
-  )
+        <input {...getInputProps()} />
+        <Typography>
+          {isDragActive
+            ? 'Drop SQL files here'
+            : '+ Click or drag to add SQL files'}
+        </Typography>
+      </Paper>
+      {/* {sqlContents.length} */}
+      {sqlContents.length > 0 && (
+        <Box mt={3}>
+          {/* <Typography variant="h6">Schema Visualization:</Typography> */}
+          <SchemaVisualizer sqlContents={sqlContents} />
+        </Box>
+      )}
+    </Box>
+  );
 };
 
 export default UploadSqlSchema;

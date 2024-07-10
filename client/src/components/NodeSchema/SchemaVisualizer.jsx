@@ -12,8 +12,8 @@ import ReactFlow, {
 } from "reactflow";
 import { Box, Button } from "@mui/material";
 import { parseSqlSchema } from "../algorithms/schema_parser";
-import ObjectTypeList from "./ObjectTypeList";
-import './schemavisualizer.scss' // styles
+import NodeList from "./NodeList";
+import './schemavisualizer.scss';
 
 const TableNode = React.memo(({ data, id, selected }) => (
   <div
@@ -131,7 +131,7 @@ const edgeTypes = {
   custom: CustomEdge,
 };
 
-const SchemaVisualizer = ({ handleUploadBtn, sqlContents }) => {
+const SchemaVisualizer = ({ sqlContents, handleUploadBtn }) => {
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const [selectedNode, setSelectedNode] = useState(null);
@@ -185,28 +185,81 @@ const SchemaVisualizer = ({ handleUploadBtn, sqlContents }) => {
     [setNodes, setEdges, nodes, reactFlowInstance]
   );
 
-  const wholeView = useCallback(() => {
-    setFocusMode(false);
-    setSelectedNode(null);
-    setNodes((nds) =>
-      nds.map((node) => ({
-        ...node,
-        selected: false,
-      }))
-    );
-    setEdges((eds) =>
-      eds.map((edge) => ({
-        ...edge,
+  // const wholeView = useCallback(() => {
+  //   setFocusMode(false);
+  //   setSelectedNode(null);
+  //   setNodes((nds) =>
+  //     nds.map((node) => ({
+  //       ...node,
+  //       selected: false,
+  //     }))
+  //   );
+  //   setEdges((eds) =>
+  //     eds.map((edge) => ({
+  //       ...edge,
+  //       data: {
+  //         ...edge.data,
+  //         hidden: false,
+  //       },
+  //     }))
+  //   );
+  //   if (reactFlowInstance) {
+  //     reactFlowInstance.fitView({ padding: 0.2, includeHiddenNodes: true });
+  //   }
+  // }, [setNodes, setEdges, reactFlowInstance]);
+
+  const addNode = useCallback(
+    (newNode) => {
+      const nodeId = `table-${nodes.length + 1}`;
+      const position = { x: 0, y: 0 };
+      if (reactFlowInstance) {
+        const { x, y } = reactFlowInstance.project({ x: 100, y: 100 });
+        position.x = x;
+        position.y = y;
+      }
+
+      const newTableNode = {
+        id: nodeId,
+        type: "table",
+        position,
         data: {
-          ...edge.data,
-          hidden: false,
+          label: newNode.name,
+          columns: newNode.fields.map((field) => ({
+            name: field.name,
+            type: field.type,
+            required: field.required,
+          })),
         },
-      }))
-    );
-    if (reactFlowInstance) {
-      reactFlowInstance.fitView({ padding: 0.2, includeHiddenNodes: true });
-    }
-  }, [setNodes, setEdges, reactFlowInstance]);
+      };
+
+      setNodes((nds) => [...nds, newTableNode]);
+    },
+    [nodes, reactFlowInstance, setNodes]
+  );
+
+  const editNode = useCallback(
+    (nodeId, updatedNode) => {
+      setNodes((nds) =>
+        nds.map((node) =>
+          node.id === nodeId
+            ? {
+                ...node,
+                data: {
+                  ...node.data,
+                  label: updatedNode.name,
+                  columns: updatedNode.fields.map((field) => ({
+                    name: field.name,
+                    type: field.type,
+                    required: field.required,
+                  })),
+                },
+              }
+            : node
+        )
+      );
+    },
+    [setNodes]
+  );
 
   useEffect(() => {
     if (sqlContents.length > 0) {
@@ -237,71 +290,68 @@ const SchemaVisualizer = ({ handleUploadBtn, sqlContents }) => {
   }, [sqlContents, setNodes, setEdges, reactFlowInstance]);
 
   return (
-    <div
-      className='schema-visualizer'
-      // sx={{
-      //   display: "flex",
-      //   flexDirection: "row",
-      //   // height: "calc(100vh - 200px)",
-      //   justifyContent: 'space-between',
-      //   height: '100%',
-      //   width: "100%",
-      //   overflow: "hidden",
-      //   borderRadius: '0.4em',
-      //   border: '2px magenta solid',
-      // }}
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        height: "calc(100vh - 200px)",
+        width: "100%",
+        overflow: "hidden",
+      }}
     >
-      <ObjectTypeList
+      <Box sx={{ display: "flex", height: "calc(100% - 60px)" }}>
+        <NodeList
           tables={nodes}
           onSelectTable={selectNode}
           onDeleteTable={deleteNode}
+          onAddNode={addNode}
+          onEditNode={editNode}
           selectedTableId={selectedNode}
         />
-
-        {/* <ReactFlowProvider> */}
-          <Box className="node-graph-container" ref={reactFlowWrapper}>
+        <ReactFlowProvider>
+          <Box
+            sx={{
+              flexGrow: 1,
+              height: "100%",
+              border: "1px solid #333",
+              background: "#1a1a1a",
+            }}
+            ref={reactFlowWrapper}
+          >
             <div className="graph-btn-container">
-              <button className="btn-upload btn-graph"
-                onClick={handleUploadBtn}
+              <button className="btn-generate btn-graph"
               >
-                Upload SQL
+                Generate
               </button>
               <button className="btn-save btn-graph">
                 Save
               </button>
             </div>
-            <div className="graph-btn-container generate">
-              <button className="btn-generate btn-graph">
-                Generate
-              </button>
-            </div>
-
+            
             <ReactFlow
-              className="node-graph"
               nodes={nodes}
               edges={edges}
               onNodesChange={onNodesChange}
               onEdgesChange={onEdgesChange}
               nodeTypes={nodeTypes}
               edgeTypes={edgeTypes}
-              // fitView
-              // style={{ background: "#1a1a1a" }}
+              fitView
+              style={{ background: "#1a1a1a" }}
               onNodeClick={(event, node) => selectNode(node.id)}
               onInit={setReactFlowInstance}
             >
-              {/* <Background color="#333" gap={16} /> */}
-              <Background color="#CCC" gap={16} />
-              {/* <Controls
+              <Background color="#333" gap={16} />
+              <Controls
                 style={{ background: "#333", color: "#fff", border: "none" }}
-              /> */}
-              {/* <MiniMap
+              />
+              <MiniMap
                 style={{ background: "#333", maskColor: "#666" }}
                 nodeColor="#666"
-              /> */}
+              />
             </ReactFlow>
           </Box>
-        {/* </ReactFlowProvider> */}
-
+        </ReactFlowProvider>
+      </Box>
       {/* <Box
         sx={{
           display: "flex",
@@ -315,7 +365,7 @@ const SchemaVisualizer = ({ handleUploadBtn, sqlContents }) => {
           Whole View
         </Button>
       </Box> */}
-    </div>
+    </Box>
   );
 };
 
