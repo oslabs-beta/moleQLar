@@ -27,6 +27,7 @@ function Login() {
   const navigate = useNavigate();
 
   useEffect(() => {
+    console.log('login - isAuth:', isAuth);
     if (isAuth) {
       navigate('/dashboard');
     }
@@ -91,7 +92,7 @@ function Login() {
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
-              Login
+              Login!
             </Button>
             <Grid container>
               <Grid item>

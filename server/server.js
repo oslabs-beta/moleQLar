@@ -10,7 +10,9 @@ const cors = require("cors");
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-app.use(cors());
+// app.use(cors());
+const path = require('path');
+
 
 // Creates a new Sequalize Instance w/ Parameters
 // const sequelize = new Sequelize('database', 'username', 'password', {
@@ -26,6 +28,8 @@ app.use(cors());
 
 // app.use('/auth', authRoutes);
 
+app.use(express.static(path.join(__dirname, 'build')));
+
 // app.get("/testdb", async (req, res) => {
 //   const result = await db.query("SELECT * FROM users LIMIT 1");
 //   console.log("result", result);
@@ -36,6 +40,10 @@ app.use(cors());
 const authRouter = require('./routes/authRouter');
 app.use('/api/auth', authRouter);
 
+
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, 'build', 'index.html'));
+});
 
 // Global error handler:
 app.use((err, req, res, next) => {

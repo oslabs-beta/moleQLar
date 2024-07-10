@@ -1,4 +1,4 @@
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const saltRounds = 10;
 const db = require('../models/userModels');
 
@@ -26,6 +26,7 @@ userController.createUser = async (req, res, next) => {
   const hashWord = res.locals.hashWord;
 
   // TODO - check that username doesn't already exist
+  // TODO - create unique user id for the new user
 
   // insert credentials into database
   const params = [username, hashWord, email];
@@ -66,10 +67,14 @@ userController.loginUser = async (req, res, next) => {
     const dbPassword = result.rows[0].password;  // save password
     // validate password
     const isMatch = await bcrypt.compare(password, dbPassword);
-    if (isMatch) res.locals.user = { username };
-    else {
+    if (!isMatch) {
       // invalid credentials
       return res.status(401).json({ message: 'Invalid username or password' });
+    }
+    // send back user info the client
+    res.locals.user = {
+      username: username,
+      user_id: result.rows[0].user_id,
     }
     return next();
   } catch (err) {
@@ -111,7 +116,10 @@ userController.validateJWT = async (req, res, next) => {
     const decoded = jwt.verify(token, JWT_SECRET);
     // success
     // send username back to the client
-    res.locals.user = { username: decoded.username }
+    res.locals.user = {
+      username: decoded.username,
+      user_id: decoded.user_id,
+    }
     return next();
   } catch (err) {
     console.log('userController - err.name:', err.name)

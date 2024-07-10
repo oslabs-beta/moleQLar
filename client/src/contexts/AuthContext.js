@@ -8,14 +8,21 @@ export const AuthProvider = ({ children }) => {
   const navigate = useNavigate();
   const [authState, setAuthState] = useState({
     isAuth: false,
-    username: '',
+    username: "",
+    user_id: null,
+    loading: true, // Add loading state
   });
 
   useEffect(() => {
     async function verifyUser() {
       // check local storage
-      const storedUsername = localStorage.getItem('username');
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem("token");
+
+      if (!token) {
+        setAuthState((prev_state) => ({ ...prev_state, loading: false }));
+        return;
+      }
+
       // verify user token
       let config = {
         headers: { authorization: `${token}` },
@@ -30,18 +37,22 @@ export const AuthProvider = ({ children }) => {
           );
           setAuthState({
             isAuth: false,
-            username: '',
+            username: "",
+            user_id: null,
+            loading: false, // Set loading to false when done
           });
-          // return;
-          return navigate('/login');
+          // return navigate('/login');
         } else {
           // successful login
           const data = response.data;
-          localStorage.setItem('username', data.username);
-          localStorage.setItem('token', response.headers['authorization']);
+          localStorage.setItem("username", data.username);
+          localStorage.setItem("user_id", data.user_id);
+          localStorage.setItem("token", response.headers['authorization']);
           setAuthState({
             isAuth: true,
             username: data.username,
+            user_id: data.user_id,
+            loading: false, // Set loading to false when done
           });
         }
       } catch (err) {
@@ -58,11 +69,9 @@ export const AuthProvider = ({ children }) => {
           console.log('Error message:', err.message);
         }
         // return navigate('/login');
-        return; // success
       }
     }
     verifyUser();
-    //navigate('/dashboard');
   }, []);
 
   const signup = async (formData) => {
@@ -82,11 +91,12 @@ export const AuthProvider = ({ children }) => {
         setAuthState({
           isAuth: true,
           username: data.username,
-          token: data.token,
-        });
+          user_id: data.user_id,
+        })
         console.log('signup - setting username/token');
-        localStorage.setItem('username', data.username);
-        localStorage.setItem('token', response.headers['authorization']);
+        localStorage.setItem("username", data.username);
+        localStorage.setItem("user_id", data.user_id);
+        localStorage.setItem("token", response.headers['authorization']);
         return; // success
       }
     } catch (err) {
@@ -130,11 +140,12 @@ export const AuthProvider = ({ children }) => {
         setAuthState({
           isAuth: true,
           username: data.username,
-          token: data.token,
+          user_id: data.user_id,
         });
         console.log('login - setting username/token');
-        localStorage.setItem('username', data.username);
-        localStorage.setItem('token', response.headers['authorization']);
+        localStorage.setItem("username", data.username);
+        localStorage.setItem("user_id", data.user_id);
+        localStorage.setItem("token", response.headers['authorization']);
         // return navigate("/dashboard");
         return; // success
       }
@@ -160,12 +171,13 @@ export const AuthProvider = ({ children }) => {
   const logout = () => {
     setAuthState({
       isAuth: false,
-      username: '',
-      userId: '',
+      username: "",
+      user_id: null,
     });
-    localStorage.removeItem('username');
-    localStorage.removeItem('token');
-    return navigate('/');
+    localStorage.removeItem("username");
+    localStorage.removeItem("user_id");
+    localStorage.removeItem("token");
+    return navigate("/");
   };
 
   return (
