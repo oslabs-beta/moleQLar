@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 import githubLogo from '../../assets/logos/githubLogo.png';
 import linkedInLogo from '../../assets/logos/linkedin.png';
 import smallLogo from '../../assets/logos/smallLogo.png'
@@ -18,13 +18,13 @@ const Navbar = () => {
       </Link>
       <ul className="nav-links">
             <li>
-              <Link className="nav-link active" to="/">Home</Link>
+              <NavLink className="nav-link" to="/">Home</NavLink>
             </li>
             <li>
-              <Link className="nav-link" to="/team">Team</Link>
+              <NavLink className="nav-link" to="/team">Team</NavLink>
             </li>
             <li>
-              <Link className="nav-link" to="/about">About</Link>
+              <NavLink className="nav-link" to="/about">About</NavLink>
             </li>
       </ul>
       <div className="social-icons">
