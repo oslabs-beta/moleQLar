@@ -86,5 +86,6 @@ export default function resolverGenerator(nodes, edges) {
   });
 
   resolverString += '}\n';
-  return resolverString;
+  const resolverArray = resolverString.split('\n');
+  return resolverArray;
 }

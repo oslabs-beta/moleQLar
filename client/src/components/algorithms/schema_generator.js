@@ -9,7 +9,6 @@ export default function schemaGenerator(nodes, edges) {
   const manyToOneRelationships = {};
 
   //for each edge between nodes
-  console.log('edges!!!', edges);
   edges.forEach((edge) => {
     //if source node has no connections, create empty array to hold them
     if (manyToOneRelationships[edge.source] === undefined) {
@@ -53,7 +52,7 @@ export default function schemaGenerator(nodes, edges) {
       .singular(node.id)
       .replace(/^./, node.id[0].toUpperCase())} {\n`;
     //add id property to type
-    gql_schema += '    _id: ID!\n';
+    gql_schema += `    _id: ID!\n`;
 
     //add associated columns to GraphQL type
     for (let i = 1; i < node.data.columns.length; i++) {
@@ -84,7 +83,11 @@ export default function schemaGenerator(nodes, edges) {
     gql_schema += `  }\n`;
   });
   query_string += `  }\n`;
+  gql_schema += query_string;
 
+  const testSchema = gql_schema.split('\n');
+  console.log(testSchema)
+  
   //return final schema
-  return gql_schema + query_string;
+  return testSchema;
 }

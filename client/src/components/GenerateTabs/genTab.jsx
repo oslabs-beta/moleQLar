@@ -4,7 +4,7 @@ import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Tabs, T
 import '../NodeSchema/schemavisualizer.scss'
 import schemaGenerator from '../algorithms/schema_generator';
 import resolverGenerator from '../algorithms/resolver_generator';
-
+import './gentab.scss'
 
 
 
@@ -48,12 +48,20 @@ function BasicTabs({generatedSchema, generatedResolver}) {
         </Tabs>
       </Box>
       <CustomTabPanel value={value} index={0}>
-        TypeDefs
-        {generatedSchema}
+        <h1>TypeDefs</h1>
+        {generatedSchema.map((item, index) => (
+          <div key={index}>
+            <h3>{`${item}`}</h3>
+          </div>
+        ))}
       </CustomTabPanel>
       <CustomTabPanel value={value} index={1}>
-        Resolver
-        {generatedResolver}
+        <h1>Resolver</h1>
+        {generatedResolver.map((item, index) => (
+          <div key={index}>
+            <h3>{`${item}`}</h3>
+          </div>
+        ))}
       </CustomTabPanel>
     </Box>
   );
