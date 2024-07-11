@@ -15,7 +15,7 @@ import { parseSqlSchema } from '../algorithms/schema_parser';
 import { schemaGenerator } from '../algorithms/schema_generator';
 import { resolverGenerator } from '../algorithms/resolver_generator';
 import NodeList from './NodeList';
-import './schemavisualizer.scss';
+import './schemavisualizer.scss';  // styles
 import GenerateTab from "../GenerateTabs/genTab";
 
 const TableNode = React.memo(({ data, id, selected }) => (
@@ -150,8 +150,6 @@ const SchemaVisualizer = ({ sqlContents, handleUploadBtn }) => {
   const handleGenTabClose = () =>{
     setGenTabOpen(false)
   };
-
-  
 
   const deleteNode = useCallback(
     (id) => {
@@ -304,81 +302,44 @@ const SchemaVisualizer = ({ sqlContents, handleUploadBtn }) => {
   }, [sqlContents, setNodes, setEdges, reactFlowInstance]);
 
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        height: 'calc(100vh - 200px)',
-        width: '100%',
-        overflow: 'hidden',
-      }}
-    >
-      <Box sx={{ display: 'flex', height: 'calc(100% - 60px)' }}>
-        <NodeList
-          tables={nodes}
-          onSelectTable={selectNode}
-          onDeleteTable={deleteNode}
-          onAddNode={addNode}
-          onEditNode={editNode}
-          selectedTableId={selectedNode}
-        />
-        <ReactFlowProvider>
-          <Box
-            sx={{
-              flexGrow: 1,
-              height: '100%',
-              border: '1px solid #333',
-              background: '#1a1a1a',
-            }}
-            ref={reactFlowWrapper}
-          >
-            <div className="graph-btn-container">
-              <button className="btn-generate btn-graph" onClick={handleGenTabOpen}>Generate</button>
-              <button className="btn-save btn-graph">Save</button>
-            </div>
-
-            <ReactFlow
-              nodes={nodes}
-              edges={edges}
-              onNodesChange={onNodesChange}
-              onEdgesChange={onEdgesChange}
-              nodeTypes={nodeTypes}
-              edgeTypes={edgeTypes}
-              fitView
-              style={{ background: '#1a1a1a' }}
-              onNodeClick={(event, node) => selectNode(node.id)}
-              onInit={setReactFlowInstance}
-            >
-              <Background color='#333' gap={16} />
-              <Controls
-                style={{ background: '#333', color: '#fff', border: 'none' }}
-              />
-              <MiniMap
-                style={{ background: '#333', maskColor: '#666' }}
-                nodeColor='#666'
-              />
-            </ReactFlow>
-          </Box>
-        </ReactFlowProvider>
-      </Box>
-      {/* <Box
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          padding: "10px",
-          height: "60px",
-        }}
-      >
-        <Button variant="contained" onClick={wholeView} disabled={!focusMode}>
-          Whole View
-        </Button>
-        <GenerateTab/>
-
-      </Box> */}
+    <div className='schema-visualizer'>
       <GenerateTab open={genTabOpen} onClose={handleGenTabClose}/>
-    </Box>
-    
+      <NodeList
+        tables={nodes}
+        onSelectTable={selectNode}
+        onDeleteTable={deleteNode}
+        onAddNode={addNode}
+        onEditNode={editNode}
+        selectedTableId={selectedNode}
+      />
+      <ReactFlowProvider>
+        <div className='node-graph-container' ref={reactFlowWrapper}>
+          
+          <div className="graph-btn-container">
+            <button className="btn-generate btn-graph" onClick={handleGenTabOpen}>Generate</button>
+            <button className="btn-save btn-graph">Save</button>
+          </div>
+
+          <ReactFlow
+            className='node-graph'
+            nodes={nodes}
+            edges={edges}
+            onNodesChange={onNodesChange}
+            onEdgesChange={onEdgesChange}
+            nodeTypes={nodeTypes}
+            edgeTypes={edgeTypes}
+            fitView
+            style={{ background: '#1a1a1a' }}
+            onNodeClick={(event, node) => selectNode(node.id)}
+            onInit={setReactFlowInstance}
+          >
+            <Background color='#333' gap={16} />
+            <Controls style={{ background: '#333', color: '#fff', border: 'none' }}/>
+            <MiniMap style={{ background: '#333', maskColor: '#666' }} nodeColor='#666'/>
+          </ReactFlow>
+        </div>
+      </ReactFlowProvider>
+    </div>
   );
 };
 
