@@ -34,7 +34,7 @@ function BasicTabs() {
   };
 
   return (
-    <Box sx={{ width: '100%' }}>
+    <>
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
         <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
           <Tab label="TypeDef" {...a11yProps(0)} />
@@ -47,7 +47,7 @@ function BasicTabs() {
       <CustomTabPanel value={value} index={1}>
         Resolver
       </CustomTabPanel>
-    </Box>
+    </>
   );
 }
 
@@ -63,22 +63,16 @@ const GenerateTab = ({open,onClose}) => {
   // };
 
   return (
-    <div>
-    {/* <Button onClick={handleClickOpen}>
-      Generate
-    </Button> */}
+    <div clasName='generate-tab-container'>
       <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
         <DialogTitle>Tabs</DialogTitle>
         <DialogContent>
           <BasicTabs />
         </DialogContent>
         <DialogActions>
-          <Button onClick={onClose} color="primary">
-            Close
-          </Button>
+          <Button onClick={onClose} color="primary">Close</Button>
         </DialogActions>
       </Dialog>
-    
     </div>
   );
 }

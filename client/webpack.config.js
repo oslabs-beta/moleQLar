@@ -14,6 +14,10 @@ module.exports = {
   module: {
     rules: [
       {
+        test: /\.sql$/,
+        use: 'raw-loader',
+      },
+      {
         test: /\.jsx?/,
         exclude: /node_modules/,
         use: {

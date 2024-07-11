@@ -21,6 +21,8 @@ import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
 import NodeDialog from "./AddNodeDialog";
 
+import './nodelist.scss'  // styles
+
 const NodeList = ({
   tables,
   onSelectTable,
@@ -54,116 +56,110 @@ const NodeList = ({
   };
 
   return (
-    <Box
-      sx={{
-        width: "300px",
-        height: "100%",
-        overflowY: "auto",
-        borderRight: "1px solid #ddd",
-        display: "flex",
-        flexDirection: "column",
-      }}
-    >
-      <List sx={{ flexGrow: 1 }}>
-        {tables.map((table) => (
-          <React.Fragment key={table.id}>
-            <ListItem
-              sx={{
-                backgroundColor:
-                  selectedTableId === table.id ? "#e3f2fd" : "transparent",
-                "&:hover": {
-                  backgroundColor: "#f5f5f5",
-                },
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                pr: 1,
-              }}
-            >
-              <ListItemText
-                primary={table.data.label}
-                onClick={() => handleClick(table.id)}
+    <div className='sidebar'>
+      <div className="sidebar-top">
+        <h1 className="sidebar-heading">Graph Name</h1>
+        <List sx={{ flexGrow: 1 }}>
+          {tables.map((table) => (
+            <React.Fragment key={table.id}>
+              <ListItem
                 sx={{
                   backgroundColor:
                     selectedTableId === table.id ? "#e3f2fd" : "transparent",
                   "&:hover": {
                     backgroundColor: "#f5f5f5",
                   },
-                  flexGrow: 1,
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  pr: 1,
                 }}
-              />
-              <Box sx={{ display: "flex", alignItems: "center" }}>
-                <IconButton
-                  size="small"
-                  onClick={() => openEditDialog(table)}
-                  sx={{ p: 0.5 }}
-                >
-                  <EditIcon fontSize="small" />
-                </IconButton>
-                <IconButton
-                  size="small"
-                  onClick={() => onDeleteTable(table.id)}
-                  sx={{ p: 0.5 }}
-                >
-                  <DeleteIcon fontSize="small" />
-                </IconButton>
-                {openTable === table.id ? (
-                  <ExpandLess fontSize="small" />
-                ) : (
-                  <ExpandMore fontSize="small" />
-                )}
-              </Box>
-            </ListItem>
-            <Collapse in={openTable === table.id} timeout="auto" unmountOnExit>
-              <Box sx={{ margin: 1 }}>
-                <TableContainer component={Paper}>
-                  <Table size="small" aria-label="table attributes">
-                    <TableHead>
-                      <TableRow>
-                        <TableCell>Name</TableCell>
-                        <TableCell>Type</TableCell>
-                        <TableCell>Constraints</TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {table.data.columns.map((column, index) => (
-                        <TableRow key={index}>
-                          <TableCell component="th" scope="row">
-                            {column.name}
-                          </TableCell>
-                          <TableCell>{column.type}</TableCell>
-                          <TableCell>
-                            {column.required ? "NOT NULL" : ""}
-                          </TableCell>
+              >
+                <ListItemText
+                  primary={table.data.label}
+                  onClick={() => handleClick(table.id)}
+                  sx={{
+                    backgroundColor:
+                      selectedTableId === table.id ? "#e3f2fd" : "transparent",
+                    "&:hover": {
+                      backgroundColor: "#f5f5f5",
+                    },
+                    flexGrow: 1,
+                  }}
+                />
+                <Box sx={{ display: "flex", alignItems: "center" }}>
+                  <IconButton
+                    size="small"
+                    onClick={() => openEditDialog(table)}
+                    sx={{ p: 0.5 }}
+                  >
+                    <EditIcon fontSize="small" />
+                  </IconButton>
+                  <IconButton
+                    size="small"
+                    onClick={() => onDeleteTable(table.id)}
+                    sx={{ p: 0.5 }}
+                  >
+                    <DeleteIcon fontSize="small" />
+                  </IconButton>
+                  {/* {openTable === table.id ? (
+                    <ExpandLess fontSize="small" />
+                  ) : (
+                    <ExpandMore fontSize="small" />
+                  )} */}
+                </Box>
+              </ListItem>
+              <Collapse in={openTable === table.id} timeout="auto" unmountOnExit>
+                <Box sx={{ margin: 1 }}>
+                  <TableContainer component={Paper}>
+                    <Table size="small" aria-label="table attributes">
+                      <TableHead>
+                        <TableRow>
+                          <TableCell>Name</TableCell>
+                          <TableCell>Type</TableCell>
+                          <TableCell>Constraints</TableCell>
                         </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </TableContainer>
-              </Box>
-            </Collapse>
-          </React.Fragment>
-        ))}
-      </List>
-      <Button
-        variant="contained"
-        color="primary"
-        onClick={() => setIsNodeDialogOpen(true)}
-        sx={{ margin: 2 }}
-      >
-        Add New Node
-      </Button>
-      <NodeDialog
-        open={isNodeDialogOpen}
-        onClose={() => {
-          setIsNodeDialogOpen(false);
-          setEditingNode(null);
-        }}
-        onAddNode={handleAddNode}
-        onEditNode={handleEditNode}
-        editingNode={editingNode}
-      />
-    </Box>
+                      </TableHead>
+                      <TableBody>
+                        {table.data.columns.map((column, index) => (
+                          <TableRow key={index}>
+                            <TableCell component="th" scope="row">
+                              {column.name}
+                            </TableCell>
+                            <TableCell>{column.type}</TableCell>
+                            <TableCell>
+                              {column.required ? "NOT NULL" : ""}
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                </Box>
+              </Collapse>
+            </React.Fragment>
+          ))}
+        </List>
+      </div>
+
+      <div className="sidebar-bottom">
+        <button className='btn-graph btn-add-node'
+          onClick={() => setIsNodeDialogOpen(true)}
+        >
+          Add New Node</button>
+        {/* <button className='btn-graph btn-clear'>Clear</button> */}
+        <NodeDialog
+          open={isNodeDialogOpen}
+          onClose={() => {
+            setIsNodeDialogOpen(false);
+            setEditingNode(null);
+          }}
+          onAddNode={handleAddNode}
+          onEditNode={handleEditNode}
+          editingNode={editingNode}
+        />
+      </div>
+    </div>
   );
 };
 

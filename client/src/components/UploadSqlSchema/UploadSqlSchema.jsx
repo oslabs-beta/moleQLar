@@ -3,6 +3,10 @@ import { Box, Typography, Paper } from '@mui/material';
 import { useDropzone } from 'react-dropzone';
 import SchemaVisualizer from '../NodeSchema/SchemaVisualizer';
 
+import './uploadsqlschema.scss'  // styles 
+import { useEffect } from 'react';  // for testing onDrop
+import samplePgDump from '../algorithms/sample_pg_dump.sql';  // for testing onDrop
+
 const UploadSqlSchema = () => {
   const [sqlContents, setSqlContents] = useState([]);
 
@@ -17,6 +21,16 @@ const UploadSqlSchema = () => {
     });
   }, []);
 
+  // TODO - testing functionality
+  // useEffect(() => {
+  //   console.log('testing...');
+  //   const blob = new Blob([samplePgDump], { type: "application/sql" });
+  //   const mockFile = new File([blob], "mock.sql", {
+  //     type: "application/sql",
+  //   });
+  //   onDrop([mockFile]);
+  // }, []);
+
   // useDropzone is to set up the drag and drop functionality
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
@@ -28,35 +42,18 @@ const UploadSqlSchema = () => {
   });
 
   return (
-    <Box sx={{ width: '100%', p: 3 }}>
-      <Paper
-        {...getRootProps()}
-        sx={{
-          p: 3,
-          textAlign: 'center',
-          cursor: 'pointer',
-          backgroundColor: isDragActive ? '#e3f2fd' : 'white',
-          border: '2px dashed #1976d2',
-          '&:hover': {
-            backgroundColor: '#e3f2fd',
-          },
-        }}
-      >
-        <input {...getInputProps()} />
-        <Typography>
+    <div className="graph-container">
+      <div className="drop-box" {...getRootProps()}>
+        <input className='drop-box-input' {...getInputProps()} />
+        <Typography className="drop-box-text">
           {isDragActive
             ? 'Drop SQL files here'
             : '+ Click or drag to add SQL files'}
         </Typography>
-      </Paper>
-      {/* {sqlContents.length} */}
-      {sqlContents.length > 0 && (
-        <Box mt={3}>
-          {/* <Typography variant="h6">Schema Visualization:</Typography> */}
-          <SchemaVisualizer sqlContents={sqlContents} />
-        </Box>
-      )}
-    </Box>
+      </div>
+
+      <SchemaVisualizer sqlContents={sqlContents} />
+    </div>
   );
 };
 
