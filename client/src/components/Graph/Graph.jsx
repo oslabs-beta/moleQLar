@@ -6,6 +6,7 @@ import '../NodeSchema/schemavisualizer.scss';
 
 function Graph() {
   const [sqlContents, setSqlContents] = useState([]);
+  const [ graphName, setGraphName ] = useState();
 
   const handleUploadBtn = (content) => {
     setSqlContents([...sqlContents, content]);

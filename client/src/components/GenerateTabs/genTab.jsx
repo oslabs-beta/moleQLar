@@ -63,7 +63,7 @@ const GenerateTab = ({open,onClose}) => {
   // };
 
   return (
-    <div clasName='generate-tab-container'>
+    <div className='generate-tab-container'>
       <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
         <DialogTitle>Tabs</DialogTitle>
         <DialogContent>

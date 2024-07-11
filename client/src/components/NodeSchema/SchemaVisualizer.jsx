@@ -1,3 +1,4 @@
+import axios from 'axios';
 import React, { useCallback, useEffect, useState, useRef } from 'react';
 import ReactFlow, {
   Background,
@@ -17,6 +18,9 @@ import { resolverGenerator } from '../algorithms/resolver_generator';
 import NodeList from './NodeList';
 import './schemavisualizer.scss';  // styles
 import GenerateTab from "../GenerateTabs/genTab";
+
+import { useAuth } from '../../contexts/AuthContext';
+import { useGraphContext } from '../../contexts/GraphContext';
 
 const TableNode = React.memo(({ data, id, selected }) => (
   <div
@@ -141,6 +145,49 @@ const SchemaVisualizer = ({ sqlContents, handleUploadBtn }) => {
   const [focusMode, setFocusMode] = useState(false);
   const reactFlowWrapper = useRef(null);
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
+
+  
+
+  const handleSaveBtn = async () => {
+    // save functionality
+    const { user_id } = useAuth();
+    const { graphName, graphId } = useGraphContext();
+
+    // convert nodes and edges to string
+    const nodeString = JSON.stringify(nodes);
+    const edgeString = JSON.stringify(edges);
+    
+    // send POST request to /api/graph
+    const endpoint = `/api/graph${user_id}/${graphName}`;
+    const config = {}
+    const body = {
+      user_id,
+      graphName,
+      nodeString,
+      edgeString,
+    };
+    if (graphId) {
+      const response = await axios.post(endpoint, body, config);
+    } else {
+      const response = await axios.put(endpoint, body, config);
+    }
+    
+    // error
+    if (response.status !== 200) {
+      console.log('response.message:', response.message);
+      console.log('Error saving node graph to database');
+      return;
+    }
+    // success
+    console.log('Successfully saved node graph to database');
+    // if new graph, store graphID crated by SQL database
+    const data = response.data;
+    if (!graphId) {
+      setGraphName(data.graphName);
+      setGraphId(data.graphId);
+    }
+    return;
+  }
 
   // tab state variables
   const [genTabOpen, setGenTabOpen] = useState(false);
@@ -317,7 +364,7 @@ const SchemaVisualizer = ({ sqlContents, handleUploadBtn }) => {
           
           <div className="graph-btn-container">
             <button className="btn-generate btn-graph" onClick={handleGenTabOpen}>Generate</button>
-            <button className="btn-save btn-graph">Save</button>
+            <button className="btn-save btn-graph" onClick={handleSaveBtn}>Save</button>
           </div>
 
           <ReactFlow
