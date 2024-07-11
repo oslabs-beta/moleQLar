@@ -26,11 +26,11 @@ const PrivateRoutes = () => {
     // if logged im
     return (
         <GraphProvider>
-            <Outlet />;
+            <Outlet />
         </GraphProvider>
     )
 };
- App = () =>{
+ const App = () =>{
     return(
         <BrowserRouter>
             <AuthProvider>

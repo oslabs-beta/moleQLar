@@ -1,4 +1,4 @@
-import { createContext, useContext } from 'react';
+import React, { createContext, useContext, useState } from 'react';
 
 export const GraphContext = createContext();
 
