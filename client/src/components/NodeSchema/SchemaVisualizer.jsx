@@ -145,12 +145,18 @@ const SchemaVisualizer = ({ sqlContents, handleUploadBtn }) => {
   // tab state variables
   const [genTabOpen, setGenTabOpen] = useState(false);
   const handleGenTabOpen = () =>{
-    setGenTabOpen(true)
+    console.log('clicked generate button')
+    // setGenTabOpen(true)
+    setGenTabOpen(prev => !prev);
+    console.log('genTabOpen', genTabOpen)
   };
   const handleGenTabClose = () =>{
     setGenTabOpen(false)
   };
 
+  useEffect(() => {
+    console.log('genTabOpen changed:', genTabOpen);
+  }, [genTabOpen])
   
 
   const deleteNode = useCallback(
@@ -333,8 +339,13 @@ const SchemaVisualizer = ({ sqlContents, handleUploadBtn }) => {
             ref={reactFlowWrapper}
           >
             <div className="graph-btn-container">
-              <button className="btn-generate btn-graph" onClick={handleGenTabOpen}>Generate</button>
+              <button className="btn-generate btn-graph" onClick={handleGenTabOpen} disabled={!reactFlowInstance}>Generate</button>
+              {console.log('test', nodes.length, genTabOpen, !reactFlowInstance)}
+              <GenerateTab open={genTabOpen} onClose={handleGenTabClose} nodes={nodes} edges={edges} />
+
+              {/* {reactFlowInstance && (<GenerateTab open={genTabOpen} onClose={handleGenTabClose} nodes={nodes} edges={edges} />)}  */}
               <button className="btn-save btn-graph">Save</button>
+              {/* <genTab edges = {edges} nodes = {nodes}/> */}
             </div>
 
             <ReactFlow
@@ -376,7 +387,6 @@ const SchemaVisualizer = ({ sqlContents, handleUploadBtn }) => {
         <GenerateTab/>
 
       </Box> */}
-      <GenerateTab open={genTabOpen} onClose={handleGenTabClose}/>
     </Box>
     
   );

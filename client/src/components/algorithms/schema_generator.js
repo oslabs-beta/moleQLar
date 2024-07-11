@@ -1,9 +1,15 @@
-export function schemaGenerator(nodes, edges) {
+import pluralize from 'pluralize';
+
+export default function schemaGenerator(nodes, edges) {
+  if (!nodes) {
+    return 'No data available to generate schema.';
+  }
   //create aux objects to hold node relationships
   const oneToManyRelationships = {};
   const manyToOneRelationships = {};
 
   //for each edge between nodes
+  console.log('edges!!!', edges);
   edges.forEach((edge) => {
     //if source node has no connections, create empty array to hold them
     if (manyToOneRelationships[edge.source] === undefined) {
@@ -81,4 +87,4 @@ export function schemaGenerator(nodes, edges) {
 
   //return final schema
   return gql_schema + query_string;
-};
+}
