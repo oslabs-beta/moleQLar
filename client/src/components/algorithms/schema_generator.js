@@ -1,4 +1,9 @@
-export function schemaGenerator(nodes, edges) {
+import pluralize from 'pluralize';
+
+export default function schemaGenerator(nodes, edges) {
+  if (!nodes) {
+    return 'No data available to generate schema.';
+  }
   //create aux objects to hold node relationships
   const oneToManyRelationships = {};
   const manyToOneRelationships = {};
@@ -47,7 +52,7 @@ export function schemaGenerator(nodes, edges) {
       .singular(node.id)
       .replace(/^./, node.id[0].toUpperCase())} {\n`;
     //add id property to type
-    gql_schema += '    _id: ID!\n';
+    gql_schema += `    _id: ID!\n`;
 
     //add associated columns to GraphQL type
     for (let i = 1; i < node.data.columns.length; i++) {
@@ -78,7 +83,11 @@ export function schemaGenerator(nodes, edges) {
     gql_schema += `  }\n`;
   });
   query_string += `  }\n`;
+  gql_schema += query_string;
 
+  const testSchema = gql_schema.split('\n');
+  console.log(testSchema)
+  
   //return final schema
-  return gql_schema + query_string;
-};
+  return testSchema;
+}

@@ -14,7 +14,10 @@ function Graph() {
   return (
     <>
       <AuthorizedNavbar />
-      <UploadSqlSchema />
+        <UploadSqlSchema />
+      {/* <div style={{width: '100%', paddingLeft: '24px', paddingRight: '24px' }}>
+        <SchemaVisualizer sqlContents={sqlContents} handleUploadBtn={handleUploadBtn} />
+      </div> */}
     </>
   );
 }

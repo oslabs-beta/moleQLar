@@ -1,7 +1,10 @@
 import * as React from 'react';
+import { useState, useEffect } from 'react';
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Tabs, Tab, ButtonGroup } from '@mui/material';
 import '../NodeSchema/schemavisualizer.scss'
-
+import schemaGenerator from '../algorithms/schema_generator';
+import resolverGenerator from '../algorithms/resolver_generator';
+import './gentab.scss'
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -26,8 +29,9 @@ function a11yProps(index) {
   };
 }
 
-function BasicTabs() {
+function BasicTabs({generatedSchema, generatedResolver}) {
   const [value, setValue] = React.useState(0);
+  
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -42,16 +46,37 @@ function BasicTabs() {
         </Tabs>
       </Box>
       <CustomTabPanel value={value} index={0}>
-        TypeDef
+        <h1>TypeDefs</h1>
+        {generatedSchema.map((item, index) => (
+          <div key={index}>
+            <h3>{`${item}`}</h3>
+          </div>
+        ))}
       </CustomTabPanel>
       <CustomTabPanel value={value} index={1}>
-        Resolver
+        <h1>Resolver</h1>
+        {generatedResolver.map((item, index) => (
+          <div key={index}>
+            <h3>{`${item}`}</h3>
+          </div>
+        ))}
       </CustomTabPanel>
     </>
   );
 }
 
-const GenerateTab = ({open,onClose}) => {
+const GenerateTab = ({open, onClose, nodes, edges}) => {
+  // Storing ER of Schema Generator Function
+
+  let generatedSchemaData = [];
+  if(open) generatedSchemaData = schemaGenerator(nodes, edges);
+  // Storing ER of Resolver Generator Function
+  let generatedResolverData = [];
+  if(open) generatedResolverData = resolverGenerator(nodes, edges);
+
+  //  const [generatedSchemaData, setGeneratedSchemaData] = useState(null);
+  //  const [generatedResolverData, setGeneratedResolverData] = useState(null);
+
   // const [open, setOpen] = React.useState(false);
 
   // const handleClickOpen = () => {
@@ -62,12 +87,32 @@ const GenerateTab = ({open,onClose}) => {
   //   setOpen(false);
   // };
 
+  // useEffect(() => {
+  //   // if(open && nodes && nodes.length > 0) {
+  //   //   console.log('test')
+  //     const schemaData = schemaGenerator(nodes, edges);
+  //     setGeneratedSchemaData(schemaData);
+  //     const resolverData = resolverGenerator(nodes, edges);
+  //     setGeneratedResolverData(resolverData);
+  //   // }
+
+  // }, [open, nodes, edges])
+
+  if(!open) return null;
+
   return (
-    <div clasName='generate-tab-container'>
-      <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
+    <div className='generate-tab-container'>
+    {/* <Button onClick={handleClickOpen}>
+      Generate
+    </Button> */}
+    {/* maxWidth="md" fullWidth */}
+      <Dialog open={open} onClose={onClose} >
         <DialogTitle>Tabs</DialogTitle>
         <DialogContent>
-          <BasicTabs />
+          <BasicTabs 
+            generatedSchema={generatedSchemaData}
+            generatedResolver={generatedResolverData} 
+          />
         </DialogContent>
         <DialogActions>
           <Button onClick={onClose} color="primary">Close</Button>
