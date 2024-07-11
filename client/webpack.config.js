@@ -1,5 +1,6 @@
 const path = require('path');
 const HtmlWebPackPlugin = require('html-webpack-plugin');
+const Dotenv = require('dotenv-webpack');
 
 module.exports = {
   entry: './src/index.js',
@@ -13,6 +14,10 @@ module.exports = {
   module: {
     rules: [
       {
+        test: /\.sql$/,
+        use: 'raw-loader',
+      },
+      {
         test: /\.jsx?/,
         exclude: /node_modules/,
         use: {
@@ -25,7 +30,6 @@ module.exports = {
       
       {
         test: /\.s?css/,
-      
         use: ['style-loader', 'css-loader', 'sass-loader'],
       },
       {
@@ -48,6 +52,10 @@ module.exports = {
   plugins: [
     new HtmlWebPackPlugin({
       template: './public/index.html',
+    }),
+    new Dotenv({
+      path: path.resolve(__dirname, '../server/.env'), // Path to .env file in the server folder
+      safe: true, // Load '.env.example' to verify the '.env' variables are all set. Can also be a string to a different file.
     }),
   ],
   devServer: {

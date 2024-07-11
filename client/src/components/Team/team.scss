@@ -1,0 +1,74 @@
+@import '../../assets/styles/globalstyles.scss';
+
+.team-section {
+  width: 100%;
+  text-align: center;
+  padding: 3.125rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  // flex-grow: 1;
+  align-items: center;
+}
+
+.team-section h2 {
+  font-size: 2rem;
+  margin-bottom: 2rem;
+}
+
+.team-grid {
+  // display: grid;
+  // grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  // gap: 40px;
+  // justify-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  width: 100%;
+  max-width: 75rem;
+  // border: 2px solid red;
+}
+
+.team-member {
+  text-align: center;
+  width: 33.33%;
+  box-sizing: border-box;
+  padding: 0.625rem;
+}
+
+.profile-img {
+  width: 9rem;
+  height: 9rem;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.team-member h3 {
+  font-size: 1rem;
+  margin: 0.625rem 0 0.3125rem;
+}
+
+.team-member p {
+  font-size: 0.8rem;
+  color: gray;
+}
+
+.social-links {
+  display: flex;
+  justify-content: center;
+  margin-top: 0.625rem;
+}
+
+.social-links a {
+  margin: 0 0.3125rem;
+}
+
+.social-logo {
+  width: 1.5rem;
+  height: 1.5rem;
+  transition: transform 100ms ease;
+
+  &:hover {
+    transform: translateY(-1px);
+    transition: transform 100ms ease;
+  }
+}

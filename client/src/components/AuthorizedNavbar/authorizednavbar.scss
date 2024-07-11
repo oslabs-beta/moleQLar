@@ -1,0 +1,10 @@
+@import '../../assets/styles/variables.scss';
+@import "../Navbar/navbar.scss";
+
+.nav-links {
+    width: auto;
+}
+
+.nav-link:last-child {
+    margin-left: 4rem;
+}
