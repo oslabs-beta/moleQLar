@@ -1,4 +1,4 @@
-@import '../../assets/styles/globalstyles.scss';
+@import '../../assets/styles/variables.scss';
 
 .schema-visualizer {
     width: 100%;
@@ -7,15 +7,16 @@
     flex-direction: row;
     justify-content: space-between;
     overflow: hidden;
-    // border: 2px solid magenta;
+    flex-grow: 1;
+    // border: 5px solid magenta;
 }
 
 .node-graph-container {
     position: relative;
-    height: 100%;
-    // background: $color-black;
-    align-self: stretch;
+    // height: 100%;
+    background: $color-black;
     flex-grow: 1;
+    // border: '1px solid #333',
 }
 
 .node-graph {
@@ -23,12 +24,11 @@
 }
 
 // buttons start
-
 .graph-btn-container {
     position: absolute;
     z-index: 1;
-    top: 2rem;
-    right: 2rem;
+    top: 1rem;
+    right: 1rem;
 }
 
 .btn-graph {
@@ -40,7 +40,6 @@
     font-size: 1.2rem;
     color: $color-white;
     transition: transform 100ms ease-in;
-    margin-top: 11rem;
 
     &:hover {
       transform: translateY(-1px);
@@ -62,12 +61,10 @@
 
 .btn-generate {
     background-color: $color-primary;
-    margin-left: 1rem;
     // background-color: $color-primary;
     // border: $color-white solid .2em;
     // font-size: 1.4rem;
     // width: 14rem;
     // height: 4rem;
 }
-
 // buttons end

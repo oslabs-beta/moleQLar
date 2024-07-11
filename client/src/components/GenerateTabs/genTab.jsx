@@ -6,8 +6,6 @@ import schemaGenerator from '../algorithms/schema_generator';
 import resolverGenerator from '../algorithms/resolver_generator';
 import './gentab.scss'
 
-
-
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -40,7 +38,7 @@ function BasicTabs({generatedSchema, generatedResolver}) {
   };
 
   return (
-    <Box sx={{ width: '100%' }}>
+    <>
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
         <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
           <Tab label="TypeDef" {...a11yProps(0)} />
@@ -63,7 +61,7 @@ function BasicTabs({generatedSchema, generatedResolver}) {
           </div>
         ))}
       </CustomTabPanel>
-    </Box>
+    </>
   );
 }
 
@@ -103,12 +101,11 @@ const GenerateTab = ({open, onClose, nodes, edges}) => {
   if(!open) return null;
 
   return (
-    <div>
+    <div className='generate-tab-container'>
     {/* <Button onClick={handleClickOpen}>
       Generate
     </Button> */}
     {/* maxWidth="md" fullWidth */}
-      <button>Hello</button>
       <Dialog open={open} onClose={onClose} >
         <DialogTitle>Tabs</DialogTitle>
         <DialogContent>
@@ -118,12 +115,9 @@ const GenerateTab = ({open, onClose, nodes, edges}) => {
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={onClose} color="primary">
-            Close
-          </Button>
+          <Button onClick={onClose} color="primary">Close</Button>
         </DialogActions>
       </Dialog>
-    
     </div>
   );
 }
