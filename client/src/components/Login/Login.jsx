@@ -1,3 +1,4 @@
+import axios from 'axios';
 import React, { useContext, useState, useEffect } from 'react';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Button from '@mui/material/Button';
@@ -23,12 +24,12 @@ const theme = createTheme({
 function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const { isAuth, login } = useAuth();  // defined in AuthContext
+  const { authState, setAuthState } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
-    console.log('login - isAuth:', isAuth);
-    if (isAuth) {
+    console.log('login - authState.isAuth:', authState.isAuth);
+    if (authState.isAuth) {
       navigate('/dashboard');
     }
   }, [])
@@ -36,9 +37,42 @@ function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await login(username, password);
-    return navigate('/dashboard')  // redirect to /Graph
-  };
+    // await login(username, password);
+
+    // send request to server to login user
+    try {
+      const response = await axios.post('/api/auth/login', {
+        username,
+        password,
+      });
+      // success
+      const data = response.data;
+      setAuthState({
+        isAuth: true,
+        username: data.username,
+        user_id: data.user_id,
+      });
+      console.log('logged in - saving to local storage');
+      localStorage.setItem("username", data.username);
+      localStorage.setItem("user_id", data.user_id);
+      localStorage.setItem("token", response.headers['authorization']);
+      return navigate('/dashboard');
+    } catch (err) {
+      if (err.response) {
+        // fail - unable to log in
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        console.log('Failed to login. Error response data:', err.response.data);
+        console.log('Failed to login. Error response status:', err.response.status);
+      } else if (err.request) {
+        // The request was made but no response was received
+        console.log('Error request:', err.request);
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        console.log('Error message:', err.message);
+      }
+    }
+  }
 
   return (
     <>

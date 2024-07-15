@@ -12,14 +12,15 @@ import Graph from './components/Graph/Graph.jsx';
 
 // A wrapper for <Route> that redirects to the login page if the user is not authenticated.
 const PrivateRoutes = () => {
-    const { isAuth, loading } = useAuth();
-    if (loading) {
+    const { authState, setAuthState } = useAuth();
+    
+    if (authState.loading) {
         // Can return a loading spinner component or any loading UI here
         console.log('Loading...');
         return <div>Loading...</div>;
     }
-    console.log('PrivateRoutes - isAuth:', isAuth);
-    if (!isAuth) {
+    console.log('PrivateRoutes - isAuth:', authState.isAuth);
+    if (!authState.isAuth) {
         return <Navigate to="/login" />;
     }
     // if logged in
@@ -28,8 +29,8 @@ const PrivateRoutes = () => {
 
 const App = () =>{
     return(
-        <BrowserRouter>
-            <AuthProvider>
+        <AuthProvider>
+            <BrowserRouter>
                 <Routes>
                     <Route path="/" element={<Main />} />
                     <Route path="/team" element={<Team />} />
@@ -43,8 +44,8 @@ const App = () =>{
                         {/* Add more private routes here */}
                     </Route>
                 </Routes>
-            </AuthProvider>
-        </BrowserRouter>
+            </BrowserRouter>
+        </AuthProvider>
     )
 }
 
