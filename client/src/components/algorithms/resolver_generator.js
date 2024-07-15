@@ -1,3 +1,6 @@
+import pluralize from "pluralize";
+
+
 export default function resolverGenerator(nodes, edges) {
   //create aux objects to hold node relationships
   const oneToManyRelationships = {};
@@ -83,5 +86,6 @@ export default function resolverGenerator(nodes, edges) {
   });
 
   resolverString += '}\n';
-  return resolverString;
+  const resolverArray = resolverString.split('\n');
+  return resolverArray;
 }

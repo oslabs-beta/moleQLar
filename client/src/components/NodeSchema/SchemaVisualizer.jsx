@@ -192,7 +192,10 @@ const SchemaVisualizer = ({ sqlContents, handleUploadBtn }) => {
   // tab state variables
   const [genTabOpen, setGenTabOpen] = useState(false);
   const handleGenTabOpen = () =>{
-    setGenTabOpen(true)
+    console.log('clicked generate button')
+    // setGenTabOpen(true)
+    setGenTabOpen(prev => !prev);
+    console.log('genTabOpen', genTabOpen)
   };
   const handleGenTabClose = () =>{
     setGenTabOpen(false)
@@ -350,7 +353,7 @@ const SchemaVisualizer = ({ sqlContents, handleUploadBtn }) => {
 
   return (
     <div className='schema-visualizer'>
-      <GenerateTab open={genTabOpen} onClose={handleGenTabClose}/>
+      <GenerateTab open={genTabOpen} onClose={handleGenTabClose} nodes={nodes} edges={edges} />
       <NodeList
         tables={nodes}
         onSelectTable={selectNode}
@@ -363,7 +366,7 @@ const SchemaVisualizer = ({ sqlContents, handleUploadBtn }) => {
         <div className='node-graph-container' ref={reactFlowWrapper}>
           
           <div className="graph-btn-container">
-            <button className="btn-generate btn-graph" onClick={handleGenTabOpen}>Generate</button>
+            <button className="btn-generate btn-graph" onClick={handleGenTabOpen} disabled={!reactFlowInstance}>Generate</button>
             <button className="btn-save btn-graph" onClick={handleSaveBtn}>Save</button>
           </div>
 
