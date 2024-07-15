@@ -9,14 +9,19 @@ const ModalGraphName = (props) => {
     const [ graphName, setGraphName ] = useState('');
     const { modalVisibility, handleModalClose } = props;
 
-    const handleGraphNameSubmit = () => {
+    const handleGraphNameSubmit = async () => {
         // send POST request to server
         console.log('Submitted Graph Name:', graphName);
-        // const payload = {
-        //     username: authState.username,
-        //     user_id: authState.user_id,
-        //     graphName
-        // }
+        const username = authState.username;
+        const user_id = authState.user_id;
+        const config = {
+            headers: { authorization: authState.token },
+        }
+        const payload = {
+            user_id: authState.user_id,
+            graphName: graphName
+        }
+
         // hide modal
         handleModalClose();
         // redirect to '/graph/:userId/:graphId'

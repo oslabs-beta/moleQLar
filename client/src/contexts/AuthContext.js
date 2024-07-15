@@ -45,7 +45,7 @@ export const AuthProvider = ({ children }) => {
             user_id: null,
             loading: false, // Set loading to false when done
           });
-          // return navigate('/login');
+          // TODO - create refresh token
         } else {
           // successful login
           const data = response.data;
@@ -63,6 +63,19 @@ export const AuthProvider = ({ children }) => {
         if (err.response) {
           // The request was made and the server responded with a status code
           // that falls out of the range of 2xx
+          if (err.response.status === 401) {
+            console.log('Error verifying user token');
+            setAuthState({
+              isAuth: false,
+              username: "",
+              user_id: null,
+              loading: false,
+            });
+            localStorage.removeItem("username");
+            localStorage.removeItem("user_id");
+            localStorage.removeItem('token');
+            
+          }
           console.log('Error response data:', err.response.data);
           console.log('Error response status:', err.response.status);
         } else if (error.request) {

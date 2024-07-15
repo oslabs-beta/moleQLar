@@ -5,10 +5,10 @@ const graphController = require('../controllers/graphController');
 
 // TODO - retrieve all graph names for user - expect on dashboard page load
 graphRouter.get('/:userId', (req, res) => {
-    // return all graphs in database with :userid
+    // return all graphs in database with :userid -- expect from dashboard page
 });
 
-// TODO - get specific graph for user - expect from dashboard page
+// TODO - get specific graph for user - expect dashboard redirect to this endpoint
 graphRouter.get('/:userId/:graphId', (req, res) => {
     // retrieve specific graph
 });
