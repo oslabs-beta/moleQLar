@@ -6,7 +6,7 @@ export const GraphProvider = ({ children }) => {
     const [ graphName, setGraphName ] = useState(undefined);
     const [ graphId, setGraphId] = useState(undefined);
     
-    console.log('Graph Context variables initialized to undefined');
+    // console.log('Graph Context variables initialized to undefined');
 
     return (
         <GraphContext.Provider value={{ graphName, graphId }}>

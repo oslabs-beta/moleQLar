@@ -43,7 +43,7 @@ const PrivateRoutes = () => {
                     <Route path="/about" element={<About />} />
                     {/* private routes */}
                     <Route element={<PrivateRoutes />}>
-                        <Route path="/graph" element={<Graph />} />
+                        <Route path="/graph/:userId/:graphId" element={<Graph />} />
                         <Route path="/dashboard" element={<Dashboard />} />
                         {/* Add more private routes here */}
                     </Route>

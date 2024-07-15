@@ -171,13 +171,6 @@ const SchemaVisualizer = ({ sqlContents, handleUploadBtn }) => {
     } else {
       const response = await axios.put(endpoint, body, config);
     }
-    
-    // error
-    if (response.status !== 200) {
-      console.log('response.message:', response.message);
-      console.log('Error saving node graph to database');
-      return;
-    }
     // success
     console.log('Successfully saved node graph to database');
     // if new graph, store graphID crated by SQL database
