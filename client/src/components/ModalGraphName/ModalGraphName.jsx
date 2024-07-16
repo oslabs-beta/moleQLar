@@ -1,30 +1,54 @@
-import React, { useState, useEffect} from 'react';
+import axios from 'axios';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Modal, Box, Typography, TextField, Button } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useAuth } from '../../contexts/AuthContext';
 
 // Modal will pop up only when user creates new graph
 const ModalGraphName = (props) => {
+    const navigate = useNavigate();
     const { authState, setAuthState } = useAuth();
     const [ graphName, setGraphName ] = useState('');
     const { modalVisibility, handleModalClose } = props;
 
     const handleGraphNameSubmit = async () => {
         // send POST request to server
-        console.log('Submitted Graph Name:', graphName);
-        const username = authState.username;
         const user_id = authState.user_id;
         const config = {
-            headers: { authorization: authState.token },
+            headers: { authorization: localStorage.getItem("token") },
         }
         const payload = {
+            username: authState.username,
             user_id: authState.user_id,
-            graphName: graphName
+            graph_name: graphName,
         }
+        try {
+            const response = await axios.post(`/api/graph/${user_id}`, payload, config);
+            console.log(response);
+            // TODO - update graph state - save graph_id
 
+            // redirect to /graph/:userId/:graphId
+            if (response.data) {
+                return navigate(`/graph/${response.data.user_id}/${response.data.graph_id}`)
+            } else {
+                throw Error('Response missing data');
+            }
+        } catch (err) {
+            if (err.response) {
+                // fail - unable to create graph
+                console.log('Failed to create graph. Error responese data:', err.reponse.data);
+                console.log('Failed to create graph. Error responese status:', err.reponse.status);
+            } else if (err.request) {
+                console.log('Error request:', err.request);
+            } else {
+                console.log('Error message:', err.message);
+            }
+        }
+        // console.log('Submitted Graph Name:', graphName);
         // hide modal
-        handleModalClose();
-        // redirect to '/graph/:userId/:graphId'
+        // handleModalClose();
+        // return;
     }
 
     const colors = {
@@ -38,8 +62,7 @@ const ModalGraphName = (props) => {
 
     const theme = createTheme({
         typography: {
-            // fontFamily: 'Nunito, Arial, sans-serif',
-            fontFamily: 'Nunito',
+            fontFamily: 'Nunito, Arial, sans-serif',
         },
         components: {
             MuiButton: {
