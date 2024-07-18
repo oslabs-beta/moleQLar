@@ -17,6 +17,7 @@ import { resolverGenerator } from '../algorithms/resolver_generator';
 import NodeList from './NodeList';
 import './schemavisualizer.scss';  // styles
 import GenerateTab from "../GenerateTabs/genTab";
+import { useTheme } from '../../contexts/ThemeContext'
 
 const TableNode = React.memo(({ data, id, selected }) => (
   <div
@@ -141,6 +142,7 @@ const SchemaVisualizer = ({ sqlContents, handleUploadBtn }) => {
   const [focusMode, setFocusMode] = useState(false);
   const reactFlowWrapper = useRef(null);
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
+  const { darkMode } = useTheme();
 
   // tab state variables
   const [genTabOpen, setGenTabOpen] = useState(false);
@@ -316,7 +318,7 @@ const SchemaVisualizer = ({ sqlContents, handleUploadBtn }) => {
         selectedTableId={selectedNode}
       />
       <ReactFlowProvider>
-        <div className='node-graph-container' ref={reactFlowWrapper}>
+      <div className={`node-graph-container ${darkMode ? 'dark' : ''}`} ref={reactFlowWrapper}>
           
           <div className="graph-btn-container">
             <button className="btn-generate btn-graph" onClick={handleGenTabOpen} disabled={!reactFlowInstance}>Generate</button>
@@ -324,7 +326,7 @@ const SchemaVisualizer = ({ sqlContents, handleUploadBtn }) => {
           </div>
 
           <ReactFlow
-            className='node-graph'
+            className={`node-graph ${darkMode ? 'dark' : ''}`}
             nodes={nodes}
             edges={edges}
             onNodesChange={onNodesChange}
@@ -332,13 +334,13 @@ const SchemaVisualizer = ({ sqlContents, handleUploadBtn }) => {
             nodeTypes={nodeTypes}
             edgeTypes={edgeTypes}
             fitView
-            style={{ background: '#1a1a1a' }}
+            style={{ background: darkMode ? '#1a1a1a' : '#ffffff' }}
             onNodeClick={(event, node) => selectNode(node.id)}
             onInit={setReactFlowInstance}
           >
-            <Background color='#333' gap={16} />
-            <Controls style={{ background: '#333', color: '#fff', border: 'none' }}/>
-            <MiniMap style={{ background: '#333', maskColor: '#666' }} nodeColor='#666'/>
+            <Background color={darkMode ? '#333' : '#aaa'} gap={16} />
+            <Controls style={{ background: darkMode ? '#333' : '#fff', color: darkMode ? '#fff' : '#000', border: 'none' }}/>
+            <MiniMap style={{ background: darkMode ? '#333' : '#f0f0f0', maskColor: darkMode ? '#666' : '#ccc' }} nodeColor={darkMode ? '#666' : '#ccc'}/>
           </ReactFlow>
         </div>
       </ReactFlowProvider>

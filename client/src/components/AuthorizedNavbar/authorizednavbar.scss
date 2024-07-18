@@ -1,10 +1,76 @@
 @import '../../assets/styles/variables.scss';
 @import "../Navbar/navbar.scss";
 
+.navbar {
+    background-color: #f8f9fa;
+    color: #000;
+    transition: background-color 0.3s, color 0.3s;
+  
+    &.dark {
+      background-color: #333;
+      color: #fff;
+  
+      .nav-link {
+        color: #fff;
+      }
+  
+      .logo {
+        color: #fff;
+      }
+    }
+  }
+
 .nav-links {
-    width: auto;
+  width: auto;
+  display: flex;
+  align-items: center;
+
+  .nav-link {
+    color: inherit;
+  }
 }
 
 .nav-link:last-child {
     margin-left: 4rem;
+}
+
+.logo-container .smallLogo {
+    height: 40px;
+    margin-right: 10px;
+  }
+  
+  .logo-container .logo {
+    font-size: 1.5rem;
+    font-weight: bold;
+  }
+
+.theme-toggle {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: inherit;
+  font-size: 1.2rem;
+  margin-left: 1rem;
+  transition: color 0.3s ease, transform 0.3s ease;
+
+  &:hover {
+    color: $color-primary;
+    transform: scale(1.1);
+  }
+
+  &:focus {
+    outline: none;
+  }
+}
+
+.navbar.dark .theme-toggle {
+  color: #f1c40f;
+
+  &:hover {
+    color: $color-primary;
+  }
 }

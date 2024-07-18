@@ -1,0 +1,20 @@
+body {
+    transition: background-color 0.3s, color 0.3s;
+}
+
+body.dark {
+    background-color: #121212;
+    color: #ffffff;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    padding: 1rem;
+    background-color: #f8f9fa;
+    transition: background-color 0.3s;
+}
+
+.navbar.dark {
+    background-color: #333;
+}
