@@ -13,14 +13,20 @@
 
 .node-graph-container {
     position: relative;
-    // height: 100%;
-    background: $color-black;
     flex-grow: 1;
-    // border: '1px solid #333',
+    background: $color-white; 
+
+    &.dark {
+        background: $color-black;
+    }
 }
 
 .node-graph {
-    background-color: $color-black;
+    background-color: $color-white;
+
+    &.dark {
+        background-color: $color-black;
+    }
 }
 
 // buttons start

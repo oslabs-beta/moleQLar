@@ -20,6 +20,12 @@
     border-style: solid;
     @include color-opacity(border-color, $color-black, 10%);
     // border: 5px solid red;
+    background-color: $color-white;
+
+    &.dark {
+        background-color: $color-black;
+        @include color-opacity(border-color, $color-white, 10%);
+    }
 }
 
 // .overlay {
@@ -61,10 +67,6 @@
 //     border: 2px dashed #1976d2
 // }
 
-.drop-box-input {
-    background-color: red;
-}
-
 // .drop-box-text {
 //     display: inline-block;
 //     width: 100%;
@@ -90,5 +92,45 @@
 
     &:hover {
         background-color: #e3f2fd;
+    }
+}
+
+.drop-box {
+    cursor: pointer;
+    height: 4rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    background-color: $color-white;
+    border: 3px dashed #1976d2;
+    
+    &.isDragActive {
+        background-color: #e3f2fd;
+    }
+
+    &:hover {
+        background-color: #e3f2fd;
+    }
+
+    &.dark {
+        background-color: $color-black;
+        border-color: #4dabf5;
+
+        &.isDragActive, &:hover {
+            background-color: #1e3a5f;
+        }
+    }
+}
+
+.drop-box-input {
+    display: none;
+}
+
+.drop-box-text {
+    color: $color-black;
+
+    &.dark {
+        color: $color-white;
     }
 }

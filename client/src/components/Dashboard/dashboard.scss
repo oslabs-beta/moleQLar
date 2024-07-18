@@ -8,6 +8,13 @@
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
+  background-color: #f8f9fa;
+  color: #000; 
+
+  &.dark {
+    background-color: #121212;
+    color: #ffffff;
+  }
 }
 
 .add-graph-section {
@@ -28,11 +35,20 @@
 
 .add-graph-button img {
   width: 100px;
-  height: 100px;
+  filter: none;
+
+  .dark & {
+    filter: invert(1);
+  }
 }
+
 
 .add-graph-section p {
   margin-left: 20px;
   font-size: 16px;
   color: black;
+
+  .dark & {
+    color: white;
+  }
 }
