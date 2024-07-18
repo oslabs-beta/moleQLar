@@ -1,14 +1,29 @@
+import axios from 'axios';
 import React, { useContext } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import smallLogo from '../../assets/logos/smallLogo.png';
-import { AuthContext } from '../../contexts/AuthContext';
+import { useAuth } from '../../contexts/AuthContext.js';
 import { useTheme } from '../../contexts/ThemeContext';
 import { FaSun, FaMoon } from 'react-icons/fa';
 import './authorizednavbar.scss';
 
 
 const AuthorizedNavbar = () => {
-  const { isAuth, username, logout } = useContext(AuthContext);
+  const navigate = useNavigate();
+  const { authState, setAuthState } = useAuth();
+
+  const handleLogOut = () => {
+    setAuthState({
+      isAuth: false,
+      username: "",
+      user_id: null,
+    });
+    localStorage.removeItem("username");
+    localStorage.removeItem("user_id");
+    localStorage.removeItem("token");
+    return navigate('/');
+  }
+
   const {darkMode, toggleDarkMode} = useTheme()
 
   return (
@@ -24,7 +39,7 @@ const AuthorizedNavbar = () => {
           <NavLink to="/dashboard" className="nav-link">Dashboard</NavLink>
         </li>
         <li>
-          <NavLink to="/" className="nav-link" onClick={logout}>
+          <NavLink to="/" className="nav-link" onClick={handleLogOut}>
             Logout
           </NavLink>
         </li>

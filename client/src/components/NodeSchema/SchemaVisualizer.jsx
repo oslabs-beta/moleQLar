@@ -156,11 +156,6 @@ const SchemaVisualizer = ({ sqlContents, handleUploadBtn }) => {
     setGenTabOpen(false)
   };
 
-  useEffect(() => {
-    console.log('genTabOpen changed:', genTabOpen);
-  }, [genTabOpen])
-  
-
   const deleteNode = useCallback(
     (id) => {
       setNodes((prevNodes) => prevNodes.filter((node) => node.id !== id));
