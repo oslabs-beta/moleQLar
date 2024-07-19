@@ -6,9 +6,11 @@ import SchemaVisualizer from '../NodeSchema/SchemaVisualizer';
 import './uploadsqlschema.scss'  // styles 
 import { useEffect } from 'react';  // for testing onDrop
 import samplePgDump from '../algorithms/sample_pg_dump.sql';  // for testing onDrop
+import { useTheme } from '../../contexts/ThemeContext';
 
 const UploadSqlSchema = () => {
   const [sqlContents, setSqlContents] = useState([]);
+  const { darkMode } = useTheme();
 
   // onDrop is called when a file is dropped
   const onDrop = useCallback((acceptedFiles) => {
@@ -21,9 +23,8 @@ const UploadSqlSchema = () => {
     });
   }, []);
 
-  // TODO - testing functionality
+  // TODO - testing with sample node graph functionality
   // useEffect(() => {
-  //   console.log('testing...');
   //   const blob = new Blob([samplePgDump], { type: "application/sql" });
   //   const mockFile = new File([blob], "mock.sql", {
   //     type: "application/sql",
@@ -42,10 +43,10 @@ const UploadSqlSchema = () => {
   });
 
   return (
-    <div className="graph-container">
-      <div className="drop-box" {...getRootProps()}>
+    <div className={`graph-container ${darkMode ? 'dark' : ''}`}>
+      <div className={`drop-box ${isDragActive ? 'isDragActive' : ''} ${darkMode ? 'dark' : ''}`} {...getRootProps()}>
         <input className='drop-box-input' {...getInputProps()} />
-        <Typography className="drop-box-text">
+        <Typography className={`drop-box-text ${darkMode ? 'dark' : ''}`}>
           {isDragActive
             ? 'Drop SQL files here'
             : '+ Click or drag to add SQL files'}

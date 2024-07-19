@@ -1,0 +1,25 @@
+@import './assets/styles/variables.scss';
+
+body {
+    transition: background-color 0.3s, color 0.3s;
+}
+
+body.dark {
+    // background-color: #121212;
+    // color: #ffffff;
+    background-color: $color-black;
+    color: $color-white;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    padding: 1rem;
+    // background-color: #f8f9fa;
+    background-color: $color-white;
+    transition: background-color 0.3s;
+}
+
+.navbar.dark {
+    background-color: $color-black;
+}

@@ -1,6 +1,6 @@
+import axios from 'axios';
 import React, { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import Button from '@mui/material/Button';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import TextField from '@mui/material/TextField';
@@ -34,10 +34,10 @@ function Signup() {
   const [isLoading, setIsLoading] = useState(false);
   const [submitError, setSubmitError] = useState('');
   const [submitSuccess, setSubmitSuccess] = useState(false);
-  const { isAuth, signup } = useAuth()
+  const { authState, setAuthState } = useAuth();
 
   useEffect(() => {
-    if (isAuth) {
+    if (authState.isAuth) {
       navigate('/dashboard');
     }
   }, [])
@@ -69,7 +69,34 @@ function Signup() {
       setIsLoading(true);
       setSubmitError('');
       try {
-        await signup(formData);  // send POST request to server
+        // await signup(formData);  // send POST request to server to create new user
+
+        try {
+          const response = await axios.post('/api/auth/signup', formData);
+          const data = response.data;
+          setAuthState({
+            isAuth: false,
+            username: data.username,
+            userId: data.userId,
+          });
+          console.log('signup succesful - updating local storage');
+          localStorage.setItem("username", data.username);
+          localStorage.setItem("userId", data.userId);
+          localStorage.setItem("token", response.headers['authorization']);
+          // navigate outside of try-catch block
+        } catch (err) {
+          if (err.response) {
+            // response status code outside 2XX
+            console.log('Failed to sign up. Error response data:', err.response.data);
+            console.log('Failed to sign up. Error response status:', err.response.status);
+          } else if (err.request) {
+            // request was made, but no response received
+            console.log('Error request:', err.request);
+          } else {
+            // error in setting up request
+            console.log('Error message:', err.message);
+          }
+        }
         setSubmitSuccess(true);
       } catch (error) {
         console.error(error);
