@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, { useCallback, useEffect, useState, useRef } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import ReactFlow, {
   Background,
   Controls,
@@ -140,6 +140,7 @@ const edgeTypes = {
 };
 
 const SchemaVisualizer = ({ sqlContents, handleUploadBtn }) => {
+  const navigate = useNavigate();
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const [selectedNode, setSelectedNode] = useState(null);
@@ -168,7 +169,6 @@ const SchemaVisualizer = ({ sqlContents, handleUploadBtn }) => {
         response.data.nodes === '' ? serverNodes = [] : serverNodes = JSON.parse(response.data.nodes);
         response.data.edges === '' ? serverEdges = [] : serverEdges = JSON.parse(response.data.edges);
 
-        console.log('reponse:', response);
         setGraphName(response.data.graphName);
         setNodes(serverNodes);
         setEdges(serverEdges);
@@ -183,6 +183,7 @@ const SchemaVisualizer = ({ sqlContents, handleUploadBtn }) => {
         } else {
           console.log('Error message:', err.message);
         }
+        navigate('/dashboard');
       }
     }
     fetchGraphData();
