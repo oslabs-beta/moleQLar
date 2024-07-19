@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React from 'react';
 import { BrowserRouter, Route, Routes, Outlet, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from "./contexts/AuthContext.js";
 
@@ -26,8 +26,8 @@ const PrivateRoutes = () => {
     return <Outlet />;
 };
 
-const App = () =>{
-    return(
+const App = () => {
+    return (
         <BrowserRouter>
             <AuthProvider>
                 <Routes>
@@ -45,7 +45,7 @@ const App = () =>{
                 </Routes>
             </AuthProvider>
         </BrowserRouter>
-    )
-}
+    );
+};
 
 export default App;

@@ -8,176 +8,92 @@ export const AuthProvider = ({ children }) => {
   const navigate = useNavigate();
   const [authState, setAuthState] = useState({
     isAuth: false,
-    username: "",
+    username: '',
     user_id: null,
-    loading: true, // Add loading state
+    loading: true,
   });
 
   useEffect(() => {
     async function verifyUser() {
-      // check local storage
-      const token = localStorage.getItem("token");
-
-      if (!token) {
-        setAuthState((prev_state) => ({ ...prev_state, loading: false }));
-        return;
-      }
-
-      // verify user token
-      let config = {
-        headers: { authorization: `${token}` },
-      };
       try {
-        const response = await axios.post('/api/auth/protected', {}, config);
-        if (response.status !== 200) {
-          console.log('response.message:', response.message);
-          console.log(
-            'Unable to verify user. Reponse status: ',
-            response.status
-          );
-          setAuthState({
-            isAuth: false,
-            username: "",
-            user_id: null,
-            loading: false, // Set loading to false when done
-          });
-          // return navigate('/login');
-        } else {
-          // successful login
-          const data = response.data;
-          localStorage.setItem("username", data.username);
-          localStorage.setItem("user_id", data.user_id);
-          localStorage.setItem("token", response.headers['authorization']);
+        const response = await axios.get('/api/auth/status');
+        if (response.status === 200 && response.data.isAuth) {
           setAuthState({
             isAuth: true,
-            username: data.username,
-            user_id: data.user_id,
-            loading: false, // Set loading to false when done
+            username: response.data.username,
+            user_id: response.data.user_id,
+            loading: false,
+          });
+        } else {
+          setAuthState({
+            isAuth: false,
+            username: '',
+            user_id: null,
+            loading: false,
           });
         }
       } catch (err) {
-        if (err.response) {
-          // The request was made and the server responded with a status code
-          // that falls out of the range of 2xx
-          console.log('Error response data:', err.response.data);
-          console.log('Error response status:', err.response.status);
-        } else if (error.request) {
-          // The request was made but no response was received
-          console.log('Error request:', err.request);
-        } else {
-          // Something happened in setting up the request that triggered an Error
-          console.log('Error message:', err.message);
-        }
-        // return navigate('/login');
+        console.error('Error fetching user status:', err);
+        setAuthState({
+          isAuth: false,
+          username: '',
+          user_id: null,
+          loading: false,
+        });
       }
     }
     verifyUser();
-  }, []);
+  }, [navigate]);
 
   const signup = async (formData) => {
-    // send request to server to create new user
     try {
       const response = await axios.post('/api/auth/signup', formData);
-      if (response.status !== 200) {
-        console.log('Failed to sign up:', response);
-        // TODO - front-end: refresh the page with 'invalid sign up credentials' error message
-        return;
-      }
-      // success
-      const data = response.data;
-      console.log('data:', data);
-      console.log('data.username:', data.username);
-      if (data.username) {
+      if (response.status === 200) {
         setAuthState({
           isAuth: true,
-          username: data.username,
-          user_id: data.user_id,
-        })
-        console.log('signup - setting username/token');
-        localStorage.setItem("username", data.username);
-        localStorage.setItem("user_id", data.user_id);
-        localStorage.setItem("token", response.headers['authorization']);
-        return; // success
+          username: response.data.username,
+          user_id: response.data.user_id,
+        });
+        navigate('/dashboard');
       }
     } catch (err) {
-      if (err.response) {
-        // The request was made and the server responded with a status code
-        // that falls out of the range of 2xx
-        console.log(
-          'Failed to sign up. Error response data:',
-          err.response.data
-        );
-        console.log(
-          'Failed to sign up. Error response status:',
-          err.response.status
-        );
-      } else if (err.request) {
-        // if request was made, but no response received
-        console.log('Error request:', err.request);
-      } else {
-        // Something happened in setting up the request that triggered an error
-        console.log('Error message:', err.message);
-      }
+      console.error('Error during signup:', err);
     }
   };
 
   const login = async (username, password) => {
-    // send request to server to login user
     try {
       const response = await axios.post('/api/auth/login', {
         username,
         password,
       });
-      if (response.status !== 200) {
-        console.log('Failed to login:', response);
-        // TODO - front-end: refresh page with 'invalid credentials' error message
-        return;
-      }
-
-      // success
-      const data = response.data;
-      if (data.username) {
+      if (response.status === 200) {
         setAuthState({
           isAuth: true,
-          username: data.username,
-          user_id: data.user_id,
+          username: response.data.username,
+          user_id: response.data.user_id,
         });
-        console.log('login - setting username/token');
-        localStorage.setItem("username", data.username);
-        localStorage.setItem("user_id", data.user_id);
-        localStorage.setItem("token", response.headers['authorization']);
-        // return navigate("/dashboard");
-        return; // success
+        navigate('/dashboard');
       }
     } catch (err) {
-      if (err.response) {
-        // The request was made and the server responded with a status code
-        // that falls out of the range of 2xx
-        console.log('Failed to login. Error response data:', err.response.data);
-        console.log(
-          'Failed to login. Error response status:',
-          err.response.status
-        );
-      } else if (err.request) {
-        // The request was made but no response was received
-        console.log('Error request:', err.request);
-      } else {
-        // Something happened in setting up the request that triggered an Error
-        console.log('Error message:', err.message);
-      }
+      console.error('Error during login:', err);
     }
   };
 
   const logout = () => {
-    setAuthState({
-      isAuth: false,
-      username: "",
-      user_id: null,
-    });
-    localStorage.removeItem("username");
-    localStorage.removeItem("user_id");
-    localStorage.removeItem("token");
-    return navigate("/");
+    axios
+      .post('/api/auth/logout')
+      .then(() => {
+        setAuthState({
+          isAuth: false,
+          username: '',
+          user_id: null,
+        });
+        navigate('/');
+      })
+      .catch((err) => {
+        console.error('Error during logout:', err);
+      });
   };
 
   return (
@@ -187,6 +103,4 @@ export const AuthProvider = ({ children }) => {
   );
 };
 
-export const useAuth = () => {
-  return useContext(AuthContext);
-};
+export const useAuth = () => useContext(AuthContext);
