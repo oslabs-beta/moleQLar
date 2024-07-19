@@ -40,6 +40,10 @@ app.use(express.static(path.join(__dirname, 'build')));
 const authRouter = require('./routes/authRouter');
 app.use('/api/auth', authRouter);
 
+// Graph Routes
+const graphRouter = require('./routes/graphRouter');
+app.use('/api/graph', graphRouter);
+
 
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, 'build', 'index.html'));

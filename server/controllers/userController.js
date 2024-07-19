@@ -25,8 +25,8 @@ userController.createUser = async (req, res, next) => {
   const { username, email } = req.body;
   const hashWord = res.locals.hashWord;
 
-  // TODO - check that username doesn't already exist
-  // TODO - create unique user id for the new user
+  // TODO - check that username doesn't already exist -- handled by DB
+  // TODO - create unique user id for the new user -- handled by DB
 
   // insert credentials into database
   const params = [username, hashWord, email];
@@ -74,7 +74,7 @@ userController.loginUser = async (req, res, next) => {
     // send back user info the client
     res.locals.user = {
       username: username,
-      user_id: result.rows[0].user_id,
+      userId: result.rows[0].user_id,
     }
     return next();
   } catch (err) {
@@ -118,7 +118,7 @@ userController.validateJWT = async (req, res, next) => {
     // send username back to the client
     res.locals.user = {
       username: decoded.username,
-      user_id: decoded.user_id,
+      userId: decoded.userId,
     }
     return next();
   } catch (err) {

@@ -1,19 +1,31 @@
 @import '../../assets/styles/variables.scss';
 
-.dashboard {
-  padding: 20px;
+.dashboard-container {
+  padding: 1rem;
   width: 100%;
-  height: 100%;
+  // height: 100%;
+  flex-grow: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  background-color: #f8f9fa;
-  color: #000; 
-
   &.dark {
     background-color: #121212;
     color: #ffffff;
+  }
+  // border: 5px solid magenta;
+}
+
+.dashboard-title {
+  // border: 2px solid red;
+  margin-bottom: 2rem;
+  // background-color: #f8f9fa;
+  // color: #000; 
+  // background-color: $color-white;
+  color: $color-black;
+
+  &.dark {
+    color: $color-white;
   }
 }
 
@@ -46,9 +58,11 @@
 .add-graph-section p {
   margin-left: 20px;
   font-size: 16px;
-  color: black;
+  // color: black;
+  color: $color-black;
 
   .dark & {
-    color: white;
+    // color: white;
+    color: $color-white;
   }
 }

@@ -77,11 +77,11 @@ function Signup() {
           setAuthState({
             isAuth: false,
             username: data.username,
-            user_id: data.user_id,
+            userId: data.userId,
           });
           console.log('signup succesful - updating local storage');
           localStorage.setItem("username", data.username);
-          localStorage.setItem("user_id", data.user_id);
+          localStorage.setItem("userId", data.userId);
           localStorage.setItem("token", response.headers['authorization']);
           // navigate outside of try-catch block
         } catch (err) {

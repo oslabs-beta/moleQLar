@@ -2,15 +2,16 @@ import React, { createContext, useContext, useState, useEffect } from "react";
 import { BrowserRouter, Route, Routes, Outlet, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from "./contexts/AuthContext.js";
 import { ThemeProvider } from "./contexts/ThemeContext.js";
-import "./index.css"
+import "./index.scss"
 
-import Main from "./components/Main/Main.jsx";
-import Signup from "./components/Signup/Signup.jsx";
-import Login from "./components/Login/Login.jsx";
-import Team from './components/Team/Team.jsx';
-import About from './components/About/About.jsx';
-import Dashboard from './components/Dashboard/Dashboard.jsx';
-import Graph from './components/Graph/Graph.jsx';
+import Main from "./components/Main/Main";
+import Signup from "./components/Signup/Signup";
+import Login from "./components/Login/Login";
+import Team from './components/Team/Team';
+import About from './components/About/About';
+import Dashboard from './components/Dashboard/Dashboard';
+import Graph from './components/Graph/Graph';
+import { GraphProvider } from './contexts/GraphContext';
 
 // A wrapper for <Route> that redirects to the login page if the user is not authenticated.
 const PrivateRoutes = () => {
@@ -25,16 +26,19 @@ const PrivateRoutes = () => {
     if (!authState.isAuth) {
         return <Navigate to="/login" />;
     }
-    // if logged in
-    return <Outlet />;
+    // if logged im
+    return (
+        <GraphProvider>
+            <Outlet />
+        </GraphProvider>
+    )
 };
-
-const App = () =>{
+ const App = () =>{
     return(
         <AuthProvider>
             <BrowserRouter>
                 <ThemeProvider>
-                        <Routes>
+                    <Routes>
                         <Route path="/" element={<Main />} />
                         <Route path="/team" element={<Team />} />
                         <Route path="/signup" element={<Signup />} />
@@ -42,7 +46,7 @@ const App = () =>{
                         <Route path="/about" element={<About />} />
                         {/* private routes */}
                         <Route element={<PrivateRoutes />}>
-                            <Route path="/graph" element={<Graph />} />
+                            <Route path="/graph/:userId/:graphId" element={<Graph />} />
                             <Route path="/dashboard" element={<Dashboard />} />
                             {/* Add more private routes here */}
                         </Route>
