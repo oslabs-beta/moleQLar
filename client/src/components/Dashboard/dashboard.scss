@@ -9,12 +9,18 @@
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
+  &.dark {
+    background-color: #121212;
+    color: #ffffff;
+  }
   // border: 5px solid magenta;
 }
 
 .dashboard-title {
   // border: 2px solid red;
   margin-bottom: 2rem;
+  background-color: #f8f9fa;
+  color: #000; 
 }
 
 .add-graph-section {
@@ -35,11 +41,20 @@
 
 .add-graph-button img {
   width: 100px;
-  height: 100px;
+  filter: none;
+
+  .dark & {
+    filter: invert(1);
+  }
 }
+
 
 .add-graph-section p {
   margin-left: 20px;
   font-size: 16px;
   color: black;
+
+  .dark & {
+    color: white;
+  }
 }
