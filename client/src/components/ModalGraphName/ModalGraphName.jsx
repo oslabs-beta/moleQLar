@@ -10,10 +10,11 @@ import { useGraphContext } from '../../contexts/GraphContext';
 const ModalGraphName = (props) => {
     const navigate = useNavigate();
     const { authState, setAuthState } = useAuth();
-    // const [ graphName, setGraphName ] = useState('');
     const { graphName, setGraphName } = useGraphContext();
     // const { graphId, setGraphId } = useGraphContext();
     const { modalVisibility, handleModalClose } = props;
+
+    
 
     const handleGraphNameSubmit = async () => {
         // send POST request to server
@@ -29,6 +30,7 @@ const ModalGraphName = (props) => {
         try {
             const response = await axios.post(`/api/graph/${userId}`, payload, config);
             console.log(response);
+
             // Update graph state - save graph_name, graph_id
             setGraphName(response.data.graphName)
             setGraphName(response.data.graphId)
@@ -42,8 +44,8 @@ const ModalGraphName = (props) => {
         } catch (err) {
             if (err.response) {
                 // fail - unable to create graph
-                console.log('Failed to create graph. Error responese data:', err.reponse.data);
-                console.log('Failed to create graph. Error responese status:', err.reponse.status);
+                console.log('Failed to create graph. Error responese data:', err.reponse);
+                // console.log('Failed to create graph. Error responese status:', err.reponse.status);
             } else if (err.request) {
                 console.log('Error request:', err.request);
             } else {
