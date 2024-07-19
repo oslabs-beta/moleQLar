@@ -17,7 +17,6 @@ const ModalGraphName = (props) => {
 
     const handleGraphNameSubmit = async () => {
         // send POST request to server
-        console.log('authState:', authState)
         const userId = authState.userId;
         const config = {
             headers: { authorization: localStorage.getItem("token") },
@@ -109,6 +108,9 @@ const ModalGraphName = (props) => {
         transform: 'translate(-50%, -50%)',
         p: '2rem',
         boxShadow: 8,
+        '&:focus': {
+            outline: 'none',
+        }
     }
 
     const titleStyle = {

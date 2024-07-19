@@ -5,11 +5,10 @@ export const GraphContext = createContext();
 export const GraphProvider = ({ children }) => {
     const [ graphName, setGraphName ] = useState('');
     const [ graphId, setGraphId] = useState(null);
-    
-    // console.log('Graph Context variables initialized to undefined');
+    const [ graphList, setGraphList ] = useState([]);
 
     return (
-        <GraphContext.Provider value={{ graphName, setGraphName, graphId, setGraphId }}>
+        <GraphContext.Provider value={{ graphName, setGraphName, graphId, setGraphId, graphList, setGraphList }}>
             { children }
         </GraphContext.Provider>
     )

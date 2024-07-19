@@ -5,8 +5,13 @@ const userController = require('../controllers/userController');
 const graphController = require('../controllers/graphController');
 
 // TODO - retrieve all graph names for user - expect on dashboard page load
-graphRouter.get('/:userId', (req, res, next) => {
+graphRouter.get('/:userId',
+    userController.validateJWT,
+    graphController.getGraphList,
+    (req, res, next) => {
     // return all graphs in database with :userid -- expect from dashboard page
+    console.log('Reached GET /api/graph/:userId');
+    return res.status(200).json(res.locals.user);
 });
 
 // TODO - create new graph for user - expect from dashboard graph name modal

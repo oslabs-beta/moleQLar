@@ -1,0 +1,41 @@
+@import '../../assets/styles/variables.scss';
+
+.dashboard-grid {
+    display: grid;
+    width: 100%;
+    flex-grow: 1;   
+    grid-template-columns: repeat(auto-fill, minmax(10rem, 1fr));
+    grid-template-rows: autofill;
+    gap: 2rem;
+    // border: 10px solid orange;
+}
+
+// graph cards start
+
+@mixin color-opacity($property, $color, $opacity) {
+    $r: red($color);
+    $g: green($color);
+    $b: blue($color);
+    // border-bottom: 2px solid rgba($r, $g, $b, $opacity);
+    #{$property}: rgba($r, $g, $b, $opacity);
+}
+
+.graph-card {
+    font-size: 1.5rem;
+    cursor: pointer;
+    width: 10rem;
+    height: 10rem;
+    background-color: $color-white;
+    border-width: .5rem;
+    border-style: solid;
+    @include color-opacity(border-color, $color-black, 20%);
+    border-radius: 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.new-graph-card {
+    font-size: 4rem;
+    @include color-opacity(color, $color-black, 30%)
+}

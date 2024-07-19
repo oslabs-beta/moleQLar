@@ -61,6 +61,38 @@ graphController.getGraph = async (req, res, next) => {
     }
 }
 
+graphController.getGraphList = async (req, res, next) => {
+    // get userId from res.locals
+    const { userId } = res.locals.user;
+
+    const params = [ userId ];
+    const query =  `SELECT * FROM graphs WHERE user_id = $1`;
+    
+    try {
+        const dbResponse = await db.query(query, params);
+        const graphList = [];
+        let row;
+        for (let i = 0; i < dbResponse.rows.length; i++) {
+            row = dbResponse.rows[i];
+            graphList.push({
+                graph_id: row['graph_id'],
+                graph_name: row['graph_name'],
+                // TODO - insert graph picture here
+            })
+        }
+        res.locals.user.graphList = graphList;
+    } catch (err) {
+        console.log(err);
+        return next({
+            log: 'Error in graphController.getGraphList',
+            message: `Unable to pull graphlist for userId: ${userId}`,
+            status: 500,
+        });
+    }
+
+    return next();
+}
+
 graphController.saveGraph = async (req, res, next) => {
     // update graph in database
     // destructure request payload
