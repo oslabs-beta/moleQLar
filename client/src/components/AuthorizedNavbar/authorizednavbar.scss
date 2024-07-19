@@ -2,20 +2,26 @@
 @import "../Navbar/navbar.scss";
 
 .navbar {
-    background-color: #f8f9fa;
-    color: #000;
+    // background-color: #f8f9fa;
+    background-color: $color-white;
+    // color: #000;
+    color: $color-black;
     transition: background-color 0.3s, color 0.3s;
   
     &.dark {
-      background-color: #333;
-      color: #fff;
+      // background-color: #333;
+      // color: #fff;
+      background-color: $color-black;
+      color: $color-white;;
   
       .nav-link {
-        color: #fff;
+        // color: #fff;
+        color: $color-white;
       }
   
       .logo {
-        color: #fff;
+        // color: #fff;
+        color: $color-white;
       }
     }
   }

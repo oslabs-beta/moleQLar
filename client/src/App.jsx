@@ -2,7 +2,7 @@ import React, { createContext, useContext, useState, useEffect } from "react";
 import { BrowserRouter, Route, Routes, Outlet, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from "./contexts/AuthContext.js";
 import { ThemeProvider } from "./contexts/ThemeContext.js";
-import "./index.css"
+import "./index.scss"
 
 import Main from "./components/Main/Main";
 import Signup from "./components/Signup/Signup";

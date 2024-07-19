@@ -25,7 +25,7 @@ function Dashboard() {
       <ModalGraphName modalVisibility={modalVisibility} handleModalClose={handleModalClose}/>
       <AuthorizedNavbar />
         <div className={`dashboard-container ${darkMode ? 'dark' : ''}`}>
-          <h1 className='dashboard-title'>Your Saved Graphs</h1>
+          <h1 className={`dashboard-title ${darkMode ? 'dark' : ''}`}>Your Saved Graphs</h1>
 
           <DashboardGrid handleModalOpen={handleModalOpen} handleModalClose={handleModalClose}/>
 
