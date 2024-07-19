@@ -21,15 +21,14 @@ const UploadSqlSchema = () => {
     });
   }, []);
 
-  // TODO - testing functionality
-  useEffect(() => {
-    console.log('testing...');
-    const blob = new Blob([samplePgDump], { type: "application/sql" });
-    const mockFile = new File([blob], "mock.sql", {
-      type: "application/sql",
-    });
-    onDrop([mockFile]);
-  }, []);
+  // TODO - testing with sample node graph functionality
+  // useEffect(() => {
+  //   const blob = new Blob([samplePgDump], { type: "application/sql" });
+  //   const mockFile = new File([blob], "mock.sql", {
+  //     type: "application/sql",
+  //   });
+  //   onDrop([mockFile]);
+  // }, []);
 
   // useDropzone is to set up the drag and drop functionality
   const { getRootProps, getInputProps, isDragActive } = useDropzone({

@@ -20,6 +20,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
 import NodeDialog from "./AddNodeDialog";
+import { useGraphContext } from '../../contexts/GraphContext.jsx';
 
 import './nodelist.scss'  // styles
 
@@ -34,6 +35,8 @@ const NodeList = ({
   const [openTable, setOpenTable] = useState(null);
   const [isNodeDialogOpen, setIsNodeDialogOpen] = useState(false);
   const [editingNode, setEditingNode] = useState(null);
+  const { graphName, setGraphName } = useGraphContext();
+  const { graphId, setGraphId } = useGraphContext();
 
   const handleClick = (tableId) => {
     setOpenTable(openTable === tableId ? null : tableId);
@@ -58,7 +61,7 @@ const NodeList = ({
   return (
     <div className='sidebar'>
       <div className="sidebar-top">
-        <h1 className="sidebar-heading">Graph Name</h1>
+        <h1 className="sidebar-heading">{graphName}</h1>
         <List sx={{ flexGrow: 1 }}>
           {tables.map((table) => (
             <React.Fragment key={table.id}>

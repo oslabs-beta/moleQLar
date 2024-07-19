@@ -4,33 +4,39 @@ import { useNavigate } from 'react-router-dom';
 import { Modal, Box, Typography, TextField, Button } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useAuth } from '../../contexts/AuthContext';
+import { useGraphContext } from '../../contexts/GraphContext';
 
 // Modal will pop up only when user creates new graph
 const ModalGraphName = (props) => {
     const navigate = useNavigate();
     const { authState, setAuthState } = useAuth();
-    const [ graphName, setGraphName ] = useState('');
+    // const [ graphName, setGraphName ] = useState('');
+    const { graphName, setGraphName } = useGraphContext();
+    // const { graphId, setGraphId } = useGraphContext();
     const { modalVisibility, handleModalClose } = props;
 
     const handleGraphNameSubmit = async () => {
         // send POST request to server
-        const user_id = authState.user_id;
+        console.log('authState:', authState)
+        const userId = authState.userId;
         const config = {
             headers: { authorization: localStorage.getItem("token") },
         }
         const payload = {
             username: authState.username,
-            user_id: authState.user_id,
-            graph_name: graphName,
+            userId: authState.userId,
+            graphName: graphName,
         }
         try {
-            const response = await axios.post(`/api/graph/${user_id}`, payload, config);
+            const response = await axios.post(`/api/graph/${userId}`, payload, config);
             console.log(response);
-            // TODO - update graph state - save graph_id
+            // Update graph state - save graph_name, graph_id
+            setGraphName(response.data.graphName)
+            setGraphName(response.data.graphId)
 
             // redirect to /graph/:userId/:graphId
             if (response.data) {
-                return navigate(`/graph/${response.data.user_id}/${response.data.graph_id}`)
+                return navigate(`/graph/${response.data.userId}/${response.data.graphId}`)
             } else {
                 throw Error('Response missing data');
             }

@@ -1,5 +1,6 @@
 import axios from 'axios';
 import React, { useCallback, useEffect, useState, useRef } from 'react';
+import { useParams } from 'react-router-dom';
 import ReactFlow, {
   Background,
   Controls,
@@ -146,40 +147,86 @@ const SchemaVisualizer = ({ sqlContents, handleUploadBtn }) => {
   const reactFlowWrapper = useRef(null);
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
 
-  
+  // TODO - send request to server to request graph_name, graph_id, nodes_string, edges_string
+  const { username } = useAuth();
+  const { graphName, setGraphName } = useGraphContext();
+  // const { graphId, setGraphId } = useGraphContext();  -- to be managed as URL param
+  // get URL params
+  const { userId, graphId } = useParams();
+
+  useEffect(() => {
+    const fetchGraphData = async () => {
+      // fetch from server
+      // console.log(`/graph/${userId}/${graphId}`);
+      const config = {
+        headers: { authorization: localStorage.getItem("token") },
+      }
+      try {
+        // GET from server
+        const response = await axios.get(`/api/graph/${userId}/${graphId}`, config);
+        let serverNodes, serverEdges;
+        response.data.nodes === '' ? serverNodes = [] : serverNodes = JSON.parse(response.data.nodes);
+        response.data.edges === '' ? serverEdges = [] : serverEdges = JSON.parse(response.data.edges);
+
+        console.log('reponse:', response);
+        setGraphName(response.data.graphName);
+        setNodes(serverNodes);
+        setEdges(serverEdges);
+      } catch (err) {
+        if (err.response) {
+          // fail - unable to log in
+          // request made, server responded with status code outside of 2xx range
+          console.log('Failed to pull graph. Error response data:', err.response.data);
+          console.log('Failed to pull graph. Error response status:', err.response.status);
+        } else if (err.request) {
+          console.log('Error request:', err.request);
+        } else {
+          console.log('Error message:', err.message);
+        }
+      }
+    }
+    fetchGraphData();
+  }, [])
 
   const handleSaveBtn = async () => {
     // save functionality
-    const { user_id } = useAuth();
-    const { graphName, graphId } = useGraphContext();
-
     // convert nodes and edges to string
     const nodeString = JSON.stringify(nodes);
     const edgeString = JSON.stringify(edges);
+
+    // console.log('nodes:', nodeString)
+    // console.log('edges:', edgeString)
+    console.log('userId:', userId)
+    console.log('graphName:', graphName)
     
-    // send POST request to /api/graph
-    const endpoint = `/api/graph${user_id}/${graphName}`;
-    const config = {}
-    const body = {
-      user_id,
-      graphName,
-      nodeString,
-      edgeString,
+    // send POST request to /api/graph/:userId/:graphId
+    const config = {
+      headers: { authorization: localStorage.getItem('token') },
+    }
+    const payload = {
+      username: username,
+      userId: userId,
+      graphName: graphName,
+      graphId: graphId,
+      nodes: nodeString,
+      edges: edgeString,
     };
-    if (graphId) {
-      const response = await axios.post(endpoint, body, config);
-    } else {
-      const response = await axios.put(endpoint, body, config);
+    try {
+      const response = await axios.put(`/api/graph/${userId}/${graphId}`, payload, config);
+      // success
+      console.log('Successfully saved node graph to database');
+      console.log('response:', response)
+    } catch (err) {
+      if (err.response) {
+        // request made, server responded with status code outside of 2xx range
+        console.log('Failed ot save graph data:', err.respones.data);
+        console.log('Failed ot save graph status:', err.respones.status);
+      } else if (err.request) {
+        console.log('Error request:', err.request);
+      } else {
+        console.log('Error message:', err.message);
+      }
     }
-    // success
-    console.log('Successfully saved node graph to database');
-    // if new graph, store graphID crated by SQL database
-    const data = response.data;
-    if (!graphId) {
-      setGraphName(data.graphName);
-      setGraphId(data.graphId);
-    }
-    return;
   }
 
   // tab state variables

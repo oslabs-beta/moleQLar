@@ -6,7 +6,6 @@ import { useNavigate } from 'react-router-dom';
 import './dashboard.scss';
 
 function Dashboard() {
-  const navigate = useNavigate();
   const [ modalVisibility, setModalVisibility ] = useState(false);
 
   const handleModalOpen = (e) => {

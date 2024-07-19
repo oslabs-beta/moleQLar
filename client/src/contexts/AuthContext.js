@@ -9,7 +9,7 @@ export const AuthProvider = ({ children }) => {
   const [authState, setAuthState] = useState({
     isAuth: false,
     username: "",
-    user_id: null,
+    userId: null,
     loading: true, // Add loading state
   });
 
@@ -42,7 +42,7 @@ export const AuthProvider = ({ children }) => {
           setAuthState({
             isAuth: false,
             username: "",
-            user_id: null,
+            userId: null,
             loading: false, // Set loading to false when done
           });
           // TODO - create refresh token
@@ -50,12 +50,12 @@ export const AuthProvider = ({ children }) => {
           // successful login
           const data = response.data;
           localStorage.setItem("username", data.username);
-          localStorage.setItem("user_id", data.user_id);
+          localStorage.setItem("userId", data.userId);
           localStorage.setItem("token", response.headers['authorization']);
           setAuthState({
             isAuth: true,
             username: data.username,
-            user_id: data.user_id,
+            userId: data.userId,
             loading: false, // Set loading to false when done
           });
         }
@@ -68,11 +68,11 @@ export const AuthProvider = ({ children }) => {
             setAuthState({
               isAuth: false,
               username: "",
-              user_id: null,
+              userId: null,
               loading: false,
             });
             localStorage.removeItem("username");
-            localStorage.removeItem("user_id");
+            localStorage.removeItem("userId");
             localStorage.removeItem('token');
             
           }
@@ -108,11 +108,11 @@ export const AuthProvider = ({ children }) => {
   //       setAuthState({
   //         isAuth: true,
   //         username: data.username,
-  //         user_id: data.user_id,
+  //         userId: data.userId,
   //       })
   //       console.log('signup - setting username/token');
   //       localStorage.setItem("username", data.username);
-  //       localStorage.setItem("user_id", data.user_id);
+  //       localStorage.setItem("userId", data.userId);
   //       localStorage.setItem("token", response.headers['authorization']);
   //       return; // success
   //     }
@@ -157,11 +157,11 @@ export const AuthProvider = ({ children }) => {
   //       setAuthState({
   //         isAuth: true,
   //         username: data.username,
-  //         user_id: data.user_id,
+  //         userId: data.userId,
   //       });
   //       console.log('login - setting username/token');
   //       localStorage.setItem("username", data.username);
-  //       localStorage.setItem("user_id", data.user_id);
+  //       localStorage.setItem("userId", data.userId);
   //       localStorage.setItem("token", response.headers['authorization']);
   //       // return navigate("/dashboard");
   //       return; // success
@@ -189,10 +189,10 @@ export const AuthProvider = ({ children }) => {
   //   setAuthState({
   //     isAuth: false,
   //     username: "",
-  //     user_id: null,
+  //     userId: null,
   //   });
   //   localStorage.removeItem("username");
-  //   localStorage.removeItem("user_id");
+  //   localStorage.removeItem("userId");
   //   localStorage.removeItem("token");
   //   return navigate("/");
   // };
