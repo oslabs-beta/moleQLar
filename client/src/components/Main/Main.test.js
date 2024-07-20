@@ -8,8 +8,15 @@ import Team from '../Team/Team.jsx';
 import Signup from '../Signup/Signup.jsx';
 import Login from '../Login/Login.jsx';
 import Main from './Main.jsx';
+import { useAuth } from '../../contexts/AuthContext';
 
+jest.mock('../../contexts/AuthContext');
 
+const mockUseAuth = useAuth;
+mockUseAuth.mockReturnValue({
+  authState: { isAuth: false },
+  setAuthState: jest.fn(),
+})
 
 describe('Main page', () => {
   beforeEach(() => {
@@ -84,8 +91,8 @@ describe('Main page', () => {
       const signupButton = screen.getByRole('button', { name: /Sign Up/i });
       fireEvent.click(signupButton);
       expect(
-        screen.getByText(/Don't have an account?/i)
-      ).toBeInTheDocument(/Already have an account?/i);
+        screen.getByText(/Already have an account?/i)
+      ).toBeInTheDocument();
     });
     
   });
