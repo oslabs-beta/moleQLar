@@ -42,7 +42,8 @@ const ModalGraphName = (props) => {
                 throw Error('Response missing data');
             }
         } catch (err) {
-            if (err.response) {
+            if (graphName === '') console.log('Graph name cannot be empty');
+            else if (err.response) {
                 // fail - unable to create graph
                 console.log('Failed to create graph. Error responese data:', err.reponse);
                 // console.log('Failed to create graph. Error responese status:', err.reponse.status);

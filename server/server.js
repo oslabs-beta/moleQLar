@@ -1,40 +1,24 @@
+const path = require('path');
 const express = require("express");
 const app = express();
 const bodyParser = require("body-parser");
 const cors = require("cors");
-// const userRoutes = require("./routes/users");
-// const { Sequelize } = require('sequelize');
-// const authRoutes = require('./routes/auth.js');
-// const User = require('./models/User.js');
-// const db =  require("./models/userModels.js");
+
+const { graphqlHTTP } = require('express-graphql');
+const schema = require('./graphql/schema');
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-// app.use(cors());
-const path = require('path');
+app.use(cors());
 
-
-// Creates a new Sequalize Instance w/ Parameters
-// const sequelize = new Sequelize('database', 'username', 'password', {
-//   host: 'localhost',
-//   dialect: 'postgres',
-// })
-// Test Connection to the Database
-// sequelize.authenticate()
-// .then(() => console.log('Database connected...'))
-// .catch(err => console.log('Error ' = err));
-// Sync the Database
-// sequelize.sync();
-
-// app.use('/auth', authRoutes);
-
+// static files
 app.use(express.static(path.join(__dirname, 'build')));
 
-// app.get("/testdb", async (req, res) => {
-//   const result = await db.query("SELECT * FROM users LIMIT 1");
-//   console.log("result", result);
-//   res.status(200).json(result);
-// });
+// graphQL
+app.use('/graphql', graphqlHTTP({
+  schema: schema,
+  graphiql: true
+}));
 
 // Authorization Route
 const authRouter = require('./routes/authRouter');
