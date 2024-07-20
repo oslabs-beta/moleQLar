@@ -4,6 +4,7 @@ const sequelize = new Sequelize('database', 'username', 'password', {
   dialect: 'postgres',
 });
 
+
 const User = sequelize.define('User', {
   firstName: {
     type: DataTypes.STRING,
@@ -23,5 +24,9 @@ const User = sequelize.define('User', {
     allowNull: false,
   },
 });
+
+// sequelize.authenticate()
+//     .then(() => console.log('Database connected...'))
+//     .catch(err => console.log('Error: ' + err));
 
 module.exports = User;
