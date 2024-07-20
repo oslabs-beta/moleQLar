@@ -2,15 +2,10 @@ import React from 'react';
 import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import About from './About.jsx';
-import { BrowserRouter} from 'react-router-dom';
-
-
-const mockNavigate = jest.fn();
-
-jest.mock('react-router-dom', () => ({
-  ...jest.requireActual('react-router-dom'),
-  useNavigate: () => mockNavigate,
-}));
+import { BrowserRouter } from 'react-router-dom';
+import { MemoryRouter, Routes, Route } from 'react-router-dom';
+import Team from '../Team/Team.jsx';
+import Main from '../Main/Main.jsx';
 
 describe('About page', () => {
   beforeEach(() => {
@@ -23,17 +18,49 @@ describe('About page', () => {
         <About />
       </BrowserRouter>
     );
-
-    const mainHeader = screen.getByText(/We're changing the way/i);
-    const homeLinkNav = screen.getByRole('link', {name: /Home/i});
+    const mainHeader = screen.getByText(/think about GraphQL/i);
+    const homeLinkNav = screen.getByRole('link', { name: /Home/i });
     const homeLinkIcon = screen.getByAltText(/Small Logo/i);
-    const teamLink = screen.getByRole('link', {name: /Team/i});
+    const teamLink = screen.getByRole('link', { name: /Team/i });
     const githubLink = screen.getByAltText(/GitHub/i);
-    
+
     expect(mainHeader).toBeInTheDocument();
     expect(homeLinkNav).toBeInTheDocument();
     expect(homeLinkIcon).toBeInTheDocument();
     expect(teamLink).toBeInTheDocument();
     expect(githubLink).toBeInTheDocument();
+  });
+
+  describe('Navigation tests for About page', () => {
+    beforeEach(() => {
+      render(
+        <MemoryRouter initialEntries={['/about']}>
+          <Routes>
+            <Route path='/about' element={<About />} />
+            <Route path='/team' element={<Team />} />
+            <Route path='/' element={<Main />} />
+          </Routes>
+        </MemoryRouter>
+      );
+    });
+    test('Successfully navigates to Team route on click', () => {
+      const teamLink = screen.getByRole('link', { name: /Team/i });
+      fireEvent.click(teamLink);
+      expect(screen.getByText(/Meet the Team/i)).toBeInTheDocument();
+    });
+    test('Successfully navigates to Home/Main route using navbar link', () => {
+      const homeLinkNav = screen.getByRole('link', { name: /Home/i });
+      fireEvent.click(homeLinkNav);
+      expect(
+        screen.getByText(/Implementation in seconds/i)
+      ).toBeInTheDocument();
+    });
+    test('Successfully navigates to Home/Main route using icon link', () => {
+      const homeLinkIcon = screen.getByAltText(/Small Logo/i);
+      fireEvent.click(homeLinkIcon);
+      expect(
+        screen.getByText(/Implementation in seconds/i)
+      ).toBeInTheDocument();
+    });
   });
 });

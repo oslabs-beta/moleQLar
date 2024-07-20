@@ -3,11 +3,9 @@ import { Link, NavLink } from 'react-router-dom';
 import githubLogo from '../../assets/logos/githubLogo.png';
 import linkedInLogo from '../../assets/logos/linkedin.png';
 import smallLogo from '../../assets/logos/smallLogo.png';
-import { AuthContext } from '../../contexts/AuthContext';
 import './navbar.scss';
 
 const Navbar = () => {
-  const { isAuth, username, logout } = useContext(AuthContext);
   return (
     <nav className='navbar'>
       <Link to='/'>
