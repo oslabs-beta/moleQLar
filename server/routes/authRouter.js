@@ -4,7 +4,6 @@ const authRouter = express.Router();
 const userController = require('../controllers/userController.js');
 
 // signup route
-// TODO -- add cookies and JWT
 authRouter.post('/signup',
     userController.hashing,
     userController.createUser,
@@ -15,7 +14,6 @@ authRouter.post('/signup',
 });
 
 // login route
-// TODO -- add cookies and JWT
 authRouter.post('/login',
     userController.loginUser,
     userController.signJWT,

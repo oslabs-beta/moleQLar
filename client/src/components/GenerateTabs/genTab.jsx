@@ -187,11 +187,7 @@ const GenerateTab = ({ open, onClose, nodes, edges }) => {
 
   return (
     <div className='generate-tab-container'>
-      {/* <Button onClick={handleClickOpen}>
-      Generate
-    </Button> */}
-      {/* maxWidth="md" fullWidth */}
-      <Dialog open={open} onClose={onClose}>
+      <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
         <DialogTitle>Tabs</DialogTitle>
         <DialogContent>
           <BasicTabs

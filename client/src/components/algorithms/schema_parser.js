@@ -43,7 +43,7 @@ export function parseSqlSchema(sql) {
       if (lineArray.length >= 2) {
         const fieldName = lineArray[0].replace(/"/g, '');
         //********** can add field mapper here?
-        console.log(lineArray[1]);
+        // console.log(lineArray[1]);
         //**** remove trailing commas from non-null (required) fields
         const fieldType = typeMapper[lineArray[1].replace(/,/g, '')];
         //********check if length is 4 instead of using includes method? includes method is O(n) for each

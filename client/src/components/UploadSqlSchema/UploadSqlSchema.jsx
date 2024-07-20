@@ -23,9 +23,8 @@ const UploadSqlSchema = () => {
     });
   }, []);
 
-  // TODO - testing functionality
+  // TODO - testing with sample node graph functionality
   // useEffect(() => {
-  //   console.log('testing...');
   //   const blob = new Blob([samplePgDump], { type: "application/sql" });
   //   const mockFile = new File([blob], "mock.sql", {
   //     type: "application/sql",

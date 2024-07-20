@@ -29,17 +29,17 @@ userController.createUser = async (req, res, next) => {
   const hashWord = res.locals.hashWord; // Retrieve hashed password from res.locals
 
   // TODO - check that username doesn't already exist - Brian
-  try {
-    const userCheck = await db.query('SELECT * FROM users WHERE username = $1', [username]);
-    if (userCheck.rows.length > 0) {
-      return res.status(409).json({ error: 'Username already exists' });
-    }
-  } catch (err) {
-    return next({
-      log: 'Error in userController.createUser - checking for existing username',
-      message: { err: 'Error checking for existing username' },
-    });
-  }
+  // try {
+  //   const userCheck = await db.query('SELECT * FROM users WHERE username = $1', [username]);
+  //   if (userCheck.rows.length > 0) {
+  //     return res.status(409).json({ error: 'Username already exists' });
+  //   }
+  // } catch (err) {
+  //   return next({
+  //     log: 'Error in userController.createUser - checking for existing username',
+  //     message: { err: 'Error checking for existing username' },
+  //   });
+  // }
   // TODO - create unique user id for the new user
 
   // Insert credentials into database
@@ -95,9 +95,9 @@ userController.loginUser = async (req, res, next) => {
     // Send back user info to the client
     res.locals.user = {
       username: username,
-      user_id: result.rows[0].user_id,
-    };
-    return next(); // Proceed to the next middleware
+      userId: result.rows[0].user_id,
+    }
+    return next();
   } catch (err) {
     console.log(err);
     return next({
@@ -146,9 +146,9 @@ userController.validateJWT = async (req, res, next) => {
     // Success - send username back to the client
     res.locals.user = {
       username: decoded.username,
-      user_id: decoded.user_id,
-    };
-    return next(); // Proceed to the next middleware
+      userId: decoded.userId,
+    }
+    return next();
   } catch (err) {
     console.log('userController - err.name:', err.name);
 

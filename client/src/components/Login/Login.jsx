@@ -50,11 +50,11 @@ function Login() {
       setAuthState({
         isAuth: true,
         username: data.username,
-        user_id: data.user_id,
+        userId: data.userId,
       });
       console.log('logged in - saving to local storage');
       localStorage.setItem("username", data.username);
-      localStorage.setItem("user_id", data.user_id);
+      localStorage.setItem("userId", data.userId);
       localStorage.setItem("token", response.headers['authorization']);
       return navigate('/dashboard');
     } catch (err) {
