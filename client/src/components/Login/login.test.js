@@ -104,6 +104,7 @@ describe('Navigation tests for Login page', () => {
       </MemoryRouter>
     );
   });
+  
 
   test('Successfully navigates to Home/Main route using icon link', () => {
     const homeLinkIcon = screen.getByAltText(/Small Logo/i);
