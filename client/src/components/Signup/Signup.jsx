@@ -13,7 +13,7 @@ import Alert from '@mui/material/Alert';
 import CircularProgress from '@mui/material/CircularProgress';
 import heroImg from '../../assets/logos/hero-img.png';
 import Navbar from '../Navbar/Navbar';
-import { useAuth } from '../../contexts/AuthContext'
+import { useAuth } from '../../contexts/AuthContext';
 
 // Creating a custom theme with primary color
 const theme = createTheme({
@@ -33,7 +33,7 @@ function Signup() {
     username: '',
     email: '',
     password: '',
-    confirmPassword: ''
+    confirmPassword: '',
   });
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
@@ -62,11 +62,13 @@ function Signup() {
     const newErrors = {};
     if (!formData.username.trim()) newErrors.username = 'Username is required';
     if (!formData.email.trim()) newErrors.email = 'Email is required';
-    else if (!/\S+@\S+\.\S+/.test(formData.email)) newErrors.email = 'Email is invalid';
+    else if (!/\S+@\S+\.\S+/.test(formData.email))
+      newErrors.email = 'Email is invalid';
     if (!formData.password) newErrors.password = 'Password is required';
     // else if (formData.password.length < 6) newErrors.password = 'Password must be at least 6 characters';
-    if (formData.password !== formData.confirmPassword) newErrors.confirmPassword = 'Passwords do not match';
-    
+    if (formData.password !== formData.confirmPassword)
+      newErrors.confirmPassword = 'Passwords do not match';
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0; // Return true if no errors
   };
@@ -83,7 +85,9 @@ function Signup() {
         setSubmitSuccess(true); // Set success state to true
       } catch (error) { // Error handling for failed signup attempt
         console.error(error);
-        setSubmitError(error.response?.data?.message || 'An error occurred during signup');
+        setSubmitError(
+          error.response?.data?.message || 'An error occurred during signup'
+        );
       } finally {
         setIsLoading(false); // Set loading state to false
       }
@@ -92,121 +96,126 @@ function Signup() {
   };
   // JSX structure of the Signup component
   return (
-   <>
-    <Navbar />
+    <>
+      <Navbar />
 
-    <ThemeProvider theme={theme}>
-      <div className="login-div">
-        <div className="hero-img">
-          <img src={heroImg} alt="Main Graphic" />
-        </div>
+      <ThemeProvider theme={theme}>
+        <div className='login-div'>
+          <div className='hero-img'>
+            <img src={heroImg} alt='Main Graphic' />
+          </div>
 
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            maxWidth: '400px',
-            margin: 'auto',
-            padding: '20px',
-          }}
-        >
-          <Typography component="h1" variant="h5">
-            Sign up
-          </Typography>
-          
-          {submitSuccess && (
-            <Alert severity="success" sx={{ width: '100%', mt: 2 }}>
-              Signup successful! You can now login.
-            </Alert>
-          )}
-          
-          {submitError && (
-            <Alert severity="error" sx={{ width: '100%', mt: 2 }}>
-              {submitError}
-            </Alert>
-          )}
-          
-          <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3, width: '100%' }}>
-            <Grid container spacing={2}>
-              <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  id="username"
-                  label="Username"
-                  name="username"
-                  autoComplete="username"
-                  value={formData.username}
-                  onChange={handleChange}
-                  error={!!errors.username}
-                  helperText={errors.username}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  id="email"
-                  label="Email Address"
-                  name="email"
-                  autoComplete="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  error={!!errors.email}
-                  helperText={errors.email}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  name="password"
-                  label="Password"
-                  type="password"
-                  id="password"
-                  autoComplete="new-password"
-                  value={formData.password}
-                  onChange={handleChange}
-                  error={!!errors.password}
-                  helperText={errors.password}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  name="confirmPassword"
-                  label="Confirm Password"
-                  type="password"
-                  id="confirmPassword"
-                  value={formData.confirmPassword}
-                  onChange={handleChange}
-                  error={!!errors.confirmPassword}
-                  helperText={errors.confirmPassword}
-                />
-              </Grid>
-            </Grid>
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-              disabled={isLoading}
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              maxWidth: '400px',
+              margin: 'auto',
+              padding: '20px',
+            }}
+          >
+            <Typography component='h1' variant='h5'>
+              Sign up
+            </Typography>
+
+            {submitSuccess && (
+              <Alert severity='success' sx={{ width: '100%', mt: 2 }}>
+                Signup successful! You can now login.
+              </Alert>
+            )}
+
+            {submitError && (
+              <Alert severity='error' sx={{ width: '100%', mt: 2 }}>
+                {submitError}
+              </Alert>
+            )}
+
+            <Box
+              component='form'
+              noValidate
+              onSubmit={handleSubmit}
+              sx={{ mt: 3, width: '100%' }}
             >
-              {isLoading ? <CircularProgress size={24} /> : 'Sign Up'}
-            </Button>
-            <Grid container justifyContent="flex-end">
-              <Grid item>
-                <Link href="/login" variant="body2">
-                  Already have an account? Sign in
-                </Link>
+              <Grid container spacing={2}>
+                <Grid item xs={12}>
+                  <TextField
+                    required
+                    fullWidth
+                    id='username'
+                    label='Username'
+                    name='username'
+                    autoComplete='username'
+                    value={formData.username}
+                    onChange={handleChange}
+                    error={!!errors.username}
+                    helperText={errors.username}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    required
+                    fullWidth
+                    id='email'
+                    label='Email Address'
+                    name='email'
+                    autoComplete='email'
+                    value={formData.email}
+                    onChange={handleChange}
+                    error={!!errors.email}
+                    helperText={errors.email}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    required
+                    fullWidth
+                    name='password'
+                    label='Password'
+                    type='password'
+                    id='password'
+                    autoComplete='new-password'
+                    value={formData.password}
+                    onChange={handleChange}
+                    error={!!errors.password}
+                    helperText={errors.password}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    required
+                    fullWidth
+                    name='confirmPassword'
+                    label='Confirm Password'
+                    type='password'
+                    id='confirmPassword'
+                    value={formData.confirmPassword}
+                    onChange={handleChange}
+                    error={!!errors.confirmPassword}
+                    helperText={errors.confirmPassword}
+                  />
+                </Grid>
               </Grid>
-            </Grid>
+              <Button
+                type='submit'
+                fullWidth
+                variant='contained'
+                sx={{ mt: 3, mb: 2 }}
+                disabled={isLoading}
+              >
+                {isLoading ? <CircularProgress size={24} /> : 'Sign Up'}
+              </Button>
+              <Grid container justifyContent='flex-end'>
+                <Grid item>
+                  <Link href='/login' variant='body2'>
+                    Already have an account? Sign in
+                  </Link>
+                </Grid>
+              </Grid>
+            </Box>
           </Box>
-        </Box>
-      </div>
-    </ThemeProvider>
+        </div>
+      </ThemeProvider>
     </>
   );
 }
