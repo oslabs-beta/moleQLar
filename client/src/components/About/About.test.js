@@ -8,6 +8,7 @@ import Team from '../Team/Team.jsx';
 import Main from '../Main/Main.jsx';
 
 describe('About page', () => {
+  //reset mocks before each test
   beforeEach(() => {
     fetch.resetMocks();
   });
@@ -18,12 +19,15 @@ describe('About page', () => {
         <About />
       </BrowserRouter>
     );
+
+    //select components on about page to test for correct rendering
     const mainHeader = screen.getByText(/think about GraphQL/i);
     const homeLinkNav = screen.getByRole('link', { name: /Home/i });
     const homeLinkIcon = screen.getByAltText(/Small Logo/i);
     const teamLink = screen.getByRole('link', { name: /Team/i });
     const githubLink = screen.getByAltText(/GitHub/i);
 
+    // Verify selected fields are rendering properly
     expect(mainHeader).toBeInTheDocument();
     expect(homeLinkNav).toBeInTheDocument();
     expect(homeLinkIcon).toBeInTheDocument();
@@ -32,6 +36,7 @@ describe('About page', () => {
   });
 
   describe('Navigation tests for About page', () => {
+    //reset memory router before each navigation test
     beforeEach(() => {
       render(
         <MemoryRouter initialEntries={['/about']}>

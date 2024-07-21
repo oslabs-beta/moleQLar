@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, waitFor, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { BrowserRouter } from 'react-router-dom';
 import { MemoryRouter, Routes, Route } from 'react-router-dom';
@@ -10,13 +10,16 @@ import Login from '../Login/Login.jsx';
 import Main from './Main.jsx';
 import { useAuth } from '../../contexts/AuthContext';
 
+//mock auth context
 jest.mock('../../contexts/AuthContext');
 
+//mock return values for auth context
 const mockUseAuth = useAuth;
 mockUseAuth.mockReturnValue({
   authState: { isAuth: false },
   setAuthState: jest.fn(),
 })
+
 
 describe('Main page', () => {
   beforeEach(() => {
@@ -29,6 +32,8 @@ describe('Main page', () => {
         <Main />
       </BrowserRouter>
     );
+
+    //select components on main page to test for correct rendering
     const mainHeader = screen.getByText(/Implementation in seconds/i);
     const homeLinkNav = screen.getByRole('link', { name: /Home/i });
     const homeLinkIcon = screen.getByAltText(/Small Logo/i);
@@ -39,6 +44,7 @@ describe('Main page', () => {
     const signupButton = screen.getByRole('button', {name: /Sign Up/i });
     const mainImage = screen.getByAltText(/molecule image/i);
 
+    //Verify selected fields are rendering properly
     expect(mainHeader).toBeInTheDocument();
     expect(homeLinkNav).toBeInTheDocument();
     expect(homeLinkIcon).toBeInTheDocument();
@@ -51,6 +57,7 @@ describe('Main page', () => {
   });
 
   describe('Navigation tests for Main page', () => {
+    //reset memory router before each navigation test
     beforeEach(() => {
       render(
         <MemoryRouter initialEntries={['/']}>
