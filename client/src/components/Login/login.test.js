@@ -104,32 +104,31 @@ describe('Navigation tests for Login page', () => {
       </MemoryRouter>
     );
   });
-  
-  // Test to check if it navigates to Home/Main when icon clicked
+
   test('Successfully navigates to Home/Main route using icon link', () => {
     const homeLinkIcon = screen.getByAltText(/Small Logo/i);
     fireEvent.click(homeLinkIcon);
     expect(screen.getByText(/Implementation in seconds/i)).toBeInTheDocument();
   });
-  // Test to successful navagation to Home/Main using Navbar Link
+
   test('Successfully navigates to Home/Main route using navbar link', () => {
     const homeLinkNav = screen.getByRole('link', { name: /Home/i });
     fireEvent.click(homeLinkNav);
     expect(screen.getByText(/Implementation in seconds/i)).toBeInTheDocument();
   });
-  // Test successfully navigates to Team on click
+
   test('Successfully navigates to Team route on click', () => {
     const teamLink = screen.getByRole('link', { name: /Team/i });
     fireEvent.click(teamLink);
     expect(screen.getByText(/Meet the Team/i)).toBeInTheDocument();
   });
-  // Test for Successfully navigates to about upon click
+
   test('Successfully navigates to About route on click', () => {
     const aboutLink = screen.getByRole('link', { name: /About/i });
     fireEvent.click(aboutLink);
     expect(screen.getByText(/think about GraphQL/i)).toBeInTheDocument();
   });
-  // Test for Successful Navigation upon Signup click
+
   test('Successfully navigates to Signup route on click', () => {
     const signupLink = screen.getByRole('link', {
       name: /Don't have an account/i,
