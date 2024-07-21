@@ -1,9 +1,10 @@
+// Importing necessary libraries and components
 const request = require('supertest');
 const express = require('express');
 const authRouter = require('../routes/authRouter'); // Adjust the path as necessary
 const userController = require('../controllers/userController');
-
 const app = express();
+
 app.use(express.json()); // Middleware to parse JSON
 app.use('/api/auth', authRouter);
 
