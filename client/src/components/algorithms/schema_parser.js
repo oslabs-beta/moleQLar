@@ -13,6 +13,9 @@ export function parseSqlSchema(sql) {
   const tables = {};
   let currentTable;
   const relationships = [];
+  let index = 0;
+  //moreFields handles adding fields to GQL types
+  let moreFields = false;
   //create mapping object to change SQL types to GQL types
   const typeMapper = {
     varchar: 'String',
@@ -20,59 +23,86 @@ export function parseSqlSchema(sql) {
     bigint: 'Int',
     DATE: 'String',
     integer: 'Int',
+    character: 'String',
   };
+
+  const lineArray = sql.split(/\r?\n/);
+
   // Split dump file into each line
-  sql.split(/\r?\n/).forEach((line) => {
+  lineArray.forEach((line) => {
     // Add all tables to tables object
-    if (line.startsWith('CREATE TABLE')) {
+    if (line.startsWith('CREATE TABLE public')) {
       // Grab table name
       let tableName = line.match(/CREATE TABLE (\w+\.)?(\w+)/)[2];
-      //make table name singular and capitalize first letter
-      //`    ${pluralize(key)}: [${pluralize.singular(key).replace(/^./, key[0].toUpperCase())}]\n`;
-
-      // currentTable = pluralize
-      //   .singular(tableName)
-      //   .replace(/^./, tableName[0].toUpperCase());
       currentTable = tableName;
       // Add tableName to tables object
       tables[currentTable] = [];
-    } else if (line.trim().startsWith('"')) {
-      // Add each field to current table
-      const lineArray = line.trim().split(' ');
-      // Make sure field is valid
-      if (lineArray.length >= 2) {
-        const fieldName = lineArray[0].replace(/"/g, '');
-        //********** can add field mapper here?
-        // console.log(lineArray[1]);
-        //**** remove trailing commas from non-null (required) fields
-        const fieldType = typeMapper[lineArray[1].replace(/,/g, '')];
-        //********check if length is 4 instead of using includes method? includes method is O(n) for each
-        const required = line.toLowerCase().includes('not null');
-        // Add new field object to associated fields array on table object
-        tables[currentTable].push({
-          name: fieldName,
-          type: fieldType,
-          required: required,
-        });
+      moreFields = true;
+    } else if (moreFields) {
+      if (line.startsWith(')')) {
+        //if all fields have been added to table, set moreFields to false
+        moreFields = false;
+      } else {
+        // Add each field to current table
+        const lineArray = line.trim().split(' ');
+        // Make sure field is valid
+        if (lineArray.length >= 2) {
+          const fieldName = lineArray[0].replace(/"/g, '');
+          //make sure field is not a primary key definition
+          if (fieldName !== 'CONSTRAINT') {
+            //remove trailing commas from non-null (required) fields to check if required
+            const fieldType = typeMapper[lineArray[1].replace(/,/g, '')];
+            const required = line.toLowerCase().includes('not null');
+            // Add new field object to associated fields array on table object
+            tables[currentTable].push({
+              name: fieldName,
+              type: fieldType,
+              required: required,
+            });
+          }
+        }
       }
     }
     // Grab relationships from alter tables (primary/foreign keys)
     else if (line.startsWith('ALTER TABLE')) {
-      const match = line.match(
-        /ALTER TABLE (\w+\.)?(\w+).*FOREIGN KEY \("(\w+)"\) REFERENCES (\w+\.)?(\w+)\("(\w+)"\)/
-      );
-      if (match) {
-        const [, , sourceTable, sourceField, , targetTable, targetField] =
-          match;
-        //push new relationship onto object
-        relationships.push({
-          source: sourceTable,
-          sourceHandle: sourceField,
-          target: targetTable,
-          targetHandle: targetField,
-        });
+      //standardize input
+      line = line.replace('ALTER TABLE ONLY', 'ALTER TABLE').replace(/"/g, '');
+      //only use public tables to link relationships
+      if (line.startsWith('ALTER TABLE public')) {
+        //if line has been split into two lines on import, concatenate them
+        if (line.at(line.length - 1) !== ';') {
+          //add next line to current
+          line += lineArray[index + 1];
+        }
+        //attempt to match line to template
+        const match = line.match(
+          /ALTER TABLE (\w+\.)?(\w+).*FOREIGN KEY \((\w+)\) REFERENCES (\w+\.)?(\w+)\((\w+)\)/
+        );
+        //if line matches, store data
+        if (match) {
+          const [
+            ,
+            sourceCheck,
+            sourceTable,
+            sourceField,
+            targetCheck,
+            targetTable,
+            targetField,
+          ] = match;
+
+          //if both tables are public, push data onto relationships object
+          if (sourceCheck === 'public.' && targetCheck === 'public.') {
+            relationships.push({
+              source: sourceTable,
+              sourceHandle: sourceField,
+              target: targetTable,
+              targetHandle: targetField,
+            });
+          }
+        }
       }
     }
+    index++;
   });
 
   // Calculate grid layout
