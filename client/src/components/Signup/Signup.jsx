@@ -39,7 +39,7 @@ function Signup() {
   const [isLoading, setIsLoading] = useState(false);
   const [submitError, setSubmitError] = useState('');
   const [submitSuccess, setSubmitSuccess] = useState(false);
-  const { isAuth, signup } = useAuth(); // Accessing auth state and state updater from AuthContext
+  const { isAuth } = useAuth(); // Accessing auth state and state updater from AuthContext
 
   // Effect hook to check authentication state on component mount
   useEffect(() => {
@@ -81,7 +81,7 @@ function Signup() {
       setSubmitError(''); // Clear submission error
       try {
         // Sending signup request to server
-        await signup(formData);  // send POST request to server
+        // await signup(formData);  // send POST request to server
         setSubmitSuccess(true); // Set success state to true
       } catch (error) { // Error handling for failed signup attempt
         console.error(error);
