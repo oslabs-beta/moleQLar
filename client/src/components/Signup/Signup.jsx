@@ -1,7 +1,6 @@
-// Importing necessary libraries and components
-import React, { useState, useEffect } from "react";
-import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Button from '@mui/material/Button';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import TextField from '@mui/material/TextField';
@@ -15,7 +14,6 @@ import heroImg from '../../assets/logos/hero-img.png';
 import Navbar from '../Navbar/Navbar';
 import { useAuth } from '../../contexts/AuthContext';
 
-// Creating a custom theme with primary color
 const theme = createTheme({
   palette: {
     primary: {
@@ -24,11 +22,8 @@ const theme = createTheme({
   },
 });
 
-// Defining the Signup functional component
 function Signup() {
-  let navigate = useNavigate(); // Hook for navigation
-
-  // Defining state variables for form data, errors, loading state, and submission state
+  let navigate = useNavigate();
   const [formData, setFormData] = useState({
     username: '',
     email: '',
@@ -39,16 +34,14 @@ function Signup() {
   const [isLoading, setIsLoading] = useState(false);
   const [submitError, setSubmitError] = useState('');
   const [submitSuccess, setSubmitSuccess] = useState(false);
-  const { isAuth, signup } = useAuth(); // Accessing auth state and state updater from AuthContext
+  const { authState, setAuthState } = useAuth();
 
-  // Effect hook to check authentication state on component mount
   useEffect(() => {
-    if (isAuth) {
-      navigate('/dashboard'); // Redirect to dashboard if already authenticated
+    if (authState.isAuth) {
+      navigate('/dashboard');
     }
-  }, []) // Empty dependency array means this runs once on mount
+  }, []);
 
-    // Function to handle input changes and update form data state
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
@@ -57,7 +50,6 @@ function Signup() {
     }
   };
 
-    // Function to validate form inputs
   const validateForm = () => {
     const newErrors = {};
     if (!formData.username.trim()) newErrors.username = 'Username is required';
@@ -70,31 +62,62 @@ function Signup() {
       newErrors.confirmPassword = 'Passwords do not match';
 
     setErrors(newErrors);
-    return Object.keys(newErrors).length === 0; // Return true if no errors
+    return Object.keys(newErrors).length === 0;
   };
 
-  // Function to handle form submission
   const handleSubmit = async (e) => {
-    e.preventDefault(); // Prevent default form submission
+    e.preventDefault();
     if (validateForm()) {
-      setIsLoading(true); // Set loading state to true
-      setSubmitError(''); // Clear submission error
+      setIsLoading(true);
+      setSubmitError('');
       try {
-        // Sending signup request to server
-        await signup(formData);  // send POST request to server
-        setSubmitSuccess(true); // Set success state to true
-      } catch (error) { // Error handling for failed signup attempt
+        // await signup(formData);  // send POST request to server to create new user
+
+        try {
+          const response = await axios.post('/api/auth/signup', formData);
+          const data = response.data;
+          setAuthState({
+            isAuth: false,
+            username: data.username,
+            userId: data.userId,
+          });
+          console.log('signup succesful - updating local storage');
+          localStorage.setItem('username', data.username);
+          localStorage.setItem('userId', data.userId);
+          localStorage.setItem('token', response.headers['authorization']);
+          // navigate outside of try-catch block
+        } catch (err) {
+          if (err.response) {
+            // response status code outside 2XX
+            console.log(
+              'Failed to sign up. Error response data:',
+              err.response.data
+            );
+            console.log(
+              'Failed to sign up. Error response status:',
+              err.response.status
+            );
+          } else if (err.request) {
+            // request was made, but no response received
+            console.log('Error request:', err.request);
+          } else {
+            // error in setting up request
+            console.log('Error message:', err.message);
+          }
+        }
+        setSubmitSuccess(true);
+      } catch (error) {
         console.error(error);
         setSubmitError(
           error.response?.data?.message || 'An error occurred during signup'
         );
       } finally {
-        setIsLoading(false); // Set loading state to false
+        setIsLoading(false);
       }
-      return navigate("/dashboard"); // Redirect to dashboard
+      return navigate('/dashboard');
     }
   };
-  // JSX structure of the Signup component
+
   return (
     <>
       <Navbar />
@@ -220,5 +243,4 @@ function Signup() {
   );
 }
 
-// Exporting the Signup component as the default export
 export default Signup;

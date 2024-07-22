@@ -1,4 +1,3 @@
-// Importing necessary libraries and components
 import axios from 'axios';
 import React, { useContext, useState, useEffect } from 'react';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
@@ -11,9 +10,9 @@ import Typography from '@mui/material/Typography';
 import heroImg from '../../assets/logos/hero-img.png';
 import { useAuth } from "../../contexts/AuthContext";
 import Navbar from '../Navbar/Navbar';
+
 import { useNavigate } from 'react-router-dom';
 
-// Creating a custom them with primary color
 const theme = createTheme({
   palette: {
     primary: {
@@ -22,34 +21,31 @@ const theme = createTheme({
   },
 });
 
-// Accessing auth state and state updater from AuthContext
 function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const { authState, setAuthState } = useAuth();
   const navigate = useNavigate();
 
-  // Effect hook to check authentication state on component mount
   useEffect(() => {
     console.log('login - authState.isAuth:', authState.isAuth);
     if (authState.isAuth) {
       navigate('/dashboard');
     }
-  }, []) // Empty dependency array means this runs once on mount
+  }, [])
 
-  // Function to handle form submission
+
   const handleSubmit = async (e) => {
-    e.preventDefault(); // Prevent default form submission
+    e.preventDefault();
     // await login(username, password);
 
     // send request to server to login user
     try {
-      // Sending login request to server
       const response = await axios.post('/api/auth/login', {
         username,
         password,
       });
-      // On successful login, update auth state and local storage
+      // success
       const data = response.data;
       setAuthState({
         isAuth: true,
@@ -78,7 +74,6 @@ function Login() {
     }
   }
 
-  // JSX structure of the Login Component
   return (
     <>
     <Navbar/>
@@ -149,5 +144,4 @@ function Login() {
   );
 }
 
-// Exporting the Login components as the default export
 export default Login;
