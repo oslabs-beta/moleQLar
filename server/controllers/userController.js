@@ -50,6 +50,7 @@ userController.createUser = async (req, res, next) => {
       // Handle successful user creation
       res.locals.user = {
         ...createdUser.rows[0], // Store created user information in res.locals
+        userId: createdUser.rows[0].user_id,
       };
       return next(); // Proceed to the next middleware
     })
