@@ -1,6 +1,6 @@
+import axios from 'axios';
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import Button from '@mui/material/Button';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import TextField from '@mui/material/TextField';
@@ -18,7 +18,7 @@ import GoogleIcon from '@mui/icons-material/Google';
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#9c27b0',
+      main: '#9C27B0',
     },
   },
 });
@@ -35,13 +35,13 @@ function Signup() {
   const [isLoading, setIsLoading] = useState(false);
   const [submitError, setSubmitError] = useState('');
   const [submitSuccess, setSubmitSuccess] = useState(false);
-  const { isAuth, signup } = useAuth();
+  const { authState, setAuthState } = useAuth();
 
   useEffect(() => {
-    if (isAuth) {
+    if (authState.isAuth) {
       navigate('/dashboard');
     }
-  }, [isAuth, navigate]);
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -71,7 +71,17 @@ function Signup() {
       setIsLoading(true);
       setSubmitError('');
       try {
-        await signup(formData); // send POST request to server
+        const response = await axios.post('/api/auth/signup', formData);
+        const data = response.data;
+        setAuthState({
+          isAuth: false,
+          username: data.username,
+          userId: data.userId,
+        });
+        console.log('signup successful - updating local storage');
+        localStorage.setItem('username', data.username);
+        localStorage.setItem('userId', data.userId);
+        localStorage.setItem('token', response.headers['authorization']);
         setSubmitSuccess(true);
       } catch (error) {
         console.error(error);
@@ -86,17 +96,18 @@ function Signup() {
   };
 
   const handleGoogleSignup = () => {
-    window.location.href = 'http://localhost:3000/auth/google';
+    window.location.href = 'http://localhost:3000/api/auth/google';
   };
+
 
   return (
     <>
       <Navbar />
 
       <ThemeProvider theme={theme}>
-        <div className="login-div">
-          <div className="hero-img">
-            <img src={heroImg} alt="Main Graphic" />
+        <div className='login-div'>
+          <div className='hero-img'>
+            <img src={heroImg} alt='Main Graphic' />
           </div>
 
           <Box
@@ -109,24 +120,24 @@ function Signup() {
               padding: '20px',
             }}
           >
-            <Typography component="h1" variant="h5">
+            <Typography component='h1' variant='h5'>
               Sign up
             </Typography>
 
             {submitSuccess && (
-              <Alert severity="success" sx={{ width: '100%', mt: 2 }}>
+              <Alert severity='success' sx={{ width: '100%', mt: 2 }}>
                 Signup successful! You can now login.
               </Alert>
             )}
 
             {submitError && (
-              <Alert severity="error" sx={{ width: '100%', mt: 2 }}>
+              <Alert severity='error' sx={{ width: '100%', mt: 2 }}>
                 {submitError}
               </Alert>
             )}
 
             <Box
-              component="form"
+              component='form'
               noValidate
               onSubmit={handleSubmit}
               sx={{ mt: 3, width: '100%' }}
@@ -136,10 +147,10 @@ function Signup() {
                   <TextField
                     required
                     fullWidth
-                    id="username"
-                    label="Username"
-                    name="username"
-                    autoComplete="username"
+                    id='username'
+                    label='Username'
+                    name='username'
+                    autoComplete='username'
                     value={formData.username}
                     onChange={handleChange}
                     error={!!errors.username}
@@ -150,10 +161,10 @@ function Signup() {
                   <TextField
                     required
                     fullWidth
-                    id="email"
-                    label="Email Address"
-                    name="email"
-                    autoComplete="email"
+                    id='email'
+                    label='Email Address'
+                    name='email'
+                    autoComplete='email'
                     value={formData.email}
                     onChange={handleChange}
                     error={!!errors.email}
@@ -164,11 +175,11 @@ function Signup() {
                   <TextField
                     required
                     fullWidth
-                    name="password"
-                    label="Password"
-                    type="password"
-                    id="password"
-                    autoComplete="new-password"
+                    name='password'
+                    label='Password'
+                    type='password'
+                    id='password'
+                    autoComplete='new-password'
                     value={formData.password}
                     onChange={handleChange}
                     error={!!errors.password}
@@ -179,10 +190,10 @@ function Signup() {
                   <TextField
                     required
                     fullWidth
-                    name="confirmPassword"
-                    label="Confirm Password"
-                    type="password"
-                    id="confirmPassword"
+                    name='confirmPassword'
+                    label='Confirm Password'
+                    type='password'
+                    id='confirmPassword'
                     value={formData.confirmPassword}
                     onChange={handleChange}
                     error={!!errors.confirmPassword}
@@ -191,9 +202,9 @@ function Signup() {
                 </Grid>
               </Grid>
               <Button
-                type="submit"
+                type='submit'
                 fullWidth
-                variant="contained"
+                variant='contained'
                 sx={{ mt: 3, mb: 2 }}
                 disabled={isLoading}
               >
@@ -201,7 +212,7 @@ function Signup() {
               </Button>
               <Button
                 fullWidth
-                variant="contained"
+                variant='contained'
                 startIcon={<GoogleIcon />}
                 sx={{
                   mt: 1,
@@ -218,9 +229,9 @@ function Signup() {
               >
                 Sign up with Google
               </Button>
-              <Grid container justifyContent="flex-end">
+              <Grid container justifyContent='flex-end'>
                 <Grid item>
-                  <Link href="/login" variant="body2">
+                  <Link href='/login' variant='body2'>
                     Already have an account? Sign in
                   </Link>
                 </Grid>

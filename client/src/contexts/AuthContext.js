@@ -1,35 +1,33 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
-export const AuthContext = createContext();
+const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const navigate = useNavigate();
   const [authState, setAuthState] = useState({
     isAuth: false,
     username: '',
-    user_id: null,
-    loading: true,
+    userId: null,
+    loading: true
   });
 
   useEffect(() => {
     async function verifyUser() {
       try {
         const response = await axios.get('/api/auth/status');
-        if (response.status === 200 && response.data.isAuth) {
+        if (response.data.isAuth) {
           setAuthState({
             isAuth: true,
             username: response.data.username,
-            user_id: response.data.user_id,
-            loading: false,
+            userId: response.data.user_id,
+            loading: false
           });
         } else {
           setAuthState({
             isAuth: false,
             username: '',
-            user_id: null,
-            loading: false,
+            userId: null,
+            loading: false
           });
         }
       } catch (err) {
@@ -37,67 +35,16 @@ export const AuthProvider = ({ children }) => {
         setAuthState({
           isAuth: false,
           username: '',
-          user_id: null,
-          loading: false,
+          userId: null,
+          loading: false
         });
       }
     }
     verifyUser();
-  }, [navigate]);
-
-  const signup = async (formData) => {
-    try {
-      const response = await axios.post('/api/auth/signup', formData);
-      if (response.status === 200) {
-        setAuthState({
-          isAuth: true,
-          username: response.data.username,
-          user_id: response.data.user_id,
-        });
-        navigate('/dashboard');
-      }
-    } catch (err) {
-      console.error('Error during signup:', err);
-    }
-  };
-
-  const login = async (username, password) => {
-    try {
-      const response = await axios.post('/api/auth/login', {
-        username,
-        password,
-      });
-      if (response.status === 200) {
-        setAuthState({
-          isAuth: true,
-          username: response.data.username,
-          user_id: response.data.user_id,
-        });
-        navigate('/dashboard');
-      }
-    } catch (err) {
-      console.error('Error during login:', err);
-    }
-  };
-
-  const logout = () => {
-    axios
-      .post('/api/auth/logout')
-      .then(() => {
-        setAuthState({
-          isAuth: false,
-          username: '',
-          user_id: null,
-        });
-        navigate('/');
-      })
-      .catch((err) => {
-        console.error('Error during logout:', err);
-      });
-  };
+  }, []);
 
   return (
-    <AuthContext.Provider value={{ ...authState, signup, login, logout }}>
+    <AuthContext.Provider value={{ authState, setAuthState }}>
       {children}
     </AuthContext.Provider>
   );

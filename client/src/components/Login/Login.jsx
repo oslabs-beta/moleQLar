@@ -10,7 +10,7 @@ import heroImg from '../../assets/logos/hero-img.png';
 import { useAuth } from '../../contexts/AuthContext';
 import Navbar from '../Navbar/Navbar';
 import { useNavigate } from 'react-router-dom';
-import GoogleIcon from '@mui/icons-material/Google'; 
+import GoogleIcon from '@mui/icons-material/Google';
 
 const theme = createTheme({
   palette: {
@@ -23,26 +23,24 @@ const theme = createTheme({
 function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const { isAuth, login } = useAuth();
+  const { authState, setAuthState } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
-    console.log('login - isAuth:', isAuth);
-    if (isAuth) {
+    if (authState.isAuth) {
       navigate('/dashboard');
     }
-  }, [isAuth, navigate]);
+  }, [authState.isAuth, navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await login(username, password);
-    return navigate('/dashboard'); 
+    // Implement login logic
   };
 
   const handleGoogleLogin = () => {
-    window.location.href = 'http://localhost:3000/auth/google';
+    window.location.href = 'http://localhost:3000/api/auth/google';
   };
-
+  
   return (
     <>
       <Navbar />
@@ -71,44 +69,44 @@ function Login() {
               width: '40%',
               padding: '0 20px',
             }}
-            >
-              <Typography component="h1" variant="h5" sx={{ mb: 3 }}>
+          >
+            <Typography component="h1" variant="h5" sx={{ mb: 3 }}>
+              Login
+            </Typography>
+            <Box component="form" onSubmit={handleSubmit} noValidate>
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                id="username"
+                label="Username"
+                name="username"
+                autoComplete="username"
+                value={username}
+                autoFocus
+                onChange={(e) => setUsername(e.target.value)}
+              />
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                name="password"
+                label="Password"
+                type="password"
+                id="password"
+                autoComplete="current-password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                sx={{ mt: 3, mb: 2 }}
+              >
                 Login
-              </Typography>
-              <Box component="form" onSubmit={handleSubmit} noValidate>
-                <TextField
-                  margin="normal"
-                  required
-                  fullWidth
-                  id="username"
-                  label="Username"
-                  name="username"
-                  autoComplete="username"
-                  value={username}
-                  autoFocus
-                  onChange={(e) => setUsername(e.target.value)}
-                />
-                <TextField
-                  margin="normal"
-                  required
-                  fullWidth
-                  name="password"
-                  label="Password"
-                  type="password"
-                  id="password"
-                  autoComplete="current-password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                />
-                <Button
-                  type="submit"
-                  fullWidth
-                  variant="contained"
-                  sx={{ mt: 3, mb: 2 }}
-                >
-                  Login
-                </Button>
-                <Button
+              </Button>
+              <Button
                 fullWidth
                 variant="contained"
                 startIcon={<GoogleIcon />}
@@ -127,19 +125,19 @@ function Login() {
               >
                 Login with Google
               </Button>
-                <Grid container>
-                  <Grid item>
-                    <Link href="/signup" variant="body2">
-                      {"Don't have an account? Sign Up"}
-                    </Link>
-                  </Grid>
+              <Grid container>
+                <Grid item>
+                  <Link href="/signup" variant="body2">
+                    {"Don't have an account? Sign Up"}
+                  </Link>
                 </Grid>
-              </Box>
+              </Grid>
             </Box>
-          </div>
-        </ThemeProvider>
-      </>
-    );
+          </Box>
+        </div>
+      </ThemeProvider>
+    </>
+  );
 }
 
 export default Login;

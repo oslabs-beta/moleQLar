@@ -20,6 +20,8 @@ import EditIcon from "@mui/icons-material/Edit";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
 import NodeDialog from "./AddNodeDialog";
+import { useTheme } from '../../contexts/ThemeContext';
+import { useGraphContext } from '../../contexts/GraphContext.jsx';
 
 import './nodelist.scss'  // styles
 
@@ -34,6 +36,9 @@ const NodeList = ({
   const [openTable, setOpenTable] = useState(null);
   const [isNodeDialogOpen, setIsNodeDialogOpen] = useState(false);
   const [editingNode, setEditingNode] = useState(null);
+  const { darkMode } = useTheme();
+  const { graphName, setGraphName } = useGraphContext();
+  const { graphId, setGraphId } = useGraphContext();
 
   const handleClick = (tableId) => {
     setOpenTable(openTable === tableId ? null : tableId);
@@ -56,18 +61,19 @@ const NodeList = ({
   };
 
   return (
-    <div className='sidebar'>
+    <div className={`sidebar ${darkMode ? 'dark' : ''}`}>
       <div className="sidebar-top">
-        <h1 className="sidebar-heading">Graph Name</h1>
+        <h1 className="sidebar-heading">{graphName}</h1>
         <List sx={{ flexGrow: 1 }}>
           {tables.map((table) => (
             <React.Fragment key={table.id}>
               <ListItem
                 sx={{
-                  backgroundColor:
-                    selectedTableId === table.id ? "#e3f2fd" : "transparent",
+                  backgroundColor: selectedTableId === table.id 
+                    ? (darkMode ? '#333' : '#e3f2fd')
+                    : 'transparent',
                   "&:hover": {
-                    backgroundColor: "#f5f5f5",
+                    backgroundColor: darkMode ? '#444' : '#f5f5f5',
                   },
                   display: "flex",
                   justifyContent: "space-between",
@@ -79,11 +85,7 @@ const NodeList = ({
                   primary={table.data.label}
                   onClick={() => handleClick(table.id)}
                   sx={{
-                    backgroundColor:
-                      selectedTableId === table.id ? "#e3f2fd" : "transparent",
-                    "&:hover": {
-                      backgroundColor: "#f5f5f5",
-                    },
+                    color: darkMode ? '#fff' : '#000',
                     flexGrow: 1,
                   }}
                 />
@@ -91,43 +93,38 @@ const NodeList = ({
                   <IconButton
                     size="small"
                     onClick={() => openEditDialog(table)}
-                    sx={{ p: 0.5 }}
+                    sx={{ p: 0.5, color: darkMode ? '#fff' : '#000' }}
                   >
                     <EditIcon fontSize="small" />
                   </IconButton>
                   <IconButton
                     size="small"
                     onClick={() => onDeleteTable(table.id)}
-                    sx={{ p: 0.5 }}
+                    sx={{ p: 0.5, color: darkMode ? '#fff' : '#000' }}
                   >
                     <DeleteIcon fontSize="small" />
                   </IconButton>
-                  {/* {openTable === table.id ? (
-                    <ExpandLess fontSize="small" />
-                  ) : (
-                    <ExpandMore fontSize="small" />
-                  )} */}
                 </Box>
               </ListItem>
               <Collapse in={openTable === table.id} timeout="auto" unmountOnExit>
                 <Box sx={{ margin: 1 }}>
-                  <TableContainer component={Paper}>
+                  <TableContainer component={Paper} sx={{ backgroundColor: darkMode ? '#333' : '#fff' }}>
                     <Table size="small" aria-label="table attributes">
                       <TableHead>
                         <TableRow>
-                          <TableCell>Name</TableCell>
-                          <TableCell>Type</TableCell>
-                          <TableCell>Constraints</TableCell>
+                          <TableCell sx={{ color: darkMode ? '#fff' : '#000' }}>Name</TableCell>
+                          <TableCell sx={{ color: darkMode ? '#fff' : '#000' }}>Type</TableCell>
+                          <TableCell sx={{ color: darkMode ? '#fff' : '#000' }}>Constraints</TableCell>
                         </TableRow>
                       </TableHead>
                       <TableBody>
                         {table.data.columns.map((column, index) => (
                           <TableRow key={index}>
-                            <TableCell component="th" scope="row">
+                            <TableCell component="th" scope="row" sx={{ color: darkMode ? '#fff' : '#000' }}>
                               {column.name}
                             </TableCell>
-                            <TableCell>{column.type}</TableCell>
-                            <TableCell>
+                            <TableCell sx={{ color: darkMode ? '#fff' : '#000' }}>{column.type}</TableCell>
+                            <TableCell sx={{ color: darkMode ? '#fff' : '#000' }}>
                               {column.required ? "NOT NULL" : ""}
                             </TableCell>
                           </TableRow>
@@ -146,8 +143,8 @@ const NodeList = ({
         <button className='btn-graph btn-add-node'
           onClick={() => setIsNodeDialogOpen(true)}
         >
-          Add New Node</button>
-        {/* <button className='btn-graph btn-clear'>Clear</button> */}
+          Add New Node
+        </button>
         <NodeDialog
           open={isNodeDialogOpen}
           onClose={() => {
@@ -157,6 +154,7 @@ const NodeList = ({
           onAddNode={handleAddNode}
           onEditNode={handleEditNode}
           editingNode={editingNode}
+          darkMode={darkMode}
         />
       </div>
     </div>

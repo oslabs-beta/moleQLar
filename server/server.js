@@ -49,43 +49,27 @@ passport.use(
   )
 );
 
-// Google OAuth Routes
-app.get(
-  '/auth/google',
-  passport.authenticate('google', {
-    scope: ['profile', 'email'],
-  })
-);
+// app.use('/auth', authRoutes);
 
-app.get(
-  '/oauth/callback',
-  passport.authenticate('google', { failureRedirect: '/' }),
-  (req, res) => {
-    res.redirect('/dashboard'); // Redirect to /dashboard after successful authentication
-  }
-);
+app.use(express.static(path.join(__dirname, 'build')));
 
-app.get('/logout', (req, res) => {
-  req.logout((err) => {
-    if (err) {
-      return next(err);
-    }
-    res.redirect('/');
-  });
-});
+// app.get("/testdb", async (req, res) => {
+//   const result = await db.query("SELECT * FROM users LIMIT 1");
+//   console.log("result", result);
+//   res.status(200).json(result);
+// });
 
-// Authentication status route
-app.get('/api/auth/status', (req, res) => {
-  res.json({
-    isAuth: !!req.user,
-    username: req.user ? req.user.displayName : '',
-    user_id: req.user ? req.user.id : null,
-  });
-});
+// Authorization Route
+const authRouter = require('./routes/authRouter');
+app.use('/api/auth', authRouter);
 
-// Serve the main application
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../client/build', 'index.html'));
+// Graph Routes
+const graphRouter = require('./routes/graphRouter');
+app.use('/api/graph', graphRouter);
+
+
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
 
 // Global error handler

@@ -20,6 +20,15 @@
     border-style: solid;
     @include color-opacity(border-color, $color-black, 10%);
     // border: solid 3px green;
+
+    background-color: $color-white;
+    color: $color-black;
+
+    &.dark {
+        background-color: $color-black;
+        color: $color-white;
+        @include color-opacity(border-color, $color-white, 10%);
+    }
 }
 
 .sidebar-top {
@@ -32,7 +41,7 @@
 }
 
 .sidebar-bottom {
-    background-color: $color-white;
+    // background-color: $color-white;
     width: 100%;
     position: absolute;
     bottom: 0;
@@ -41,6 +50,8 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    background-color: inherit;
+
 
     button {
         margin-bottom: 1rem;
@@ -57,8 +68,8 @@
         transition: transform 100ms ease-in;
 
         &:hover {
-        transform: translateY(-1px);
-        transition: transform 100ms ease-in;
+            transform: translateY(-1px);
+            transition: transform 100ms ease-in;
         }
     }
     
@@ -71,5 +82,11 @@
         background-color: $color-white;
         color: $color-primary;
         border: 2px solid $color-primary;
+
+        .dark & {
+            background-color: $color-black;
+            color: $color-primary;
+            border-color: $color-primary;
+        }
     }
 }

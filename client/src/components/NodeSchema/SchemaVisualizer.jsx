@@ -1,4 +1,6 @@
+import axios from 'axios';
 import React, { useCallback, useEffect, useState, useRef } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import ReactFlow, {
   Background,
   Controls,
@@ -17,6 +19,10 @@ import { resolverGenerator } from '../algorithms/resolver_generator';
 import NodeList from './NodeList';
 import './schemavisualizer.scss';  // styles
 import GenerateTab from "../GenerateTabs/genTab";
+import { useTheme } from '../../contexts/ThemeContext'
+
+import { useAuth } from '../../contexts/AuthContext';
+import { useGraphContext } from '../../contexts/GraphContext';
 
 const TableNode = React.memo(({ data, id, selected }) => (
   <div
@@ -135,12 +141,96 @@ const edgeTypes = {
 };
 
 const SchemaVisualizer = ({ sqlContents, handleUploadBtn }) => {
+  const navigate = useNavigate();
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const [selectedNode, setSelectedNode] = useState(null);
   const [focusMode, setFocusMode] = useState(false);
   const reactFlowWrapper = useRef(null);
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
+  const { darkMode } = useTheme();
+
+  // TODO - send request to server to request graph_name, graph_id, nodes_string, edges_string
+  const { username } = useAuth();
+  const { graphName, setGraphName } = useGraphContext();
+  // const { graphId, setGraphId } = useGraphContext();  -- to be managed as URL param
+  // get URL params
+  const { userId, graphId } = useParams();
+
+  useEffect(() => {
+    const fetchGraphData = async () => {
+      // fetch from server
+      // console.log(`/graph/${userId}/${graphId}`);
+      const config = {
+        headers: { authorization: localStorage.getItem("token") },
+      }
+      try {
+        // GET from server
+        const response = await axios.get(`/api/graph/${userId}/${graphId}`, config);
+        let serverNodes, serverEdges;
+        response.data.nodes === '' ? serverNodes = [] : serverNodes = JSON.parse(response.data.nodes);
+        response.data.edges === '' ? serverEdges = [] : serverEdges = JSON.parse(response.data.edges);
+
+        setGraphName(response.data.graphName);
+        setNodes(serverNodes);
+        setEdges(serverEdges);
+      } catch (err) {
+        if (err.response) {
+          // fail - unable to log in
+          // request made, server responded with status code outside of 2xx range
+          console.log('Failed to pull graph. Error response data:', err.response.data);
+          console.log('Failed to pull graph. Error response status:', err.response.status);
+        } else if (err.request) {
+          console.log('Error request:', err.request);
+        } else {
+          console.log('Error message:', err.message);
+        }
+        navigate('/dashboard');
+      }
+    }
+    fetchGraphData();
+  }, [])
+
+  const handleSaveBtn = async () => {
+    // save functionality
+    // convert nodes and edges to string
+    const nodeString = JSON.stringify(nodes);
+    const edgeString = JSON.stringify(edges);
+
+    // console.log('nodes:', nodeString)
+    // console.log('edges:', edgeString)
+    console.log('userId:', userId)
+    console.log('graphName:', graphName)
+    
+    // send POST request to /api/graph/:userId/:graphId
+    const config = {
+      headers: { authorization: localStorage.getItem('token') },
+    }
+    const payload = {
+      username: username,
+      userId: userId,
+      graphName: graphName,
+      graphId: graphId,
+      nodes: nodeString,
+      edges: edgeString,
+    };
+    try {
+      const response = await axios.put(`/api/graph/${userId}/${graphId}`, payload, config);
+      // success
+      console.log('Successfully saved node graph to database');
+      console.log('response:', response)
+    } catch (err) {
+      if (err.response) {
+        // request made, server responded with status code outside of 2xx range
+        console.log('Failed ot save graph data:', err.respones.data);
+        console.log('Failed ot save graph status:', err.respones.status);
+      } else if (err.request) {
+        console.log('Error request:', err.request);
+      } else {
+        console.log('Error message:', err.message);
+      }
+    }
+  }
 
   // tab state variables
   const [genTabOpen, setGenTabOpen] = useState(false);
@@ -153,11 +243,6 @@ const SchemaVisualizer = ({ sqlContents, handleUploadBtn }) => {
   const handleGenTabClose = () =>{
     setGenTabOpen(false)
   };
-
-  useEffect(() => {
-    console.log('genTabOpen changed:', genTabOpen);
-  }, [genTabOpen])
-  
 
   const deleteNode = useCallback(
     (id) => {
@@ -321,15 +406,15 @@ const SchemaVisualizer = ({ sqlContents, handleUploadBtn }) => {
         selectedTableId={selectedNode}
       />
       <ReactFlowProvider>
-        <div className='node-graph-container' ref={reactFlowWrapper}>
+      <div className={`node-graph-container ${darkMode ? 'dark' : ''}`} ref={reactFlowWrapper}>
           
           <div className="graph-btn-container">
             <button className="btn-generate btn-graph" onClick={handleGenTabOpen} disabled={!reactFlowInstance}>Generate</button>
-            <button className="btn-save btn-graph">Save</button>
+            <button className="btn-save btn-graph" onClick={handleSaveBtn}>Save</button>
           </div>
 
           <ReactFlow
-            className='node-graph'
+            className={`node-graph ${darkMode ? 'dark' : ''}`}
             nodes={nodes}
             edges={edges}
             onNodesChange={onNodesChange}
@@ -337,13 +422,13 @@ const SchemaVisualizer = ({ sqlContents, handleUploadBtn }) => {
             nodeTypes={nodeTypes}
             edgeTypes={edgeTypes}
             fitView
-            style={{ background: '#1a1a1a' }}
+            style={{ background: darkMode ? '#1a1a1a' : '#ffffff' }}
             onNodeClick={(event, node) => selectNode(node.id)}
             onInit={setReactFlowInstance}
           >
-            <Background color='#333' gap={16} />
-            <Controls style={{ background: '#333', color: '#fff', border: 'none' }}/>
-            <MiniMap style={{ background: '#333', maskColor: '#666' }} nodeColor='#666'/>
+            <Background color={darkMode ? '#333' : '#aaa'} gap={16} />
+            <Controls style={{ background: darkMode ? '#333' : '#fff', color: darkMode ? '#fff' : '#000', border: 'none' }}/>
+            <MiniMap style={{ background: darkMode ? '#333' : '#f0f0f0', maskColor: darkMode ? '#666' : '#ccc' }} nodeColor={darkMode ? '#666' : '#ccc'}/>
           </ReactFlow>
         </div>
       </ReactFlowProvider>

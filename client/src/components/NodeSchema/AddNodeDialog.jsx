@@ -18,10 +18,12 @@ import {
   ListItemText,
   ListItemSecondaryAction,
   Grid,
+  useTheme,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
+import { useTheme as useCustomTheme } from '../../contexts/ThemeContext';
 
 const NodeDialog = ({
   open,
@@ -37,6 +39,8 @@ const NodeDialog = ({
     type: "String",
     required: false,
   });
+  const { darkMode } = useCustomTheme();
+  const theme = useTheme();
 
   useEffect(() => {
     if (editingNode) {
@@ -85,8 +89,24 @@ const NodeDialog = ({
     }
   };
 
+  const dialogStyle = {
+    paper: {
+      backgroundColor: darkMode ? theme.palette.background.paper : '#fff',
+      color: darkMode ? theme.palette.text.primary : theme.palette.text.primary,
+    },
+  };
+
+  const textFieldStyle = {
+    input: {
+      color: darkMode ? theme.palette.text.primary : theme.palette.text.primary,
+    },
+    label: {
+      color: darkMode ? theme.palette.text.secondary : theme.palette.text.secondary,
+    },
+  };
+
   return (
-    <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
+    <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth PaperProps={{ style: dialogStyle.paper }}>
       <DialogTitle>{editingNode ? "Edit Node" : "Add New Node"}</DialogTitle>
       <DialogContent>
         <TextField
@@ -96,7 +116,7 @@ const NodeDialog = ({
           fullWidth
           value={nodeName}
           onChange={(e) => setNodeName(e.target.value)}
-          sx={{ mb: 3 }}
+          sx={{ mb: 3, ...textFieldStyle }}
         />
         <List>
           {fields.map((field, index) => (
@@ -127,11 +147,12 @@ const NodeDialog = ({
               onChange={(e) =>
                 setNewField({ ...newField, name: e.target.value })
               }
+              sx={textFieldStyle}
             />
           </Grid>
           <Grid item xs={12} sm={4}>
             <FormControl fullWidth variant="outlined">
-              <InputLabel id="type-select-label">Type</InputLabel>
+              <InputLabel id="type-select-label" sx={textFieldStyle.label}>Type</InputLabel>
               <Select
                 labelId="type-select-label"
                 value={newField.type}
@@ -139,6 +160,7 @@ const NodeDialog = ({
                   setNewField({ ...newField, type: e.target.value })
                 }
                 label="Type"
+                sx={textFieldStyle.input}
               >
                 <MenuItem value="Int">Int</MenuItem>
                 <MenuItem value="Float">Float</MenuItem>
