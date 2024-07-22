@@ -52,6 +52,7 @@ module.exports = {
   plugins: [
     new HtmlWebPackPlugin({
       template: './public/index.html',
+      favicon: './public/smallLogo.png',
     }),
     new Dotenv({
       path: path.resolve(__dirname, '../server/.env'), // Path to .env file in the server folder

@@ -24,6 +24,8 @@ import { useTheme } from '../../contexts/ThemeContext'
 import { useAuth } from '../../contexts/AuthContext';
 import { useGraphContext } from '../../contexts/GraphContext';
 
+// Custom node component for representing database tables
+// Memoized for performance optimization in large graphs
 const TableNode = React.memo(({ data, id, selected }) => (
   <div
     style={{
@@ -83,6 +85,8 @@ const colorScheme = [
   '#ff9ff3',
 ];
 
+// Custom edge component to visualize relationships between tables
+// Allows for custom styling and labels on edges
 const CustomEdge = ({
   id,
   sourceX,
@@ -140,6 +144,7 @@ const edgeTypes = {
   custom: CustomEdge,
 };
 
+// Main component for visualizing and editing database schemas
 const SchemaVisualizer = ({ sqlContents, handleUploadBtn }) => {
   const navigate = useNavigate();
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
@@ -157,6 +162,8 @@ const SchemaVisualizer = ({ sqlContents, handleUploadBtn }) => {
   // get URL params
   const { userId, graphId } = useParams();
 
+  // Fetch graph data from the server on component mount
+  // This allows for persistent storage and retrieval of user's graph data
   useEffect(() => {
     const fetchGraphData = async () => {
       // fetch from server
@@ -191,6 +198,9 @@ const SchemaVisualizer = ({ sqlContents, handleUploadBtn }) => {
     fetchGraphData();
   }, [])
 
+  // Save the current graph state to the server
+  // This function is called when the user clicks the save button
+  // Allows for persistence of user's work across sessions
   const handleSaveBtn = async () => {
     // save functionality
     // convert nodes and edges to string
@@ -232,11 +242,12 @@ const SchemaVisualizer = ({ sqlContents, handleUploadBtn }) => {
     }
   }
 
-  // tab state variables
+  // Toggle the generation tab visibility
+  // This function is called when the user clicks the generate button
+  // Separates the graph visualization from code generation for a cleaner UI
   const [genTabOpen, setGenTabOpen] = useState(false);
   const handleGenTabOpen = () =>{
     console.log('clicked generate button')
-    // setGenTabOpen(true)
     setGenTabOpen(prev => !prev);
     console.log('genTabOpen', genTabOpen)
   };
@@ -244,6 +255,8 @@ const SchemaVisualizer = ({ sqlContents, handleUploadBtn }) => {
     setGenTabOpen(false)
   };
 
+  // Remove a node from the graph and clean up related edges
+  // This function ensures graph consistency when deleting nodes
   const deleteNode = useCallback(
     (id) => {
       setNodes((prevNodes) => prevNodes.filter((node) => node.id !== id));
@@ -258,6 +271,9 @@ const SchemaVisualizer = ({ sqlContents, handleUploadBtn }) => {
     [setNodes, setEdges, selectedNode]
   );
 
+  // Select a node and focus the view on it
+  // This function enhances user experience by highlighting the selected node
+  // and its immediate relationships
   const selectNode = useCallback(
     (id) => {
       setSelectedNode(id);
@@ -290,29 +306,8 @@ const SchemaVisualizer = ({ sqlContents, handleUploadBtn }) => {
     [setNodes, setEdges, nodes, reactFlowInstance]
   );
 
-  // const wholeView = useCallback(() => {
-  //   setFocusMode(false);
-  //   setSelectedNode(null);
-  //   setNodes((nds) =>
-  //     nds.map((node) => ({
-  //       ...node,
-  //       selected: false,
-  //     }))
-  //   );
-  //   setEdges((eds) =>
-  //     eds.map((edge) => ({
-  //       ...edge,
-  //       data: {
-  //         ...edge.data,
-  //         hidden: false,
-  //       },
-  //     }))
-  //   );
-  //   if (reactFlowInstance) {
-  //     reactFlowInstance.fitView({ padding: 0.2, includeHiddenNodes: true });
-  //   }
-  // }, [setNodes, setEdges, reactFlowInstance]);
-
+  // Add a new node to the graph
+  // This function is used when the user wants to manually add a new table
   const addNode = useCallback(
     (newNode) => {
       const nodeId = `table-${nodes.length + 1}`;
@@ -342,6 +337,8 @@ const SchemaVisualizer = ({ sqlContents, handleUploadBtn }) => {
     [nodes, reactFlowInstance, setNodes]
   );
 
+  // Edit an existing node in the graph
+  // This function allows users to modify table structures after initial creation
   const editNode = useCallback(
     (nodeId, updatedNode) => {
       setNodes((nds) =>
@@ -366,6 +363,8 @@ const SchemaVisualizer = ({ sqlContents, handleUploadBtn }) => {
     [setNodes]
   );
 
+  // Parse SQL contents and update the graph
+  // This effect runs when new SQL content is uploaded, automating the graph creation process
   useEffect(() => {
     if (sqlContents.length > 0) {
       const { nodes: newNodes, edges: newEdges } = parseSqlSchema(
@@ -394,6 +393,8 @@ const SchemaVisualizer = ({ sqlContents, handleUploadBtn }) => {
     }
   }, [sqlContents, setNodes, setEdges, reactFlowInstance]);
 
+  // Render the schema visualizer component
+  // This includes the node list, graph area, and generation tab
   return (
     <div className='schema-visualizer'>
       <GenerateTab open={genTabOpen} onClose={handleGenTabClose} nodes={nodes} edges={edges} />
