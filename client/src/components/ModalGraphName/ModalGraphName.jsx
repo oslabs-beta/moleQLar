@@ -15,7 +15,7 @@ const ModalGraphName = (props) => {
     const { modalVisibility, handleModalClose } = props;
 
     
-
+    // Handle Graph Name Submittion
     const handleGraphNameSubmit = async () => {
         // send POST request to server
         const userId = authState.userId;
@@ -57,7 +57,7 @@ const ModalGraphName = (props) => {
         // handleModalClose();
         // return;
     }
-
+    // Default Color 
     const colors = {
         'color-primary': '#C978FB',
         'color-secondary': '#64268A',
@@ -66,7 +66,7 @@ const ModalGraphName = (props) => {
         'color-black': '#190624',
         'color-white': '#FCFCFC',
     }
-
+    // Default Color Theme
     const theme = createTheme({
         typography: {
             fontFamily: 'Nunito, Arial, sans-serif',
@@ -119,7 +119,7 @@ const ModalGraphName = (props) => {
         fontWeight: 500,
         fontSize: '1rem',
     }
-
+    // JSX to define Theme Component-Model Graph
     return (
         <ThemeProvider theme={theme}>
             <Modal

@@ -3,7 +3,7 @@ import heroImg from '../../assets/logos/hero-img.png'
 import Navbar from '../Navbar/Navbar';
 import { useNavigate } from 'react-router-dom';
 import './main.scss';
-
+// Main Component to construct 
 const Main = () => {
   const navigate = useNavigate();
   return (

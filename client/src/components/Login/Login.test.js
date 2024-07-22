@@ -105,30 +105,31 @@ describe('Navigation tests for Login page', () => {
     );
   });
 
+  // Test Navigating to Home/Main Route upon Icon Click
   test('Successfully navigates to Home/Main route using icon link', () => {
     const homeLinkIcon = screen.getByAltText(/Small Logo/i);
     fireEvent.click(homeLinkIcon);
     expect(screen.getByText(/Implementation in seconds/i)).toBeInTheDocument();
   });
-
+  // Test Navigation to Home/Main upon NavBar Click
   test('Successfully navigates to Home/Main route using navbar link', () => {
     const homeLinkNav = screen.getByRole('link', { name: /Home/i });
     fireEvent.click(homeLinkNav);
     expect(screen.getByText(/Implementation in seconds/i)).toBeInTheDocument();
   });
-
+  // Test Navigate to Team page upon click
   test('Successfully navigates to Team route on click', () => {
     const teamLink = screen.getByRole('link', { name: /Team/i });
     fireEvent.click(teamLink);
     expect(screen.getByText(/Meet the Team/i)).toBeInTheDocument();
   });
-
+  // Test Navigate to About page upon click
   test('Successfully navigates to About route on click', () => {
     const aboutLink = screen.getByRole('link', { name: /About/i });
     fireEvent.click(aboutLink);
     expect(screen.getByText(/think about GraphQL/i)).toBeInTheDocument();
   });
-
+  // Test Navigate to Signup upon click
   test('Successfully navigates to Signup route on click', () => {
     const signupLink = screen.getByRole('link', {
       name: /Don't have an account/i,
@@ -139,7 +140,7 @@ describe('Navigation tests for Login page', () => {
     ).toBeInTheDocument();
   });
 });
-
+// Test for Successful Login
 describe('Handles form submission and successfully logs in', () => {
   test('Successfully navigates to Dashboard route on login', async () => {
     //mock resolved value from axios call
@@ -185,64 +186,3 @@ describe('Handles form submission and successfully logs in', () => {
   });
 });
 
-// Mocking the login function and AuthContextProvider
-// const loginMock = jest.fn(); // Create a mock function for login
-// const mockLogin = jest.fn();
-//const mockNavigate = jest.fn();
-
-// jest.mock('react-router-dom', () => ({
-//   ...jest.requireActual('react-router-dom'),
-//   useNavigate: () => mockNavigate,
-// }));
-
-// function renderLoginComponent() {
-//   return render(
-//     <AuthContext.Provider value={{ isAuth: false, login: mockLogin }}>
-//       <Router>
-//         <Login />
-//       </Router>
-//     </AuthContext.Provider>
-//   );
-// }
-
-// const AuthContextProviderMock = (
-//   { children } // Create a mock AuthContext provider
-// ) => (
-//   <AuthContext.Provider value={{ login: loginMock }}>
-//     {children}
-//   </AuthContext.Provider>
-// );
-
-// render(
-//   // Render the Login component within ThemeProvider and AuthContextProviderMock
-//   <MemoryRouter>
-//     <ThemeProvider theme={theme}>
-//       <AuthContextProviderMock>
-//         <Login />
-//       </AuthContextProviderMock>
-//     </ThemeProvider>
-//   </MemoryRouter>
-// );
-
-// // Test Handles Form Submission w/ Correct Credentials
-// test('handles form submission with correct credentials', async () => {
-//   renderLoginComponent();
-//   userEvent.type(screen.getByLabelText("Username"), 'test1');
-//   userEvent.type(screen.getByLabelText("Password"), '111111');
-//   fireEvent.click(screen.getByRole('button', { name: /login!/i }));
-
-//   await waitFor(() => {
-//     expect(mockLogin).toHaveBeenCalledWith('test1', '111111');
-//   });
-// });
-
-// Navigate Test -> to '/dashboard' after successful login
-// test('navigates to dashboard after successful login', async () => {
-//   mockLogin.mockImplementation(() => Promise.resolve());
-//   renderLoginComponent();
-//   userEvent.click(screen.getByRole('button', { name: /login!/i }));
-
-//   await waitFor(() => {
-//     expect(mockNavigate).toHaveBeenCalledWith('/dashboard');
-//   });
-// });

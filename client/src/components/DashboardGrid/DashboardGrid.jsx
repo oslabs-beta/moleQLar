@@ -6,6 +6,7 @@ import GraphCard from '../GraphCard/GraphCard';
 import addGraph from '../../assets/logos/addGraph.png';
 import './dashboardgrid.scss';
 
+// Defining Dashboard Grid upon specific user's graph list
 const DashboardGrid = ({ handleModalOpen, handleModalClose }) => {
     const { graphList, setGraphList } = useGraphContext();
     const { username, userId } = useAuth();
@@ -40,7 +41,7 @@ const DashboardGrid = ({ handleModalOpen, handleModalClose }) => {
     const graphCards = graphList.map((graph) => {
         return <GraphCard key={graph.graph_id} graphId={graph.graph_id} graphName={graph.graph_name}></GraphCard>
     })
-
+    // JSX to define our Dashboard Grid div
     return (
         <div className="dashboard-grid">
             {/* <div className="add-graph-section">

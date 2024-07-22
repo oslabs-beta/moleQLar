@@ -5,6 +5,7 @@ import linkedInLogo from '../../assets/logos/linkedin.png';
 import smallLogo from '../../assets/logos/smallLogo.png';
 import './navbar.scss';
 
+// Navbar before login component
 const Navbar = () => {
   return (
     <nav className='navbar'>

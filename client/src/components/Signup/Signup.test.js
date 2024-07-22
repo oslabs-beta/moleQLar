@@ -88,23 +88,23 @@ describe('Signup page', () => {
     expect(mainImage).toBeInTheDocument();
     expect(loginLink).toBeInTheDocument();
   });
-
+  // Test for Signup Page
   describe('Navigation tests for Signup page', () => {
     beforeEach(() => {
       render(
         <MemoryRouter initialEntries={['/signup']}>
           <Routes>
-            <Route path='/signup' element={<Signup />} />
-            <Route path='/' element={<Main />} />
-            <Route path='/about' element={<About />} />
-            <Route path='/team' element={<Team />} />
-            <Route path='/login' element={<Login />} />
-            <Route path='/dashboard' element={<Dashboard />} />
+            <Route path="/signup" element={<Signup />} />
+            <Route path="/" element={<Main />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/team" element={<Team />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/dashboard" element={<Dashboard />} />
           </Routes>
         </MemoryRouter>
       );
     });
-
+    // Test Navigation to Home/Main upon Icon click
     test('Successfully navigates to Home/Main route using icon link', () => {
       const homeLinkIcon = screen.getByAltText(/Small Logo/i);
       fireEvent.click(homeLinkIcon);
@@ -112,7 +112,7 @@ describe('Signup page', () => {
         screen.getByText(/Implementation in seconds/i)
       ).toBeInTheDocument();
     });
-
+    // Test Navigation to Home/Main upon NavBar click
     test('Successfully navigates to Home/Main route using navbar link', () => {
       const homeLinkNav = screen.getByRole('link', { name: /Home/i });
       fireEvent.click(homeLinkNav);
@@ -120,19 +120,19 @@ describe('Signup page', () => {
         screen.getByText(/Implementation in seconds/i)
       ).toBeInTheDocument();
     });
-
+    // Test Navigation to Team page upon click
     test('Successfully navigates to Team route on click', () => {
       const teamLink = screen.getByRole('link', { name: /Team/i });
       fireEvent.click(teamLink);
       expect(screen.getByText(/Meet the Team/i)).toBeInTheDocument();
     });
-
+    // Test Navigation to About page upon click
     test('Successfully navigates to About route on click', () => {
       const aboutLink = screen.getByRole('link', { name: /About/i });
       fireEvent.click(aboutLink);
       expect(screen.getByText(/think about GraphQL/i)).toBeInTheDocument();
     });
-
+    // Test Navigation to Login page upon click
     test('Successfully navigates to Login route on click', () => {
       const loginLink = screen.getByRole('link', {
         name: /Already have an account/i,
@@ -143,7 +143,7 @@ describe('Signup page', () => {
       ).toBeInTheDocument();
     });
   });
-
+  // Test for Successul Signup Submission
   describe('Handles form submission and successfully signs up', () => {
     test('Successfully navigates to Dashboard route on signup', async () => {
       //mock resolved value from axios call
@@ -161,8 +161,8 @@ describe('Signup page', () => {
         <ThemeProvider theme={theme}>
           <MemoryRouter initialEntries={['/signup']}>
             <Routes>
-              <Route path='/signup' element={<Signup />} />
-              <Route path='/dashboard' element={<Dashboard />} />
+              <Route path="/signup" element={<Signup />} />
+              <Route path="/dashboard" element={<Dashboard />} />
             </Routes>
           </MemoryRouter>
         </ThemeProvider>
