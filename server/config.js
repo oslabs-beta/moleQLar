@@ -1,11 +1,13 @@
 module.exports = {
   google: {
-    clientID:
-      '704749739839-saomke6iini8e119kva074d7n7dc0h2b.apps.googleusercontent.com',
-    clientSecret: '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',
-    callbackURL: 'http://localhost:3000/oauth/callback',
+    clientID: process.env.GOOGLE_CLIENT_ID,
+    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    callbackURL: process.env.GOOGLE_CALLBACK_URL,
   },
   session: {
-    cookieKey: 'your-cookie-secret',
+    cookieKey: process.env.COOKIE_KEY,
   },
+  jwt: {
+    secret: process.env.JWT_SECRET, 
+  }
 };

@@ -28,20 +28,6 @@ userController.createUser = async (req, res, next) => {
   const { username, email } = req.body; // Extract username and email from request body
   const hashWord = res.locals.hashWord; // Retrieve hashed password from res.locals
 
-  // TODO - check that username doesn't already exist - Brian
-  // try {
-  //   const userCheck = await db.query('SELECT * FROM users WHERE username = $1', [username]);
-  //   if (userCheck.rows.length > 0) {
-  //     return res.status(409).json({ error: 'Username already exists' });
-  //   }
-  // } catch (err) {
-  //   return next({
-  //     log: 'Error in userController.createUser - checking for existing username',
-  //     message: { err: 'Error checking for existing username' },
-  //   });
-  // }
-  // TODO - create unique user id for the new user
-
   // Insert credentials into database
   const params = [username, hashWord, email]; // Define parameters for SQL query
   const query = `INSERT INTO users(username, password, email) VALUES ($1, $2, $3) RETURNING *`; // Define SQL query string
@@ -113,7 +99,6 @@ userController.signJWT = (req, res, next) => {
   console.log('userController.signJWT - signing JWT');
 
   // Generate JWT
-  // State
   const state = {
     ...res.locals.user, // Include user information in the state
   };
@@ -131,8 +116,8 @@ userController.validateJWT = async (req, res, next) => {
   console.log('userController.validateJWT');
 
   // Check that JWT exists in client's local storage
-  const token = req.headers['authorization'].replace('Bearer ', ''); // Extract token from authorization header
-  if (token === 'null' && !JSON.parse(token)) {
+  const token = req.headers['authorization']?.replace('Bearer ', ''); // Extract token from authorization header
+  if (!token) {
     console.log('No token found');
     // Denied - no token
     res.locals.user = null;
@@ -164,6 +149,57 @@ userController.validateJWT = async (req, res, next) => {
     } else {
       return res.status(500).json({ message: 'Internal server error' });
     }
+  }
+};
+
+// Middleware for handling OAuth user creation
+userController.handleOAuthUser = async (req, res, next) => {
+  const profile = req.user; // Extract profile from request user object
+
+  if (!profile.email) {
+    console.error('No email found in Google profile');
+    return next({
+      log: 'Error in userController.handleOAuthUser',
+      message: 'No email found in user profile',
+      status: 400,
+    });
+  }
+
+  const query = `SELECT * FROM auth.users WHERE email = $1`;
+  const params = [profile.email];
+
+  try {
+    const result = await db.query(query, params);
+    if (result.rows.length === 0) {
+      // User does not exist, create a new user
+      const id = uuidv4();  // Generate a new UUID
+      const email = profile.email;
+      const password = await bcrypt.hash(profile.id, saltRounds); // Hash the profile ID as the password
+
+      const createUserQuery = `INSERT INTO auth.users (id, email, encrypted_password, role) VALUES ($1, $2, $3, 'authenticated') RETURNING *`;
+      const createUserParams = [id, email, password];
+
+      const newUser = await db.query(createUserQuery, createUserParams);
+      res.locals.user = newUser.rows[0];
+    } else {
+      // User exists, return the user
+      res.locals.user = result.rows[0];
+    }
+
+    // Generate JWT token
+    const token = jwt.sign(res.locals.user, JWT_SECRET, { expiresIn: '1h' });
+
+    // Set the token in a cookie
+    res.cookie('jwt', token, { httpOnly: true });
+
+    return next();
+  } catch (err) {
+    console.error('Error saving OAuth user:', err);
+    return next({
+      log: 'Error in userController.handleOAuthUser',
+      message: 'Error saving OAuth user',
+      status: 500,
+    });
   }
 };
 
