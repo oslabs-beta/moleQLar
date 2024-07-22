@@ -19,7 +19,7 @@ import '../NodeSchema/schemavisualizer.scss';
 import schemaGenerator from '../algorithms/schema_generator';
 import resolverGenerator from '../algorithms/resolver_generator';
 import './gentab.scss';
-
+// Defined Custom Tab Panel to pass down probs and manage children component
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -35,7 +35,7 @@ function CustomTabPanel(props) {
     </div>
   );
 }
-
+// a11yProps defined to enhance the accessiblity of tabs
 function a11yProps(index) {
   return {
     id: `simple-tab-${index}`,
@@ -44,7 +44,7 @@ function a11yProps(index) {
 }
 
 
-
+// BasicTabs defined to hold inner tabs - child component
 function BasicTabs({ generatedSchema, generatedResolver }) {
   const [value, setValue] = useState(0);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
@@ -73,7 +73,7 @@ function BasicTabs({ generatedSchema, generatedResolver }) {
   function handleSnackbarClose() {
     setSnackbarOpen(false);
   } 
-
+  // JSX to construct Inner Tab - Child
   return (
     <>
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
@@ -149,7 +149,7 @@ function BasicTabs({ generatedSchema, generatedResolver }) {
     </>
   );
 }
-
+// Defining Main Tab Functionality - contains BasicTabs
 const GenerateTab = ({ open, onClose, nodes, edges }) => {
   // Storing ER of Schema Generator Function
 
@@ -159,32 +159,8 @@ const GenerateTab = ({ open, onClose, nodes, edges }) => {
   let generatedResolverData = [];
   if (open) generatedResolverData = resolverGenerator(nodes, edges);
 
-  //  const [generatedSchemaData, setGeneratedSchemaData] = useState(null);
-  //  const [generatedResolverData, setGeneratedResolverData] = useState(null);
-
-  // const [open, setOpen] = React.useState(false);
-
-  // const handleClickOpen = () => {
-  //   setOpen(true);
-  // };
-
-  // const handleClose = () => {
-  //   setOpen(false);
-  // };
-
-  // useEffect(() => {
-  //   // if(open && nodes && nodes.length > 0) {
-  //   //   console.log('test')
-  //     const schemaData = schemaGenerator(nodes, edges);
-  //     setGeneratedSchemaData(schemaData);
-  //     const resolverData = resolverGenerator(nodes, edges);
-  //     setGeneratedResolverData(resolverData);
-  //   // }
-
-  // }, [open, nodes, edges])
-
   if (!open) return null;
-
+  // JSX to construct GenerateTab popup tab
   return (
     <div className='generate-tab-container'>
       <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>

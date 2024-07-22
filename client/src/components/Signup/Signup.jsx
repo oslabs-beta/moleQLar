@@ -14,6 +14,7 @@ import heroImg from '../../assets/logos/hero-img.png';
 import Navbar from '../Navbar/Navbar';
 import { useAuth } from '../../contexts/AuthContext';
 
+// Defining Default Theme
 const theme = createTheme({
   palette: {
     primary: {
@@ -22,6 +23,7 @@ const theme = createTheme({
   },
 });
 
+// Signup Functionality
 function Signup() {
   let navigate = useNavigate();
   const [formData, setFormData] = useState({
@@ -36,6 +38,7 @@ function Signup() {
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const { authState, setAuthState } = useAuth();
 
+  // useEffect to Navgiate to Dashboard
   useEffect(() => {
     if (authState.isAuth) {
       navigate('/dashboard');
@@ -50,6 +53,7 @@ function Signup() {
     }
   };
 
+  // Form Validation
   const validateForm = () => {
     const newErrors = {};
     if (!formData.username.trim()) newErrors.username = 'Username is required';
@@ -65,6 +69,7 @@ function Signup() {
     return Object.keys(newErrors).length === 0;
   };
 
+  // Handling Form Submit
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (validateForm()) {
@@ -118,6 +123,7 @@ function Signup() {
     }
   };
 
+  // JSX to define Signup Component
   return (
     <>
       <Navbar />

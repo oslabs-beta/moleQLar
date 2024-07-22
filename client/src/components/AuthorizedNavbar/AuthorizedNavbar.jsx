@@ -7,11 +7,11 @@ import { useTheme } from '../../contexts/ThemeContext';
 import { FaSun, FaMoon } from 'react-icons/fa';
 import './authorizednavbar.scss';
 
-
+// Authorized Navbar Defined
 const AuthorizedNavbar = () => {
   const navigate = useNavigate();
   const { authState, setAuthState } = useAuth();
-
+  // Handle Authorized State and to Handle Logout
   const handleLogOut = () => {
     setAuthState({
       isAuth: false,
@@ -25,7 +25,7 @@ const AuthorizedNavbar = () => {
   }
 
   const {darkMode, toggleDarkMode} = useTheme()
-
+  // JSX to define our Authorized Navbar
   return (
     <nav className={`navbar ${darkMode ? 'dark' : ''}`}>
       <NavLink to="/">

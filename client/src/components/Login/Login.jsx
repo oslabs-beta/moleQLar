@@ -10,9 +10,9 @@ import Typography from '@mui/material/Typography';
 import heroImg from '../../assets/logos/hero-img.png';
 import { useAuth } from "../../contexts/AuthContext";
 import Navbar from '../Navbar/Navbar';
-
 import { useNavigate } from 'react-router-dom';
 
+// Defining Default Theme
 const theme = createTheme({
   palette: {
     primary: {
@@ -21,12 +21,14 @@ const theme = createTheme({
   },
 });
 
+// Login Functionality
 function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const { authState, setAuthState } = useAuth();
   const navigate = useNavigate();
 
+  // useEffect to navigate to dashboard
   useEffect(() => {
     console.log('login - authState.isAuth:', authState.isAuth);
     if (authState.isAuth) {
@@ -34,7 +36,7 @@ function Login() {
     }
   }, [])
 
-
+  // Handle Form Submit
   const handleSubmit = async (e) => {
     e.preventDefault();
     // await login(username, password);
@@ -74,6 +76,7 @@ function Login() {
     }
   }
 
+  // JSX to define Login Component
   return (
     <>
     <Navbar/>

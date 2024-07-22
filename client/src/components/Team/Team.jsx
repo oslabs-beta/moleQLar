@@ -9,7 +9,7 @@ import linkedInLogo from '../../assets/logos/linkedin.png';
 
 import Navbar from '../Navbar/Navbar';
 import './team.scss';
-
+// Team Page defined with JSX
 const Team = () => {
   return (
     <>
