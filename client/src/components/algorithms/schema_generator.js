@@ -29,6 +29,11 @@ export default function schemaGenerator(nodes, edges) {
 
   //for each node in nodes argument
   nodes.forEach((node) => {
+    //select primary key field for query by primary key
+    const primaryKeyField = node.data.columns.fields.filter(
+      (field) => field.name === node.primaryKey
+    );
+    console.log(primaryKeyField);
     //if plural/singular versions of id are the same, add 'All' to plural version
     const pluralIsSingular =
       pluralize(node.id) === pluralize.singular(node.id) ? '_all' : '';
@@ -41,9 +46,12 @@ export default function schemaGenerator(nodes, edges) {
       .replace(/^./, node.id[0].toUpperCase())}]\n`;
 
     //query for one element in type (by ID - singular form)
+    const required = primaryKeyField[0].required ? '!' : '';
     query_string += `    ${pluralize
       .singular(node.id)
-      .replace(/^./, node.id[0].toLowerCase())}(_id: ID!): ${pluralize
+      .replace(/^./, node.id[0].toLowerCase())}(${primaryKeyField[0].name}: ${
+      primaryKeyField[0].type
+    }${required}): ${pluralize
       .singular(node.id)
       .replace(/^./, node.id[0].toUpperCase())}\n`;
 
@@ -51,14 +59,12 @@ export default function schemaGenerator(nodes, edges) {
     gql_schema += `  type ${pluralize
       .singular(node.id)
       .replace(/^./, node.id[0].toUpperCase())} {\n`;
-    //add id property to type
-    gql_schema += `    _id: ID!\n`;
 
     //add associated columns to GraphQL type
-    for (let i = 1; i < node.data.columns.length; i++) {
+    for (let i = 0; i < node.data.columns.fields.length; i++) {
       //check if field is required
-      const required = node.data.columns[i].required ? '!' : '';
-      gql_schema += `    ${node.data.columns[i].name}: ${node.data.columns[i].type}${required}\n`;
+      const required = node.data.columns.fields[i].required ? '!' : '';
+      gql_schema += `    ${node.data.columns.fields[i].name}: ${node.data.columns.fields[i].type}${required}\n`;
     }
 
     //add current type's many to one relationships to schema
@@ -86,8 +92,7 @@ export default function schemaGenerator(nodes, edges) {
   gql_schema += query_string;
 
   const testSchema = gql_schema.split('\n');
-  console.log(testSchema)
-  
   //return final schema
   return testSchema;
 }
+

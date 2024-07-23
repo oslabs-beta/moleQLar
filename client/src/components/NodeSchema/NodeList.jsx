@@ -118,7 +118,7 @@ const NodeList = ({
                         </TableRow>
                       </TableHead>
                       <TableBody>
-                        {table.data.columns.map((column, index) => (
+                        {table.data.columns.fields.map((column, index) => (
                           <TableRow key={index}>
                             <TableCell component="th" scope="row" sx={{ color: darkMode ? '#fff' : '#000' }}>
                               {column.name}

@@ -17,9 +17,9 @@ import { parseSqlSchema } from '../algorithms/schema_parser';
 import { schemaGenerator } from '../algorithms/schema_generator';
 import { resolverGenerator } from '../algorithms/resolver_generator';
 import NodeList from './NodeList';
-import './schemavisualizer.scss';  // styles
-import GenerateTab from "../GenerateTabs/genTab";
-import { useTheme } from '../../contexts/ThemeContext'
+import './schemavisualizer.scss'; // styles
+import GenerateTab from '../GenerateTabs/genTab';
+import { useTheme } from '../../contexts/ThemeContext';
 
 import { useAuth } from '../../contexts/AuthContext';
 import { useGraphContext } from '../../contexts/GraphContext';
@@ -50,7 +50,7 @@ const TableNode = React.memo(({ data, id, selected }) => (
     >
       {data.label}
     </div>
-    {data.columns.map((col, index) => (
+    {data.columns.fields.map((col, index) => (
       <div key={index}>
         <Handle
           type='source'
@@ -169,14 +169,21 @@ const SchemaVisualizer = ({ sqlContents, handleUploadBtn }) => {
       // fetch from server
       // console.log(`/graph/${userId}/${graphId}`);
       const config = {
-        headers: { authorization: localStorage.getItem("token") },
-      }
+        headers: { authorization: localStorage.getItem('token') },
+      };
       try {
         // GET from server
-        const response = await axios.get(`/api/graph/${userId}/${graphId}`, config);
+        const response = await axios.get(
+          `/api/graph/${userId}/${graphId}`,
+          config
+        );
         let serverNodes, serverEdges;
-        response.data.nodes === '' ? serverNodes = [] : serverNodes = JSON.parse(response.data.nodes);
-        response.data.edges === '' ? serverEdges = [] : serverEdges = JSON.parse(response.data.edges);
+        response.data.nodes === ''
+          ? (serverNodes = [])
+          : (serverNodes = JSON.parse(response.data.nodes));
+        response.data.edges === ''
+          ? (serverEdges = [])
+          : (serverEdges = JSON.parse(response.data.edges));
 
         setGraphName(response.data.graphName);
         setNodes(serverNodes);
@@ -185,8 +192,14 @@ const SchemaVisualizer = ({ sqlContents, handleUploadBtn }) => {
         if (err.response) {
           // fail - unable to log in
           // request made, server responded with status code outside of 2xx range
-          console.log('Failed to pull graph. Error response data:', err.response.data);
-          console.log('Failed to pull graph. Error response status:', err.response.status);
+          console.log(
+            'Failed to pull graph. Error response data:',
+            err.response.data
+          );
+          console.log(
+            'Failed to pull graph. Error response status:',
+            err.response.status
+          );
         } else if (err.request) {
           console.log('Error request:', err.request);
         } else {
@@ -194,9 +207,9 @@ const SchemaVisualizer = ({ sqlContents, handleUploadBtn }) => {
         }
         navigate('/dashboard');
       }
-    }
+    };
     fetchGraphData();
-  }, [])
+  }, []);
 
   // Save the current graph state to the server
   // This function is called when the user clicks the save button
@@ -209,13 +222,13 @@ const SchemaVisualizer = ({ sqlContents, handleUploadBtn }) => {
 
     // console.log('nodes:', nodeString)
     // console.log('edges:', edgeString)
-    console.log('userId:', userId)
-    console.log('graphName:', graphName)
-    
+    console.log('userId:', userId);
+    console.log('graphName:', graphName);
+
     // send POST request to /api/graph/:userId/:graphId
     const config = {
       headers: { authorization: localStorage.getItem('token') },
-    }
+    };
     const payload = {
       username: username,
       userId: userId,
@@ -225,10 +238,14 @@ const SchemaVisualizer = ({ sqlContents, handleUploadBtn }) => {
       edges: edgeString,
     };
     try {
-      const response = await axios.put(`/api/graph/${userId}/${graphId}`, payload, config);
+      const response = await axios.put(
+        `/api/graph/${userId}/${graphId}`,
+        payload,
+        config
+      );
       // success
       console.log('Successfully saved node graph to database');
-      console.log('response:', response)
+      console.log('response:', response);
     } catch (err) {
       if (err.response) {
         // request made, server responded with status code outside of 2xx range
@@ -240,19 +257,19 @@ const SchemaVisualizer = ({ sqlContents, handleUploadBtn }) => {
         console.log('Error message:', err.message);
       }
     }
-  }
+  };
 
   // Toggle the generation tab visibility
   // This function is called when the user clicks the generate button
   // Separates the graph visualization from code generation for a cleaner UI
   const [genTabOpen, setGenTabOpen] = useState(false);
-  const handleGenTabOpen = () =>{
-    console.log('clicked generate button')
-    setGenTabOpen(prev => !prev);
-    console.log('genTabOpen', genTabOpen)
+  const handleGenTabOpen = () => {
+    console.log('clicked generate button');
+    setGenTabOpen((prev) => !prev);
+    console.log('genTabOpen', genTabOpen);
   };
-  const handleGenTabClose = () =>{
-    setGenTabOpen(false)
+  const handleGenTabClose = () => {
+    setGenTabOpen(false);
   };
 
   // Remove a node from the graph and clean up related edges
@@ -397,7 +414,12 @@ const SchemaVisualizer = ({ sqlContents, handleUploadBtn }) => {
   // This includes the node list, graph area, and generation tab
   return (
     <div className='schema-visualizer'>
-      <GenerateTab open={genTabOpen} onClose={handleGenTabClose} nodes={nodes} edges={edges} />
+      <GenerateTab
+        open={genTabOpen}
+        onClose={handleGenTabClose}
+        nodes={nodes}
+        edges={edges}
+      />
       <NodeList
         tables={nodes}
         onSelectTable={selectNode}
@@ -407,11 +429,21 @@ const SchemaVisualizer = ({ sqlContents, handleUploadBtn }) => {
         selectedTableId={selectedNode}
       />
       <ReactFlowProvider>
-      <div className={`node-graph-container ${darkMode ? 'dark' : ''}`} ref={reactFlowWrapper}>
-          
-          <div className="graph-btn-container">
-            <button className="btn-generate btn-graph" onClick={handleGenTabOpen} disabled={!reactFlowInstance}>Generate</button>
-            <button className="btn-save btn-graph" onClick={handleSaveBtn}>Save</button>
+        <div
+          className={`node-graph-container ${darkMode ? 'dark' : ''}`}
+          ref={reactFlowWrapper}
+        >
+          <div className='graph-btn-container'>
+            <button
+              className='btn-generate btn-graph'
+              onClick={handleGenTabOpen}
+              disabled={!reactFlowInstance}
+            >
+              Generate
+            </button>
+            <button className='btn-save btn-graph' onClick={handleSaveBtn}>
+              Save
+            </button>
           </div>
 
           <ReactFlow
@@ -428,8 +460,20 @@ const SchemaVisualizer = ({ sqlContents, handleUploadBtn }) => {
             onInit={setReactFlowInstance}
           >
             <Background color={darkMode ? '#333' : '#aaa'} gap={16} />
-            <Controls style={{ background: darkMode ? '#333' : '#fff', color: darkMode ? '#fff' : '#000', border: 'none' }}/>
-            <MiniMap style={{ background: darkMode ? '#333' : '#f0f0f0', maskColor: darkMode ? '#666' : '#ccc' }} nodeColor={darkMode ? '#666' : '#ccc'}/>
+            <Controls
+              style={{
+                background: darkMode ? '#333' : '#fff',
+                color: darkMode ? '#fff' : '#000',
+                border: 'none',
+              }}
+            />
+            <MiniMap
+              style={{
+                background: darkMode ? '#333' : '#f0f0f0',
+                maskColor: darkMode ? '#666' : '#ccc',
+              }}
+              nodeColor={darkMode ? '#666' : '#ccc'}
+            />
           </ReactFlow>
         </div>
       </ReactFlowProvider>
