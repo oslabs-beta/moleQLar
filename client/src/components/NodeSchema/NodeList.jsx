@@ -39,6 +39,19 @@ const NodeList = ({
   const { darkMode } = useTheme();
   const { graphName, setGraphName } = useGraphContext();
   const { graphId, setGraphId } = useGraphContext();
+  //add primary keys state
+  const [primaryKeys , setPrimaryKeys] = useState([]);
+
+  
+  console.log(tables);
+  console.log(tables.map(table => table.id + '.' + table.primaryKey));
+  
+  console.log(primaryKeys);
+
+  const handleSetForeignKeys = () => {
+    setPrimaryKeys(tables.map(table => table.id + '.' + table.primaryKey))
+  }
+
 
   const handleClick = (tableId) => {
     setOpenTable(openTable === tableId ? null : tableId);
@@ -169,7 +182,7 @@ const NodeList = ({
         <button
           className='btn-graph btn-add-node'
           // onclick function commented out until relationship
-          // onClick={() => setIsNodeDialogOpen(true)}
+          onClick={() => setIsNodeDialogOpen(true)}
         >
           Add New Node
         </button>
@@ -183,6 +196,8 @@ const NodeList = ({
           onEditNode={handleEditNode}
           editingNode={editingNode}
           darkMode={darkMode}
+          primaryKeys={primaryKeys}
+          handleSetForeignKeys={handleSetForeignKeys}
         />
       </div>
     </div>

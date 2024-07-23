@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 import {
   Dialog,
   DialogTitle,
@@ -19,10 +19,10 @@ import {
   ListItemSecondaryAction,
   Grid,
   useTheme,
-} from "@mui/material";
-import DeleteIcon from "@mui/icons-material/Delete";
-import AddIcon from "@mui/icons-material/Add";
-import EditIcon from "@mui/icons-material/Edit";
+} from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
+import AddIcon from '@mui/icons-material/Add';
+import EditIcon from '@mui/icons-material/Edit';
 import { useTheme as useCustomTheme } from '../../contexts/ThemeContext';
 
 const NodeDialog = ({
@@ -31,14 +31,19 @@ const NodeDialog = ({
   onAddNode,
   onEditNode,
   editingNode = null,
+  primaryKeys,
+  handleSetForeignKeys
 }) => {
-  const [nodeName, setNodeName] = useState("");
+  const [nodeName, setNodeName] = useState('');
   const [fields, setFields] = useState([]);
   const [newField, setNewField] = useState({
-    name: "",
-    type: "String",
+    name: '',
+    type: 'String',
     required: false,
   });
+  //add foreign key state placeholder
+  const [newForeignKey, setNewForeignKey] = useState(false);
+
   const { darkMode } = useCustomTheme();
   const theme = useTheme();
 
@@ -53,15 +58,21 @@ const NodeDialog = ({
         }))
       );
     } else {
-      setNodeName("");
+      setNodeName('');
       setFields([]);
     }
   }, [editingNode]);
 
+  //ADDED
+  const handleAddForeignKey = () => {
+    console.log(primaryKeys);
+    setNewForeignKey(newForeignKey ? false : true);
+  }
+
   const handleAddField = () => {
     if (newField.name) {
       setFields([...fields, newField]);
-      setNewField({ name: "", type: "String", required: false });
+      setNewField({ name: '', type: 'String', required: false });
     }
   };
 
@@ -83,7 +94,7 @@ const NodeDialog = ({
       } else {
         onAddNode(nodeData);
       }
-      setNodeName("");
+      setNodeName('');
       setFields([]);
       onClose();
     }
@@ -101,18 +112,26 @@ const NodeDialog = ({
       color: darkMode ? theme.palette.text.primary : theme.palette.text.primary,
     },
     label: {
-      color: darkMode ? theme.palette.text.secondary : theme.palette.text.secondary,
+      color: darkMode
+        ? theme.palette.text.secondary
+        : theme.palette.text.secondary,
     },
   };
 
   return (
-    <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth PaperProps={{ style: dialogStyle.paper }}>
-      <DialogTitle>{editingNode ? "Edit Node" : "Add New Node"}</DialogTitle>
+    <Dialog
+      open={open}
+      onClose={onClose}
+      maxWidth='md'
+      fullWidth
+      PaperProps={{ style: dialogStyle.paper }}
+    >
+      <DialogTitle>{editingNode ? 'Edit Node' : 'Add New Node'}</DialogTitle>
       <DialogContent>
         <TextField
           autoFocus
-          margin="dense"
-          label="Node Name"
+          margin='dense'
+          label='Node Name'
           fullWidth
           value={nodeName}
           onChange={(e) => setNodeName(e.target.value)}
@@ -124,25 +143,25 @@ const NodeDialog = ({
               <ListItemText
                 primary={field.name}
                 secondary={`${field.type}${
-                  field.required ? " (NOT NULL)" : ""
+                  field.required ? ' (NOT NULL)' : ''
                 }`}
               />
               <ListItemSecondaryAction>
-                <IconButton edge="end" onClick={() => handleEditField(index)}>
+                <IconButton edge='end' onClick={() => handleEditField(index)}>
                   <EditIcon />
                 </IconButton>
-                <IconButton edge="end" onClick={() => handleRemoveField(index)}>
+                <IconButton edge='end' onClick={() => handleRemoveField(index)}>
                   <DeleteIcon />
                 </IconButton>
               </ListItemSecondaryAction>
             </ListItem>
           ))}
         </List>
-        <Grid container spacing={2} alignItems="center">
-          <Grid item xs={12} sm={4}>
+        <Grid container spacing={2} alignItems='center'>
+          <Grid item xs={12} sm={3}>
             <TextField
               fullWidth
-              label="Field Name"
+              label='Field Name'
               value={newField.name}
               onChange={(e) =>
                 setNewField({ ...newField, name: e.target.value })
@@ -150,23 +169,25 @@ const NodeDialog = ({
               sx={textFieldStyle}
             />
           </Grid>
-          <Grid item xs={12} sm={4}>
-            <FormControl fullWidth variant="outlined">
-              <InputLabel id="type-select-label" sx={textFieldStyle.label}>Type</InputLabel>
+          <Grid item xs={12} sm={3}>
+            <FormControl fullWidth variant='outlined'>
+              <InputLabel id='type-select-label' sx={textFieldStyle.label}>
+                Type
+              </InputLabel>
               <Select
-                labelId="type-select-label"
+                labelId='type-select-label'
                 value={newField.type}
                 onChange={(e) =>
                   setNewField({ ...newField, type: e.target.value })
                 }
-                label="Type"
+                label='Type'
                 sx={textFieldStyle.input}
               >
-                <MenuItem value="Int">Int</MenuItem>
-                <MenuItem value="Float">Float</MenuItem>
-                <MenuItem value="String">String</MenuItem>
-                <MenuItem value="Boolean">Boolean</MenuItem>
-                <MenuItem value="ID">ID</MenuItem>
+                <MenuItem value='Int'>Int</MenuItem>
+                <MenuItem value='Float'>Float</MenuItem>
+                <MenuItem value='String'>String</MenuItem>
+                <MenuItem value='Boolean'>Boolean</MenuItem>
+                <MenuItem value='ID'>ID</MenuItem>
               </Select>
             </FormControl>
           </Grid>
@@ -180,13 +201,25 @@ const NodeDialog = ({
                   }
                 />
               }
-              label="NOT NULL"
+              label='NOT NULL'
+            />
+          </Grid>
+          {/* //ADDED NEW GRID ITEM AND CHANGED above widths from 4 to 3  */}
+          <Grid item xs={12} sm={2}>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={newForeignKey}
+                  onChange={(e) => handleAddForeignKey()}
+                />
+              }
+              label='FOREIGN KEY'
             />
           </Grid>
           <Grid item xs={12} sm={2}>
             <Button
-              variant="contained"
-              color="primary"
+              variant='contained'
+              color='primary'
               onClick={handleAddField}
               startIcon={<AddIcon />}
               fullWidth
@@ -198,8 +231,8 @@ const NodeDialog = ({
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose}>Cancel</Button>
-        <Button onClick={handleSubmit} variant="contained" color="primary">
-          {editingNode ? "Save Changes" : "Add Node"}
+        <Button onClick={handleSubmit} variant='contained' color='primary'>
+          {editingNode ? 'Save Changes' : 'Add Node'}
         </Button>
       </DialogActions>
     </Dialog>
