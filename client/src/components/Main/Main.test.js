@@ -33,7 +33,6 @@ describe('Main page', () => {
       </BrowserRouter>
     );
 
-    //select components on main page to test for correct rendering
     const mainHeader = screen.getByText(/Implementation in seconds/i);
     const homeLinkNav = screen.getByRole('link', { name: /Home/i });
     const homeLinkIcon = screen.getByAltText(/Small Logo/i);
@@ -41,10 +40,9 @@ describe('Main page', () => {
     const aboutLink = screen.getByRole('link', { name: /About/i });
     const githubLink = screen.getByAltText(/GitHub/i);
     const loginButton = screen.getByRole('button', {name: /Log In/i });
-    const signupButton = screen.getByRole('button', {name: /Sign Up/i });
+    const signupButtons = screen.getAllByRole('button', {name: /Sign Up/i });
     const mainImage = screen.getByAltText(/molecule image/i);
 
-    //Verify selected fields are rendering properly
     expect(mainHeader).toBeInTheDocument();
     expect(homeLinkNav).toBeInTheDocument();
     expect(homeLinkIcon).toBeInTheDocument();
@@ -52,7 +50,7 @@ describe('Main page', () => {
     expect(aboutLink).toBeInTheDocument();
     expect(githubLink).toBeInTheDocument();
     expect(loginButton).toBeInTheDocument();
-    expect(signupButton).toBeInTheDocument();
+    expect(signupButtons.length).toBeGreaterThan(0);
     expect(mainImage).toBeVisible();
   });
 
@@ -95,11 +93,9 @@ describe('Main page', () => {
     });
 
     test('Successfully navigates to Signup route on click', () => {
-      const signupButton = screen.getByRole('button', { name: /Sign Up/i });
-      fireEvent.click(signupButton);
-      expect(
-        screen.getByText(/Already have an account?/i)
-      ).toBeInTheDocument();
+      const signupButtons = screen.getAllByRole('button', { name: /Sign Up/i });
+      fireEvent.click(signupButtons[0]); // Click the first "Sign Up" button
+      expect(screen.getByText(/Already have an account?/i)).toBeInTheDocument();
     });
     
   });

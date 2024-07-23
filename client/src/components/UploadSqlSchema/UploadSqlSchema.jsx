@@ -4,8 +4,8 @@ import { useDropzone } from 'react-dropzone';
 import SchemaVisualizer from '../NodeSchema/SchemaVisualizer';
 
 import './uploadsqlschema.scss'  // styles 
-import { useEffect } from 'react';  // for testing onDrop
-import samplePgDump from '../algorithms/sample_pg_dump.sql';  // for testing onDrop
+// import { useEffect } from 'react';  // for testing onDrop
+// import samplePgDump from '../algorithms/sample_pg_dump.sql';  // for testing onDrop
 import { useTheme } from '../../contexts/ThemeContext';
 
 // Component for uploading SQL schema files and visualizing them
