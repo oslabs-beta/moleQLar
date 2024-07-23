@@ -134,7 +134,7 @@ const NodeList = ({
                         </TableRow>
                       </TableHead>
                       <TableBody>
-                        {table.data.columns.fields.map((column, index) => (
+                        {table.data.columns && table.data.columns.fields && table.data.columns.fields.map((column, index) => (
                           <TableRow key={index}>
                             <TableCell
                               component='th'
@@ -169,7 +169,7 @@ const NodeList = ({
         <button
           className='btn-graph btn-add-node'
           // onclick function commented out until relationship
-          // onClick={() => setIsNodeDialogOpen(true)}
+          onClick={() => setIsNodeDialogOpen(true)}
         >
           Add New Node
         </button>
