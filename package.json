@@ -1,0 +1,20 @@
+{
+  "name": "moleqlar",
+  "version": "1.0.0",
+  "scripts": {
+    "heroku-postbuild": "npm run build --prefix client && npm install --prefix server",
+    "build": "cd client && npm install && npm run build",
+    "start": "cd server && npm install && npm start"
+  },
+  "engines": {
+    "node": "16.x"
+  },
+  "devDependencies": {
+    "@eslint/compat": "^1.1.0",
+    "@eslint/js": "^9.6.0",
+    "eslint": "^9.6.0",
+    "eslint-plugin-react": "^7.34.3",
+    "globals": "^15.8.0",
+    "typescript-eslint": "^7.15.0"
+  }
+}
