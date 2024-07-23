@@ -11,8 +11,8 @@ const cors = require("cors");
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 // app.use(cors());
-const path = require('path');
-
+const path = require("path");
+require("dotenv").config();
 
 // Creates a new Sequalize Instance w/ Parameters
 // const sequelize = new Sequelize('database', 'username', 'password', {
@@ -28,7 +28,7 @@ const path = require('path');
 
 // app.use('/auth', authRoutes);
 
-app.use(express.static(path.join(__dirname, 'build')));
+app.use(express.static(path.join(__dirname, "build")));
 
 // app.get("/testdb", async (req, res) => {
 //   const result = await db.query("SELECT * FROM users LIMIT 1");
@@ -37,21 +37,20 @@ app.use(express.static(path.join(__dirname, 'build')));
 // });
 
 // Authorization Route
-const authRouter = require('./routes/authRouter');
-app.use('/api/auth', authRouter);
+const authRouter = require("./routes/authRouter");
+app.use("/api/auth", authRouter);
 
 // Graph Routes
-const graphRouter = require('./routes/graphRouter');
-app.use('/api/graph', graphRouter);
-
+const graphRouter = require("./routes/graphRouter");
+app.use("/api/graph", graphRouter);
 
 app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, 'build', 'index.html'));
+  res.sendFile(path.join(__dirname, "build", "index.html"));
 });
 
 // Global error handler:
 app.use((err, req, res, next) => {
-  console.log('GLOBAL ERROR HANDLER:', err);
+  console.log("GLOBAL ERROR HANDLER:", err);
   const defaultErr = {
     log: "Express error handler caught middleware error",
     status: 500,

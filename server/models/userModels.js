@@ -1,17 +1,7 @@
-const { Pool } = require('pg');
-require('dotenv').config();
+const { Pool } = require("pg");
+require("dotenv").config();
 
 const PG_URI = process.env.SQL_DATABASE_URI;
-// 'postgresql://postgres.cysmoheuclhnggrbjhqy:codesmithgroup1@aws-0-us-west-1.pooler.supabase.com:6543/postgres';
-
-// CREATE TABLE Users ( 
-//   id SERIAL PRIMARY KEY, 
-//   username VARCHAR(255) UNIQUE NOT NULL, 
-//   firstname VARCHAR(255),
-//   lastname VARCHAR(255), 
-//   email VARCHAR(255), 
-//   password VARCHAR(255) NOT NULL,
-//   role VARCHAR(255) ); 
 
 const pool = new Pool({
   connectionString: PG_URI,
@@ -29,10 +19,10 @@ module.exports = {
   },
   testConnection: async () => {
     try {
-      await pool.query('SELECT 1');
-      console.log('Successfully connected to the database');
+      await pool.query("SELECT 1");
+      console.log("Successfully connected to the database");
     } catch (err) {
-      console.error('Error connecting to the database', err);
+      console.error("Error connecting to the database", err);
     }
   },
 };
