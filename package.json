@@ -3,13 +3,10 @@
   "version": "1.0.0",
   "scripts": {
     "heroku-postbuild": "npm run build --prefix client && npm install --prefix server",
-    "build": "cd client && npm install && npm run build",
+    "build": "npm run build --prefix client",
     "start": "cd server && npm install && npm start"
   },
   "engines": {
     "node": "16.x"
-  },
-  "dependencies": {
-    "webpack-cli": "^5.1.4"
   }
 }
