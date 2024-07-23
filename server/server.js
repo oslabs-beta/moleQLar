@@ -1,18 +1,16 @@
-require('dotenv').config(); // Add this line at the very top of the file
+require('dotenv').config(); // Load environment variables
 
 const express = require('express');
 const session = require('express-session');
 const passport = require('passport');
-const { v4: uuidv4 } = require('uuid');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const path = require('path');
 const cors = require('cors');
 const config = require('./config');
-const db = require('./models/userModels'); // Import the database models
+const db = require('./models/userModels'); 
 const bodyParser = require('body-parser');
-const bcrypt = require('bcryptjs'); // Import bcryptjs for password hashing
-const jwt = require('jsonwebtoken'); // Import jsonwebtoken for JWT creation/validation
-const userController = require('./controllers/userController'); // Import the user controller
+const bcrypt = require('bcryptjs'); 
+const userController = require('./controllers/userController'); 
 
 // Routes
 const authRouter = require('./routes/authRouter');
@@ -56,28 +54,25 @@ passport.use(new GoogleStrategy({
   console.log('Google profile:', JSON.stringify(profile, null, 2));
 
   // Check if user exists in the database
-  const query = `SELECT * FROM auth.users WHERE email = $1`;
+  const query = `SELECT * FROM users WHERE email = $1`;
   const params = [profile.emails[0].value];
 
   try {
     const result = await db.query(query, params);
     if (result.rows.length === 0) {
       // User does not exist, create a new user
-      const id = uuidv4();  // Generate a new UUID
+      const username = profile.displayName;
       const email = profile.emails[0].value;
       const password = await bcrypt.hash(profile.id, 10); // Hash the profile ID as the password
 
-      const createUserQuery = `INSERT INTO auth.users (id, email, encrypted_password, role) VALUES ($1, $2, $3, 'authenticated') RETURNING *`;
-      const createUserParams = [id, email, password];
+      const createUserQuery = `INSERT INTO users (username, email, password) VALUES ($1, $2, $3) RETURNING *`;
+      const createUserParams = [username, email, password];
 
       const newUser = await db.query(createUserQuery, createUserParams);
-      const user = newUser.rows[0];
-
-      done(null, { id: user.id, email: user.email });
+      done(null, newUser.rows[0]);
     } else {
       // User exists, return the user
-      const user = result.rows[0];
-      done(null, { id: user.id, email: user.email });
+      done(null, result.rows[0]);
     }
   } catch (err) {
     done(err, null);
@@ -89,7 +84,7 @@ app.get('/api/auth/google', passport.authenticate('google', {
   scope: ['profile', 'email']
 }));
 
-app.get('/api/auth/google/callback', passport.authenticate('google', { failureRedirect: '/login' }), userController.handleOAuthUser, async (req, res) => {
+app.get('/api/auth/google/callback', passport.authenticate('google', { failureRedirect: '/login' }), userController.handleOAuthUser, (req, res) => {
   console.log('Authentication successful');
 
   const userProfile = req.user;
@@ -100,40 +95,7 @@ app.get('/api/auth/google/callback', passport.authenticate('google', { failureRe
     return res.redirect('/login');
   }
 
-  const email = userProfile.email;
-  const userId = userProfile.id;
-
-  // Check if the user already exists
-  const userExistsQuery = `SELECT * FROM auth.users WHERE email = $1`;
-  const params = [email];
-
-  try {
-    const userExistsResult = await db.query(userExistsQuery, params);
-
-    if (userExistsResult.rows.length === 0) {
-      // User doesn't exist, create a new one
-      const id = uuidv4();  // Generate a new UUID
-      const createUserQuery = `
-        INSERT INTO auth.users (id, email)
-        VALUES ($1, $2)
-        RETURNING *`;
-      const createUserParams = [id, email];
-
-      const newUser = await db.query(createUserQuery, createUserParams);
-      console.log('New user created:', newUser.rows[0]);
-    } else {
-      console.log('User already exists:', userExistsResult.rows[0]);
-    }
-
-    // Create and send JWT token
-    const token = jwt.sign({ id: userId, email }, config.jwt.secret, { expiresIn: '1h' });
-    res.setHeader('authorization', `Bearer ${token}`);
-
-    res.redirect('http://localhost:8000/dashboard');
-  } catch (err) {
-    console.error('Error saving OAuth user:', err);
-    res.redirect('/login');
-  }
+  res.redirect('http://localhost:8000/dashboard');
 });
 
 app.get('/api/auth/status', (req, res) => {

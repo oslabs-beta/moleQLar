@@ -1,16 +1,13 @@
-const bcrypt = require('bcryptjs'); // Import bcryptjs library for hashing passwords
-const saltRounds = 10; // Define number of salt rounds for hashing
-const db = require('../models/userModels'); // Import database models for querying
+const bcrypt = require('bcryptjs'); 
+const db = require('../models/userModels'); 
 
-const jwt = require('jsonwebtoken'); // Import jsonwebtoken library for JWT creation/validation
-const JWT_SECRET = 'moleQLar'; // Define a secret key for signing JWTs
-const userController = {}; // Initialize an empty userController object
+const userController = {}; 
 
 // Middleware for hashing the password
 userController.hashing = async (req, res, next) => {
   const { password } = req.body; // Extract password from request body
   try {
-    const salt = await bcrypt.genSalt(saltRounds); // Generate salt with defined rounds
+    const salt = await bcrypt.genSalt(10); // Generate salt with defined rounds
     const hashWord = await bcrypt.hash(password, salt); // Hash the password using the generated salt
     res.locals.hashWord = hashWord; // Store the hashed password in res.locals for later use
     return next(); // Proceed to the next middleware
@@ -54,8 +51,6 @@ userController.createUser = async (req, res, next) => {
 userController.loginUser = async (req, res, next) => {
   const { username, password } = req.body; // Extract username and password from request body
   const loginQuery = `SELECT * FROM users WHERE username = '${username}'`; // Define SQL query string
-  console.log('username:', username);
-  console.log('password:', password);
 
   // Error checking for missing username or password
   if (!username || !password) {
@@ -94,64 +89,6 @@ userController.loginUser = async (req, res, next) => {
   }
 };
 
-// Middleware for signing a JWT
-userController.signJWT = (req, res, next) => {
-  console.log('userController.signJWT - signing JWT');
-
-  // Generate JWT
-  const state = {
-    ...res.locals.user, // Include user information in the state
-  };
-
-  // Sign token
-  const token = jwt.sign(state, JWT_SECRET, { expiresIn: '1h' }); // Create a JWT with the state and secret key
-
-  // Add token to response header
-  res.setHeader('authorization', `Bearer ${token}`); // Add the token to the response header
-  return next(); // Proceed to the next middleware
-};
-
-// Middleware for validating a JWT
-userController.validateJWT = async (req, res, next) => {
-  console.log('userController.validateJWT');
-
-  // Check that JWT exists in client's local storage
-  const token = req.headers['authorization']?.replace('Bearer ', ''); // Extract token from authorization header
-  if (!token) {
-    console.log('No token found');
-    // Denied - no token
-    res.locals.user = null;
-    return res.status(401).json({ message: 'No token, authorization denied' });
-  }
-
-  // Check that token is valid
-  try {
-    const decoded = jwt.verify(token, JWT_SECRET); // Verify the token using the secret key
-
-    // Success - send username back to the client
-    res.locals.user = {
-      username: decoded.username,
-      userId: decoded.userId,
-    }
-    return next();
-  } catch (err) {
-    console.log('userController - err.name:', err.name);
-
-    // Handle specific JWT errors
-    if (err.name === 'TokenExpiredError') {
-      return res
-        .status(401)
-        .json({ message: 'Token expired, authorization denied' });
-    } else if (err.name === 'JsonWebTokenError') {
-      return res
-        .status(401)
-        .json({ message: 'Invalid token, authorization denied' });
-    } else {
-      return res.status(500).json({ message: 'Internal server error' });
-    }
-  }
-};
-
 // Middleware for handling OAuth user creation
 userController.handleOAuthUser = async (req, res, next) => {
   const profile = req.user; // Extract profile from request user object
@@ -165,19 +102,19 @@ userController.handleOAuthUser = async (req, res, next) => {
     });
   }
 
-  const query = `SELECT * FROM auth.users WHERE email = $1`;
+  const query = `SELECT * FROM users WHERE email = $1`;
   const params = [profile.email];
 
   try {
     const result = await db.query(query, params);
     if (result.rows.length === 0) {
       // User does not exist, create a new user
-      const id = uuidv4();  // Generate a new UUID
+      const username = profile.displayName;
       const email = profile.email;
-      const password = await bcrypt.hash(profile.id, saltRounds); // Hash the profile ID as the password
+      const password = await bcrypt.hash(profile.id, 10); // Hash the profile ID as the password
 
-      const createUserQuery = `INSERT INTO auth.users (id, email, encrypted_password, role) VALUES ($1, $2, $3, 'authenticated') RETURNING *`;
-      const createUserParams = [id, email, password];
+      const createUserQuery = `INSERT INTO users (username, email, password) VALUES ($1, $2, $3) RETURNING *`;
+      const createUserParams = [username, email, password];
 
       const newUser = await db.query(createUserQuery, createUserParams);
       res.locals.user = newUser.rows[0];
@@ -185,12 +122,6 @@ userController.handleOAuthUser = async (req, res, next) => {
       // User exists, return the user
       res.locals.user = result.rows[0];
     }
-
-    // Generate JWT token
-    const token = jwt.sign(res.locals.user, JWT_SECRET, { expiresIn: '1h' });
-
-    // Set the token in a cookie
-    res.cookie('jwt', token, { httpOnly: true });
 
     return next();
   } catch (err) {
@@ -203,4 +134,4 @@ userController.handleOAuthUser = async (req, res, next) => {
   }
 };
 
-module.exports = userController; // Export userController object
+module.exports = userController; 
