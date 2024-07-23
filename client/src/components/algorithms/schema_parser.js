@@ -36,7 +36,7 @@ export function parseSqlSchema(sql) {
       let tableName = line.match(/CREATE TABLE (\w+\.)?(\w+)/)[2];
       currentTable = tableName;
       // Add tableName to tables object
-      tables[currentTable] = [];
+      tables[currentTable] = { primaryKey: '', fields: [] };
       moreFields = true;
     } else if (moreFields) {
       if (line.startsWith(')')) {
@@ -54,11 +54,17 @@ export function parseSqlSchema(sql) {
             const fieldType = typeMapper[lineArray[1].replace(/,/g, '')];
             const required = line.toLowerCase().includes('not null');
             // Add new field object to associated fields array on table object
-            tables[currentTable].push({
+            tables[currentTable].fields.push({
               name: fieldName,
               type: fieldType,
               required: required,
             });
+          }
+          //if line is primary key definition,
+          else {
+            const match = line.match(/PRIMARY KEY \("?([^")]+)"?\)/);
+            tables[currentTable].primaryKey = match[1];
+            console.log(tables[currentTable].primaryKey);
           }
         }
       }
@@ -74,12 +80,16 @@ export function parseSqlSchema(sql) {
           //add next line to current
           line += lineArray[index + 1];
         }
-        //attempt to match line to template
-        const match = line.match(
+        //attempt to match line to relationship template
+        const matchRelationship = line.match(
           /ALTER TABLE (\w+\.)?(\w+).*FOREIGN KEY \((\w+)\) REFERENCES (\w+\.)?(\w+)\((\w+)\)/
         );
+        //attempt to match line to primary key template
+        const matchPrimaryKey = line.match(
+          /ALTER TABLE (\w+\.)?(\w+).*PRIMARY KEY \((\w+)\)/
+        );
         //if line matches, store data
-        if (match) {
+        if (matchRelationship) {
           const [
             ,
             sourceCheck,
@@ -88,7 +98,7 @@ export function parseSqlSchema(sql) {
             targetCheck,
             targetTable,
             targetField,
-          ] = match;
+          ] = matchRelationship;
 
           //if both tables are public, push data onto relationships object
           if (sourceCheck === 'public.' && targetCheck === 'public.') {
@@ -98,6 +108,12 @@ export function parseSqlSchema(sql) {
               target: targetTable,
               targetHandle: targetField,
             });
+          }
+        } else if (matchPrimaryKey) {
+          const [, tableCheck, tableName, pkField] = matchPrimaryKey;
+
+          if (tableCheck === 'public.') {
+            tables[tableName].primaryKey = pkField;
           }
         }
       }
@@ -130,6 +146,7 @@ export function parseSqlSchema(sql) {
       type: 'table',
       //added sqlTableName
       dbTableName: tableName,
+      primaryKey: columns.primaryKey,
       data: {
         //changed tableName to this
         label: pluralize
@@ -160,43 +177,3 @@ export function parseSqlSchema(sql) {
 
   return { nodes, edges };
 }
-
-//{name: "name, type: "type", required: }
-//types in GraphQL : String, Int, Float, Boolean, ID, and []
-
-//varchar -> String
-//bigInt -> Int
-//serial -> ID
-
-//people -> planets
-
-// type Person{
-//   _id: type,
-//   name: type,
-//   planets: [Planet!]
-// }
-
-// find 'CREATE TABLE' statements
-//create new instance of Table class
-//loop through fields in table
-//for each field create new instance of column and add each to parent table's columns property
-
-//for 'ALTER TABLE' statements
-//ALTER TABLE ONLY public.species_in_films ADD CONSTRAINT species_in_films_fk1 FOREIGN KEY (species_id) REFERENCES public.species(_id);
-//ALTER TABLE ONLY public.species ADD CONSTRAINT species_fk0 FOREIGN KEY (homeworld_id) REFERENCES public.planets(_id);
-
-//let ref_table_name = 'planets'
-//let ref_table = tables.find((table) => table.name = ref_table_name)
-
-//table.assign_foreign_key('homeworld_id', ref_table='planets')
-
-//currTable[col]
-
-// currTable.columns.push(
-//     new Column(name='species_fk0', is_primary_key=false, ref_table=ref_table)
-// )
-//for the table specified after public - get foreign key and save link to referenced column in other table
-
-// invoke createNode() function to create a table node in node graph for each table
-
-// invoke addField() function on table node component to add a field property

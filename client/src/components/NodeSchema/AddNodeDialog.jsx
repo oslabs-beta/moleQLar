@@ -46,7 +46,7 @@ const NodeDialog = ({
     if (editingNode) {
       setNodeName(editingNode.data.label);
       setFields(
-        editingNode.data.columns.map((col) => ({
+        editingNode.data.columns.fields.map((col) => ({
           name: col.name,
           type: col.type,
           required: col.required,
