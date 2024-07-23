@@ -36,7 +36,7 @@ const Navbar = () => {
         <a href='https://github.com/oslabs-beta/moleQLar' target='_blank'>
           <img src={githubLogo} alt='GitHub' className='githubLogo' />
         </a>
-        <a href='https://linkedin.com' target='_blank'>
+        <a href='https://www.linkedin.com/company/moleqlar/' target='_blank'>
           <img src={linkedInLogo} alt='LinkedIn' className='linkedIn' />
         </a>
       </div>
