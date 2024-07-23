@@ -32,7 +32,7 @@ const NodeDialog = ({
   onEditNode,
   editingNode = null,
   primaryKeys,
-  handleSetForeignKeys
+  handleSetPrimaryKeys
 }) => {
   const [nodeName, setNodeName] = useState('');
   const [fields, setFields] = useState([]);
@@ -210,7 +210,7 @@ const NodeDialog = ({
               control={
                 <Checkbox
                   checked={newForeignKey}
-                  onChange={(e) => handleAddForeignKey()}
+                  onChange={(e) => handleSetPrimaryKeys()}
                 />
               }
               label='FOREIGN KEY'

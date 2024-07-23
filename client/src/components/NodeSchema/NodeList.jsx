@@ -40,17 +40,19 @@ const NodeList = ({
   const { graphName, setGraphName } = useGraphContext();
   const { graphId, setGraphId } = useGraphContext();
   //add primary keys state
-  const [primaryKeys , setPrimaryKeys] = useState([]);
+  
 
   
-  console.log(tables);
+  //console.log(tables);
   //filter out the current table from the results
-  console.log(tables.map(table => table.id + '.' + table.primaryKey));
+  //console.log(tables.map(table => table.id + '.' + table.primaryKey));
   
-  console.log(primaryKeys);
+  //console.log(primaryKeys);
 
-  const handleSetForeignKeys = () => {
+  const handleSetPrimaryKeys = () => {
+    //filter out current table
     setPrimaryKeys(tables.map(table => table.id + '.' + table.primaryKey))
+    console.log(primaryKeys)
   }
 
 
@@ -198,7 +200,7 @@ const NodeList = ({
           editingNode={editingNode}
           darkMode={darkMode}
           primaryKeys={primaryKeys}
-          handleSetForeignKeys={handleSetForeignKeys}
+          handleSetPrimaryKeys={handleSetPrimaryKeys}
         />
       </div>
     </div>

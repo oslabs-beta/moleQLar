@@ -154,6 +154,7 @@ const SchemaVisualizer = ({ sqlContents, handleUploadBtn }) => {
   const reactFlowWrapper = useRef(null);
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
   const { darkMode } = useTheme();
+  const [primaryKeys , setPrimaryKeys] = useState([]);
 
   // TODO - send request to server to request graph_name, graph_id, nodes_string, edges_string
   const { username } = useAuth();
@@ -398,7 +399,7 @@ const SchemaVisualizer = ({ sqlContents, handleUploadBtn }) => {
         },
         style: { stroke: colorScheme[index % colorScheme.length] },
       }));
-
+      setPrimaryKeys(newNodes.map(node => node.primaryKey));
       setNodes(newNodes);
       setEdges(coloredEdges);
 
