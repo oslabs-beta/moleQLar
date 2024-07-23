@@ -50,25 +50,27 @@ const TableNode = React.memo(({ data, id, selected }) => (
     >
       {data.label}
     </div>
-    {data.columns.fields.map((col, index) => (
-      <div key={index}>
-        <Handle
-          type='source'
-          position={Position.Right}
-          id={col.name}
-          style={{ background: '#555' }}
-        />
-        <Handle
-          type='target'
-          position={Position.Left}
-          id={col.name}
-          style={{ background: '#555' }}
-        />
-        <span style={{ color: '#6bf' }}>{col.name}</span>
-        <span style={{ color: '#f86' }}>({col.type})</span>
-        {col.required && <span style={{ color: '#fc6' }}> NOT NULL</span>}
-      </div>
-    ))}
+    {data.columns &&
+      data.columns.fields &&
+      data.columns.fields.map((col, index) => (
+        <div key={index}>
+          <Handle
+            type='source'
+            position={Position.Right}
+            id={col.name}
+            style={{ background: '#555' }}
+          />
+          <Handle
+            type='target'
+            position={Position.Left}
+            id={col.name}
+            style={{ background: '#555' }}
+          />
+          <span style={{ color: '#6bf' }}>{col.name}</span>
+          <span style={{ color: '#f86' }}>({col.type})</span>
+          {col.required && <span style={{ color: '#fc6' }}> NOT NULL</span>}
+        </div>
+      ))}
   </div>
 ));
 
@@ -342,11 +344,13 @@ const SchemaVisualizer = ({ sqlContents, handleUploadBtn }) => {
         position,
         data: {
           label: newNode.name,
-          columns: newNode.fields.map((field) => ({
-            name: field.name,
-            type: field.type,
-            required: field.required,
-          })),
+          columns: {
+            fields: newNode.fields.map((field) => ({
+              name: field.name,
+              type: field.type,
+              required: field.required,
+            })),
+          },
         },
       };
 
@@ -367,11 +371,13 @@ const SchemaVisualizer = ({ sqlContents, handleUploadBtn }) => {
                 data: {
                   ...node.data,
                   label: updatedNode.name,
-                  columns: updatedNode.fields.map((field) => ({
-                    name: field.name,
-                    type: field.type,
-                    required: field.required,
-                  })),
+                  columns: {
+                    fields: updatedNode.fields.map((field) => ({
+                      name: field.name,
+                      type: field.type,
+                      required: field.required,
+                    })),
+                  },
                 },
               }
             : node
@@ -411,6 +417,7 @@ const SchemaVisualizer = ({ sqlContents, handleUploadBtn }) => {
     }
   }, [sqlContents, setNodes, setEdges, reactFlowInstance]);
 
+  console.log('Testnodes', nodes);
   // Render the schema visualizer component
   // This includes the node list, graph area, and generation tab
   return (
