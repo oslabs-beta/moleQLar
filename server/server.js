@@ -13,7 +13,7 @@ app.use(bodyParser.json());
 const PORT = process.env.PORT || 3000;
 
 // static files
-app.use(express.static(path.join(__dirname, "build")));
+app.use(express.static(path.join(__dirname, "../client/build")));
 
 // Authorization Route
 const authRouter = require("./routes/authRouter");
@@ -25,7 +25,7 @@ app.use("/api/graph", graphRouter);
 
 // catch-all route
 app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "build", "index.html"));
+  res.sendFile(path.join(__dirname, "../client/build"));
 });
 
 // Global error handler:
