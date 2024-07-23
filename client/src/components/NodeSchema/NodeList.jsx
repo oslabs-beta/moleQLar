@@ -44,6 +44,7 @@ const NodeList = ({
 
   
   console.log(tables);
+  //filter out the current table from the results
   console.log(tables.map(table => table.id + '.' + table.primaryKey));
   
   console.log(primaryKeys);
