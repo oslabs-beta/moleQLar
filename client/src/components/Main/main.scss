@@ -37,7 +37,7 @@ $section-max-width: 1200px;
 .hero-content h1 {
   // max-width: 600px;
   // font-size: 6rem;
-  font-size: 6.5vw;
+  font-size: clamp(3rem, 6.5vw, 6.5rem);
   color: $color-black;
   line-height: 90%;
   letter-spacing: -2px;
@@ -46,7 +46,7 @@ $section-max-width: 1200px;
 .hero-content p {
   max-width: 36rem;
   // font-size: 1.4rem;
-  font-size: 1.5vw;
+  font-size: clamp(1.5rem, 1.5vw, 1.6rem);
   color: $color-black;
   opacity: 60%;
   font-weight: 300;
