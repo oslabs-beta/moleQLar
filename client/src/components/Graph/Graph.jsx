@@ -15,10 +15,10 @@ function Graph() {
   };
   // JSX to structure pass AuthorizedNavbar & UploadSqlSchema
   return (
-    <div style={{height: '100%', display: 'flex', flexDirection: 'column'}}>
+    <>
       <AuthorizedNavbar />
       <UploadSqlSchema />
-    </div>
+    </>
   );
 }
 
