@@ -249,8 +249,8 @@ const SchemaVisualizer = ({ sqlContents, handleUploadBtn }) => {
         config
       );
       // success
-      console.log('Successfully saved node graph to database');
-      console.log('response:', response);
+      // console.log('Successfully saved node graph to database');
+      // console.log('response:', response);
     } catch (err) {
       if (err.response) {
         // request made, server responded with status code outside of 2xx range
@@ -458,7 +458,7 @@ const SchemaVisualizer = ({ sqlContents, handleUploadBtn }) => {
         onEditNode={editNode}
         selectedTableId={selectedNode}
         primaryKeys={primaryKeys}
-        colorScheme = {colorScheme}
+        colorScheme={colorScheme}
       />
       <ReactFlowProvider>
         <div

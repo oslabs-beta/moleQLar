@@ -20,8 +20,6 @@ const PrivateRoutes = () => {
     const { authState, setAuthState } = useAuth();
     
     if (authState.loading) {
-        // Can return a loading spinner component or any loading UI here
-        console.log('Loading...');
         return <div>Loading...</div>;
     }
     if (!authState.isAuth) {
