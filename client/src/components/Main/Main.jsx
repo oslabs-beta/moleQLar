@@ -14,7 +14,7 @@ const Main = () => {
         <section className="hero-section">
           <div className="hero-content">
             <h1>Implementation<br /> in seconds</h1>
-            <p>Automatically generate a GraphQL layer over your PostgreSQL database</p>
+            <p>Automatically generate a GraphQL layer over your<br/>PostgreSQL database</p>
             <div className="main-btns-container">
               <button className="btn-login btn-home" onClick={() => navigate("/login")}>Log In</button>
               <button className="btn-signup btn-home" onClick={() => navigate("/signup")}>Sign Up</button>
@@ -24,34 +24,37 @@ const Main = () => {
             <img src={heroImg} className="hero-img" alt="molecule image" />
           </div>
         </section>
+
         <section className="introduction">
-          <div className="introduction-header">
-            <h2>What is moleQLar?</h2>
-            <p>moleQLar is an open-source tool that simplifies the process of creating a GraphQL layer for your PostgreSQL database. Whether you're working with a monolithic or microservice architecture, moleQLar streamlines your development process.</p>
+            <div className="introduction-header">
+              <h2>What is moleQLar?</h2>
+              <p>moleQLar is an open-source tool that simplifies the process of overlaying a GraphQL implementation over your PostgreSQL database. Whether you're working with a monolithic or microservice architecture, moleQLar streamlines your development process.</p>
           </div>
 
           <div className="features">
             <h3>Key Features</h3>
-            <div className="feature-grid">
-              <div className="feature-item">
-                <FaRocket className="feature-icon" />
-                <h4>Automatic Schema Generation</h4>
-                <p>Instantly generate GraphQL schemas from your PostgreSQL database structure.</p>
-              </div>
-              <div className="feature-item">
-                <FaMagic className="feature-icon" />
-                <h4>Intuitive Visual Interface</h4>
-                <p>Easily modify and customize your GraphQL schema using our user-friendly interface.</p>
-              </div>
-              <div className="feature-item">
-                <FaCogs className="feature-icon" />
-                <h4>Customizable Resolvers</h4>
-                <p>Fine-tune your resolvers to match your specific business logic and requirements.</p>
-              </div>
-              <div className="feature-item">
-                <FaSync className="feature-icon" />
-                <h4>Real-time Schema Updates</h4>
-                <p>See your changes reflected in real-time as you modify your GraphQL schema.</p>
+            <div className="feature-grid-container">
+              <div className="feature-grid">
+                <div className="feature-item">
+                  <FaRocket className="feature-icon" />
+                  <h4>Automatic Schema Generation</h4>
+                  <p>Instantly generate GraphQL schemas from your PostgreSQL database structure.</p>
+                </div>
+                <div className="feature-item">
+                  <FaMagic className="feature-icon" />
+                  <h4>Intuitive Visual Interface</h4>
+                  <p>Easily modify and customize your GraphQL schema using our user-friendly interface.</p>
+                </div>
+                <div className="feature-item">
+                  <FaCogs className="feature-icon" />
+                  <h4>Customizable Resolvers</h4>
+                  <p>Fine-tune your resolvers to match your specific business logic and requirements.</p>
+                </div>
+                <div className="feature-item">
+                  <FaSync className="feature-icon" />
+                  <h4>Real-time Schema Updates</h4>
+                  <p>See your changes reflected in real-time as you modify your GraphQL schema.</p>
+                </div>
               </div>
             </div>
           </div>

@@ -1,32 +1,32 @@
-@import '../../assets/styles/variables.scss';
+@import "../../assets/styles/variables.scss";
 @import "../Navbar/navbar.scss";
 
 .navbar {
-    // background-color: #f8f9fa;
-    background-color: $color-white;
-    // color: #000;
-    color: $color-black;
-    transition: background-color 0.3s, color 0.3s;
-  
-    &.dark {
-      // background-color: #333;
+  // background-color: #f8f9fa;
+  background-color: $color-white;
+  // color: #000;
+  color: $color-black;
+  transition: background-color 0.3s, color 0.3s;
+
+  &.dark {
+    // background-color: #333;
+    // color: #fff;
+    background-color: $color-black;
+    color: $color-white;
+
+    .auth-nav-link {
       // color: #fff;
-      background-color: $color-black;
-      color: $color-white;;
-  
-      .nav-link {
-        // color: #fff;
-        color: $color-white;
-      }
-  
-      .logo {
-        // color: #fff;
-        color: $color-white;
-      }
+      color: $color-white;
+    }
+
+    .logo {
+      // color: #fff;
+      color: $color-white;
     }
   }
+}
 
-.nav-links {
+.auth-nav-links {
   width: auto;
   display: flex;
   align-items: center;
@@ -36,19 +36,19 @@
   }
 }
 
-.nav-link:last-child {
-    margin-left: 4rem;
+.auth-nav-link:last-child {
+  margin-left: 4rem;
 }
 
 .logo-container .smallLogo {
-    height: 40px;
-    margin-right: 10px;
-  }
-  
-  .logo-container .logo {
-    font-size: 1.5rem;
-    font-weight: bold;
-  }
+  height: 40px;
+  margin-right: 10px;
+}
+
+.logo-container .logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
 
 .theme-toggle {
   background: none;
