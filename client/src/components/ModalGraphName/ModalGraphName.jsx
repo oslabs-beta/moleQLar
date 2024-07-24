@@ -29,7 +29,6 @@ const ModalGraphName = (props) => {
         }
         try {
             const response = await axios.post(`/api/graph/${userId}`, payload, config);
-            console.log(response);
 
             // Update graph state - save graph_name, graph_id
             setGraphName(response.data.graphName)
@@ -44,18 +43,13 @@ const ModalGraphName = (props) => {
         } catch (err) {
             if (err.response) {
                 // fail - unable to create graph
-                console.log('Failed to create graph. Error responese data:', err.reponse);
-                // console.log('Failed to create graph. Error responese status:', err.reponse.status);
+                console.log('Failed to create graph. Error response data:', err.response);
             } else if (err.request) {
                 console.log('Error request:', err.request);
             } else {
                 console.log('Error message:', err.message);
             }
         }
-        // console.log('Submitted Graph Name:', graphName);
-        // hide modal
-        // handleModalClose();
-        // return;
     }
     // Default Color 
     const colors = {

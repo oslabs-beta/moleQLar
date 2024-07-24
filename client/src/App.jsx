@@ -22,7 +22,6 @@ const PrivateRoutes = () => {
         console.log('Loading...');
         return <div>Loading...</div>;
     }
-    console.log('PrivateRoutes - isAuth:', authState.isAuth);
     if (!authState.isAuth) {
         return <Navigate to="/login" />;
     }

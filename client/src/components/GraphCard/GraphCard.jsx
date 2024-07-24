@@ -9,7 +9,6 @@ const GraphCard = ({graphId, graphName}) => {
     // Handling click functionality to navigate to graph
     const handleClick = () => {
         // navigate to appropriate graph
-        // console.log(`navigating to /graph/${authState.userId}/${graphId}`);
         return navigate(`/graph/${authState.userId}/${graphId}`);
     }
 

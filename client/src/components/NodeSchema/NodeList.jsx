@@ -25,36 +25,26 @@ import { useGraphContext } from '../../contexts/GraphContext.jsx';
 
 import './nodelist.scss'; // styles
 
+//NodeList component handles sidebar/node manipulation for node graph and acts as parent to dialogs
 const NodeList = ({
   tables,
+  relationships,
+  handleSetEdges,
   onSelectTable,
   onDeleteTable,
   onAddNode,
   onEditNode,
   selectedTableId,
+  primaryKeys,
+  colorScheme
 }) => {
+  //declare state variables and contexts for component
   const [openTable, setOpenTable] = useState(null);
   const [isNodeDialogOpen, setIsNodeDialogOpen] = useState(false);
   const [editingNode, setEditingNode] = useState(null);
   const { darkMode } = useTheme();
   const { graphName, setGraphName } = useGraphContext();
   const { graphId, setGraphId } = useGraphContext();
-  //add primary keys state
-  
-
-  
-  //console.log(tables);
-  //filter out the current table from the results
-  //console.log(tables.map(table => table.id + '.' + table.primaryKey));
-  
-  //console.log(primaryKeys);
-
-  const handleSetPrimaryKeys = () => {
-    //filter out current table
-    setPrimaryKeys(tables.map(table => table.id + '.' + table.primaryKey))
-    console.log(primaryKeys)
-  }
-
 
   const handleClick = (tableId) => {
     setOpenTable(openTable === tableId ? null : tableId);
@@ -150,27 +140,29 @@ const NodeList = ({
                         </TableRow>
                       </TableHead>
                       <TableBody>
-                        {table.data.columns && table.data.columns.fields && table.data.columns.fields.map((column, index) => (
-                          <TableRow key={index}>
-                            <TableCell
-                              component='th'
-                              scope='row'
-                              sx={{ color: darkMode ? '#fff' : '#000' }}
-                            >
-                              {column.name}
-                            </TableCell>
-                            <TableCell
-                              sx={{ color: darkMode ? '#fff' : '#000' }}
-                            >
-                              {column.type}
-                            </TableCell>
-                            <TableCell
-                              sx={{ color: darkMode ? '#fff' : '#000' }}
-                            >
-                              {column.required ? 'NOT NULL' : ''}
-                            </TableCell>
-                          </TableRow>
-                        ))}
+                        {table.data.columns &&
+                          table.data.columns.fields &&
+                          table.data.columns.fields.map((column, index) => (
+                            <TableRow key={index}>
+                              <TableCell
+                                component='th'
+                                scope='row'
+                                sx={{ color: darkMode ? '#fff' : '#000' }}
+                              >
+                                {column.name}
+                              </TableCell>
+                              <TableCell
+                                sx={{ color: darkMode ? '#fff' : '#000' }}
+                              >
+                                {column.type}
+                              </TableCell>
+                              <TableCell
+                                sx={{ color: darkMode ? '#fff' : '#000' }}
+                              >
+                                {column.required ? 'NOT NULL' : ''}
+                              </TableCell>
+                            </TableRow>
+                          ))}
                       </TableBody>
                     </Table>
                   </TableContainer>
@@ -184,7 +176,6 @@ const NodeList = ({
       <div className='sidebar-bottom'>
         <button
           className='btn-graph btn-add-node'
-          // onclick function commented out until relationship
           onClick={() => setIsNodeDialogOpen(true)}
         >
           Add New Node
@@ -195,12 +186,15 @@ const NodeList = ({
             setIsNodeDialogOpen(false);
             setEditingNode(null);
           }}
+          tables={tables}
           onAddNode={handleAddNode}
           onEditNode={handleEditNode}
           editingNode={editingNode}
           darkMode={darkMode}
           primaryKeys={primaryKeys}
-          handleSetPrimaryKeys={handleSetPrimaryKeys}
+          relationships={relationships}
+          handleSetEdges={handleSetEdges}
+          colorScheme={colorScheme}
         />
       </div>
     </div>

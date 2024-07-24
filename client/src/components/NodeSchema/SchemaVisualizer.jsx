@@ -23,6 +23,7 @@ import { useTheme } from '../../contexts/ThemeContext';
 
 import { useAuth } from '../../contexts/AuthContext';
 import { useGraphContext } from '../../contexts/GraphContext';
+import pluralize from 'pluralize';
 
 // Custom node component for representing database tables
 // Memoized for performance optimization in large graphs
@@ -148,7 +149,7 @@ const edgeTypes = {
 
 // Main component for visualizing and editing database schemas
 const SchemaVisualizer = ({ sqlContents, handleUploadBtn }) => {
-  const navigate = useNavigate();
+  //declare state variables for component
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const [selectedNode, setSelectedNode] = useState(null);
@@ -156,14 +157,20 @@ const SchemaVisualizer = ({ sqlContents, handleUploadBtn }) => {
   const reactFlowWrapper = useRef(null);
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
   const { darkMode } = useTheme();
-  const [primaryKeys , setPrimaryKeys] = useState([]);
+  const [primaryKeys, setPrimaryKeys] = useState([]);
 
-  // TODO - send request to server to request graph_name, graph_id, nodes_string, edges_string
+  //define hooks
+  const navigate = useNavigate();
   const { username } = useAuth();
   const { graphName, setGraphName } = useGraphContext();
-  // const { graphId, setGraphId } = useGraphContext();  -- to be managed as URL param
+
   // get URL params
   const { userId, graphId } = useParams();
+
+  //handleSetEdges updates edges state variable
+  const handleSetEdges = (newEdges) => {
+    setEdges(newEdges);
+  };
 
   // Fetch graph data from the server on component mount
   // This allows for persistent storage and retrieval of user's graph data
@@ -188,9 +195,13 @@ const SchemaVisualizer = ({ sqlContents, handleUploadBtn }) => {
           ? (serverEdges = [])
           : (serverEdges = JSON.parse(response.data.edges));
 
-        setGraphName(response.data.graphName);
-        setNodes(serverNodes);
-        setEdges(serverEdges);
+        //set initial node and edge state from database stored graph
+        await setGraphName(response.data.graphName);
+        await setNodes(serverNodes);
+        await setEdges(serverEdges);
+        setPrimaryKeys(
+          serverNodes.map((node) => node.dbTableName + '.' + node.primaryKey)
+        );
       } catch (err) {
         if (err.response) {
           // fail - unable to log in
@@ -223,11 +234,6 @@ const SchemaVisualizer = ({ sqlContents, handleUploadBtn }) => {
     const nodeString = JSON.stringify(nodes);
     const edgeString = JSON.stringify(edges);
 
-    // console.log('nodes:', nodeString)
-    // console.log('edges:', edgeString)
-    console.log('userId:', userId);
-    console.log('graphName:', graphName);
-
     // send POST request to /api/graph/:userId/:graphId
     const config = {
       headers: { authorization: localStorage.getItem('token') },
@@ -252,8 +258,8 @@ const SchemaVisualizer = ({ sqlContents, handleUploadBtn }) => {
     } catch (err) {
       if (err.response) {
         // request made, server responded with status code outside of 2xx range
-        console.log('Failed ot save graph data:', err.respones.data);
-        console.log('Failed ot save graph status:', err.respones.status);
+        console.log('Failed ot save graph data:', err.response.data);
+        console.log('Failed ot save graph status:', err.response.status);
       } else if (err.request) {
         console.log('Error request:', err.request);
       } else {
@@ -262,14 +268,17 @@ const SchemaVisualizer = ({ sqlContents, handleUploadBtn }) => {
     }
   };
 
+  //function handles setter for updating primary keys state variable
+  const handleSetPrimaryKeys = () => {
+    setPrimaryKeys(tables.map((table) => table.id + '.' + table.primaryKey));
+  };
+
   // Toggle the generation tab visibility
   // This function is called when the user clicks the generate button
   // Separates the graph visualization from code generation for a cleaner UI
   const [genTabOpen, setGenTabOpen] = useState(false);
   const handleGenTabOpen = () => {
-    console.log('clicked generate button');
     setGenTabOpen((prev) => !prev);
-    console.log('genTabOpen', genTabOpen);
   };
   const handleGenTabClose = () => {
     setGenTabOpen(false);
@@ -339,9 +348,10 @@ const SchemaVisualizer = ({ sqlContents, handleUploadBtn }) => {
       }
 
       const newTableNode = {
-        id: nodeId,
+        id: newNode.name,
         type: 'table',
         position,
+        primaryKey: newNode.fields[0].name,
         data: {
           label: newNode.name,
           columns: {
@@ -349,14 +359,26 @@ const SchemaVisualizer = ({ sqlContents, handleUploadBtn }) => {
               name: field.name,
               type: field.type,
               required: field.required,
+              isForeignKey: field.isForeignKey,
             })),
+            primaryKey: newNode.fields[0].name,
           },
         },
       };
-
+      //link to database table
+      const dbTable = pluralize(newNode.name).replace(
+        /^./,
+        newNode.name[0].toLowerCase()
+      );
+      //add primary key to primaryKeys array
+      const newPrimaryKeys = [
+        ...primaryKeys,
+        dbTable + '.' + newTableNode.data.columns.primaryKey,
+      ];
+      setPrimaryKeys(newPrimaryKeys);
       setNodes((nds) => [...nds, newTableNode]);
     },
-    [nodes, reactFlowInstance, setNodes]
+    [nodes, reactFlowInstance, setNodes, setPrimaryKeys]
   );
 
   // Edit an existing node in the graph
@@ -376,6 +398,7 @@ const SchemaVisualizer = ({ sqlContents, handleUploadBtn }) => {
                       name: field.name,
                       type: field.type,
                       required: field.required,
+                      isForeignKey: field.isForeignKey,
                     })),
                   },
                 },
@@ -394,7 +417,7 @@ const SchemaVisualizer = ({ sqlContents, handleUploadBtn }) => {
       const { nodes: newNodes, edges: newEdges } = parseSqlSchema(
         sqlContents[sqlContents.length - 1]
       );
-
+      //color connections in the node graph
       const coloredEdges = newEdges.map((edge, index) => ({
         ...edge,
         type: 'custom',
@@ -405,19 +428,20 @@ const SchemaVisualizer = ({ sqlContents, handleUploadBtn }) => {
         },
         style: { stroke: colorScheme[index % colorScheme.length] },
       }));
-      setPrimaryKeys(newNodes.map(node => node.primaryKey));
+      //set initial states from schema parser algorithm output
+      setPrimaryKeys(
+        newNodes.map((node) => node.dbTableName + '.' + node.primaryKey)
+      );
       setNodes(newNodes);
       setEdges(coloredEdges);
-
       if (reactFlowInstance) {
         setTimeout(() => {
           reactFlowInstance.fitView({ padding: 0.1, includeHiddenNodes: true });
         }, 100);
       }
     }
-  }, [sqlContents, setNodes, setEdges, reactFlowInstance]);
+  }, [sqlContents, setNodes, setEdges, setPrimaryKeys, reactFlowInstance]);
 
-  console.log('Testnodes', nodes);
   // Render the schema visualizer component
   // This includes the node list, graph area, and generation tab
   return (
@@ -430,11 +454,15 @@ const SchemaVisualizer = ({ sqlContents, handleUploadBtn }) => {
       />
       <NodeList
         tables={nodes}
+        relationships={edges}
+        handleSetEdges={handleSetEdges}
         onSelectTable={selectNode}
         onDeleteTable={deleteNode}
         onAddNode={addNode}
         onEditNode={editNode}
         selectedTableId={selectedNode}
+        primaryKeys={primaryKeys}
+        colorScheme = {colorScheme}
       />
       <ReactFlowProvider>
         <div

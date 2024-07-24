@@ -20,11 +20,13 @@ import {
   Grid,
   useTheme,
 } from '@mui/material';
+import pluralize from 'pluralize';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import { useTheme as useCustomTheme } from '../../contexts/ThemeContext';
 
+//NodeDialog component handles edits to node graph
 const NodeDialog = ({
   open,
   onClose,
@@ -32,18 +34,23 @@ const NodeDialog = ({
   onEditNode,
   editingNode = null,
   primaryKeys,
-  handleSetPrimaryKeys
+  relationships,
+  handleSetEdges,
+  tables,
+  colorScheme,
 }) => {
+  //define state variables for component
   const [nodeName, setNodeName] = useState('');
   const [fields, setFields] = useState([]);
   const [newField, setNewField] = useState({
     name: '',
     type: 'String',
     required: false,
+    isForeignKey: '',
   });
-  //add foreign key state placeholder
-  const [newForeignKey, setNewForeignKey] = useState(false);
+  const [isForeignKeyVisible, setIsForeignKeyVisible] = useState(false);
 
+  //define themes for component
   const { darkMode } = useCustomTheme();
   const theme = useTheme();
 
@@ -55,6 +62,7 @@ const NodeDialog = ({
           name: col.name,
           type: col.type,
           required: col.required,
+          isForeignKey: col.isForeignKey,
         }))
       );
     } else {
@@ -63,16 +71,15 @@ const NodeDialog = ({
     }
   }, [editingNode]);
 
-  //ADDED
-  const handleAddForeignKey = () => {
-    console.log(primaryKeys);
-    setNewForeignKey(newForeignKey ? false : true);
-  }
-
   const handleAddField = () => {
     if (newField.name) {
       setFields([...fields, newField]);
-      setNewField({ name: '', type: 'String', required: false });
+      setNewField({
+        name: '',
+        type: 'String',
+        required: false,
+        isForeignKey: '',
+      });
     }
   };
 
@@ -82,6 +89,7 @@ const NodeDialog = ({
   };
 
   const handleEditField = (index) => {
+    setIsForeignKeyVisible(fields[index].isForeignKey);
     setNewField(fields[index]);
     handleRemoveField(index);
   };
@@ -117,6 +125,11 @@ const NodeDialog = ({
         : theme.palette.text.secondary,
     },
   };
+  //create primary key menu for edge creation
+  const primaryKeyMenu = [];
+  primaryKeys.forEach((pk) => {
+    primaryKeyMenu.push(<MenuItem value={pk}>{pk}</MenuItem>);
+  });
 
   return (
     <Dialog
@@ -157,7 +170,13 @@ const NodeDialog = ({
             </ListItem>
           ))}
         </List>
-        <Grid container spacing={2} alignItems='center'>
+        <Grid
+          className='grid-container'
+          sx={{ width: '100%' }}
+          container
+          spacing={2}
+          alignItems='center'
+        >
           <Grid item xs={12} sm={3}>
             <TextField
               fullWidth
@@ -204,13 +223,28 @@ const NodeDialog = ({
               label='NOT NULL'
             />
           </Grid>
-          {/* //ADDED NEW GRID ITEM AND CHANGED above widths from 4 to 3  */}
           <Grid item xs={12} sm={2}>
             <FormControlLabel
               control={
                 <Checkbox
-                  checked={newForeignKey}
-                  onChange={(e) => handleSetPrimaryKeys()}
+                  checked={newField.isForeignKey || isForeignKeyVisible}
+                  onChange={(e) => {
+                    if (isForeignKeyVisible) {
+                      //if user removes foreign key, remove associated edge from edges object and update field
+                      setNewField({ ...newField, isForeignKey: '' });
+                      handleSetEdges(
+                        relationships.filter(
+                          (edge) =>
+                            !(
+                              edge.source === nodeName &&
+                              edge.sourceHandle === newField.name
+                            )
+                        )
+                      );
+                    }
+                    //update conditional rendering
+                    setIsForeignKeyVisible(!isForeignKeyVisible);
+                  }}
                 />
               }
               label='FOREIGN KEY'
@@ -226,6 +260,78 @@ const NodeDialog = ({
             >
               Add Field
             </Button>
+          </Grid>
+        </Grid>
+        <Grid
+          className='grid-bottom-row'
+          sx={{ width: '100%' }}
+          container
+          spacing={2}
+          alignItems='center'
+        >
+          <Grid
+            item
+            sx={{ visibility: isForeignKeyVisible ? 'visible' : 'hidden' }}
+            xs={12}
+            sm={3}
+          >
+            <FormControl fullWidth variant='outlined'>
+              <InputLabel id='fkey-select-label' sx={textFieldStyle.label}>
+                References
+              </InputLabel>
+              <Select
+                labelId='fkey-select-label'
+                value={newField.isForeignKey}
+                onChange={async (e) => {
+                  //select current node
+                  const currentNode = tables.filter(
+                    (table) => table.id === nodeName
+                  );
+                  //update field with primary key choice
+                  await setNewField({
+                    ...newField,
+                    isForeignKey: e.target.value,
+                  });
+                  const foreignKey = e.target.value;
+                  const target = foreignKey.match(/(\w+)\.(\w+)/);
+                  //add new edge
+                  if (target) {
+                    const [, dbTarget, targetField] = target;
+                    const newRelationships = [...relationships];
+                    newRelationships.push({
+                      id: crypto.randomUUID(),
+                      source: nodeName,
+                      sourceHandle: newField.name,
+                      dbSourceTable: currentNode.dbTableName,
+                      target: pluralize
+                        .singular(dbTarget)
+                        .replace(/^./, dbTarget[0].toUpperCase()),
+                      targetHandle: targetField,
+                      dbTargetTable: dbTarget,
+                      type: 'custom',
+                      data: {
+                        color:
+                          colorScheme[
+                            newRelationships.length % colorScheme.length
+                          ],
+                        label: `${newField.name} → ${targetField}`,
+                        hidden: false,
+                      },
+                      animated: true,
+                      style: { stroke: '#ff0000' },
+                    });
+                    await handleSetEdges(newRelationships);
+                  }
+                }}
+                label='Foreign key'
+                sx={textFieldStyle.input}
+              >
+                <MenuItem disabled value={newField.isForeignKey || ''}>
+                  {'current: ' + newField.isForeignKey}
+                </MenuItem>
+                {primaryKeyMenu}
+              </Select>
+            </FormControl>
           </Grid>
         </Grid>
       </DialogContent>

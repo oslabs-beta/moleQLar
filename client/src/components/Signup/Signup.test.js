@@ -60,6 +60,7 @@ describe('Signup page', () => {
       </BrowserRouter>
     );
 
+    //select components on signup page to test for correct rendering
     const homeLinkNav = screen.getByRole('link', { name: /Home/i });
     const homeLinkIcon = screen.getByAltText(/Small Logo/i);
     const teamLink = screen.getByRole('link', { name: /Team/i });
@@ -75,6 +76,7 @@ describe('Signup page', () => {
       name: /Already have an account/i,
     });
 
+    //verify selected fields are rendering properly
     expect(homeLinkNav).toBeInTheDocument();
     expect(homeLinkIcon).toBeInTheDocument();
     expect(teamLink).toBeInTheDocument();
@@ -88,8 +90,10 @@ describe('Signup page', () => {
     expect(mainImage).toBeInTheDocument();
     expect(loginLink).toBeInTheDocument();
   });
-  // Test for Signup Page
+
+  // test suite for Signup Page
   describe('Navigation tests for Signup page', () => {
+    //reset memory router before each navigation test
     beforeEach(() => {
       render(
         <MemoryRouter initialEntries={['/signup']}>
@@ -143,7 +147,7 @@ describe('Signup page', () => {
       ).toBeInTheDocument();
     });
   });
-  // Test for Successul Signup Submission
+  // Test for Successful Signup Submission
   describe('Handles form submission and successfully signs up', () => {
     test('Successfully navigates to Dashboard route on signup', async () => {
       //mock resolved value from axios call
@@ -180,7 +184,6 @@ describe('Signup page', () => {
       });
 
       const passwordFields = screen.getAllByLabelText(/Password/i);
-      console.log(passwordFields.length);
       passwordFields.forEach((field) => {
         fireEvent.change(field, {
           target: { value: '111111' },
