@@ -1,45 +1,49 @@
-const path = require('path');
-const HtmlWebPackPlugin = require('html-webpack-plugin');
-const Dotenv = require('dotenv-webpack');
+const path = require("path");
+const HtmlWebPackPlugin = require("html-webpack-plugin");
+const Dotenv = require("dotenv-webpack");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const BundleAnalyzerPlugin =
+  require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
 
 module.exports = {
-  entry: './src/index.js',
-  mode: 'development',
+  entry: "./src/index.js",
+  mode: process.env.NODE_ENV === "production" ? "production" : "development",
   output: {
-    filename: 'bundle.js',
-    path: path.resolve(__dirname, 'build'),
-    publicPath: '/'
+    filename: "[name].[contenthash].js",
+    path: path.resolve(__dirname, "build"),
+    publicPath: "/",
   },
- 
   module: {
     rules: [
       {
         test: /\.sql$/,
-        use: 'raw-loader',
+        use: "raw-loader",
       },
       {
         test: /\.jsx?/,
         exclude: /node_modules/,
         use: {
-          loader: 'babel-loader',
+          loader: "babel-loader",
           options: {
-            presets: ['@babel/preset-env', '@babel/preset-react'],
+            presets: ["@babel/preset-env", "@babel/preset-react"],
           },
         },
       },
-      
       {
-        test: /\.s?css/,
-        use: ['style-loader', 'css-loader', 'sass-loader'],
+        test: /\.s?css$/,
+        use: [MiniCssExtractPlugin.loader, "css-loader", "sass-loader"],
       },
       {
         test: /\.(png|jpg|gif|svg)$/,
         use: [
+          "file-loader",
           {
-            loader: 'file-loader',
+            loader: "image-webpack-loader",
             options: {
-              name: '[name].[ext]',
-              outputPath: 'images/',
+              mozjpeg: {
+                progressive: true,
+                quality: 65,
+              },
             },
           },
         ],
@@ -47,29 +51,56 @@ module.exports = {
     ],
   },
   resolve: {
-    extensions: ['.js', '.jsx'],
+    extensions: [".js", ".jsx"],
   },
   plugins: [
     new HtmlWebPackPlugin({
-      template: './public/index.html',
+      template: "./public/index.html",
+      favicon: "./public/smallLogo.png",
     }),
     new Dotenv({
-      path: path.resolve(__dirname, '../server/.env'), // Path to .env file in the server folder
-      safe: true, // Load '.env.example' to verify the '.env' variables are all set. Can also be a string to a different file.
+      path: path.resolve(__dirname, "../server/.env"),
     }),
-  ],
+    new MiniCssExtractPlugin({
+      filename: "[name].[contenthash].css",
+    }),
+    process.env.ANALYZE && new BundleAnalyzerPlugin(),
+  ].filter(Boolean),
   devServer: {
     historyApiFallback: true,
     static: {
-      directory: path.resolve(__dirname, 'build'),
-      publicPath: '/',
+      directory: path.resolve(__dirname, "build"),
+      publicPath: "/",
     },
     port: 8000,
     proxy: [
       {
-        context: ['/api'],
-        target: 'http://localhost:3000',
+        context: ["/api"],
+        target: "http://localhost:3000",
       },
     ],
+  },
+  optimization: {
+    splitChunks: {
+      chunks: "all",
+      maxInitialRequests: Infinity,
+      minSize: 0,
+      cacheGroups: {
+        vendor: {
+          test: /[\\/]node_modules[\\/]/,
+          name(module) {
+            const packageName = module.context.match(
+              /[\\/]node_modules[\\/](.*?)([\\/]|$)/
+            )[1];
+            return `npm.${packageName.replace("@", "")}`;
+          },
+        },
+      },
+    },
+  },
+  performance: {
+    hints: "warning",
+    maxEntrypointSize: 512000,
+    maxAssetSize: 512000,
   },
 };
