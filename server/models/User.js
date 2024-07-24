@@ -25,8 +25,5 @@ const User = sequelize.define('User', {
   },
 });
 
-// sequelize.authenticate()
-//     .then(() => console.log('Database connected...'))
-//     .catch(err => console.log('Error: ' + err));
 
 module.exports = User;
