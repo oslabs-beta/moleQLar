@@ -96,6 +96,7 @@ function BasicTabs({ generatedSchema, generatedResolver }) {
 
         {generatedSchema.map((item, index) => (
           <Box
+            key={crypto.randomUUID()}
             sx={{
               backgroundColor: '#2d2d2d',
               color: '#f8f8f2',
@@ -123,6 +124,7 @@ function BasicTabs({ generatedSchema, generatedResolver }) {
         </Box>
         {generatedResolver.map((item, index) => (
           <Box
+            key={crypto.randomUUID()}
             sx={{
               backgroundColor: '#2d2d2d',
               color: '#f8f8f2',

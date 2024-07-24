@@ -128,7 +128,7 @@ const NodeDialog = ({
   //create primary key menu for edge creation
   const primaryKeyMenu = [];
   primaryKeys.forEach((pk) => {
-    primaryKeyMenu.push(<MenuItem value={pk}>{pk}</MenuItem>);
+    primaryKeyMenu.push(<MenuItem key={crypto.randomUUID()} value={pk}>{pk}</MenuItem>);
   });
 
   return (
