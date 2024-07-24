@@ -32,15 +32,6 @@ const UploadSqlSchema = () => {
     });
   }, []);
 
-  // TODO - testing with sample node graph functionality
-  // useEffect(() => {
-  //   const blob = new Blob([samplePgDump], { type: "application/sql" });
-  //   const mockFile = new File([blob], "mock.sql", {
-  //     type: "application/sql",
-  //   });
-  //   onDrop([mockFile]);
-  // }, []);
-
   // Configuration for the dropzone
   // This setup allows for a better user experience by providing visual feedback
   // and restricting file types to SQL files

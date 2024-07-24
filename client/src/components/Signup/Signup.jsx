@@ -86,7 +86,7 @@ function Signup() {
             username: data.username,
             userId: data.userId,
           });
-          console.log('signup succesful - updating local storage');
+          // console.log('signup succesful - updating local storage');
           localStorage.setItem('username', data.username);
           localStorage.setItem('userId', data.userId);
           localStorage.setItem('token', response.headers['authorization']);
