@@ -12,10 +12,7 @@ import ReactFlow, {
   Handle,
   Position,
 } from 'reactflow';
-import { Box, Button } from '@mui/material';
 import { parseSqlSchema } from '../algorithms/schema_parser';
-import { schemaGenerator } from '../algorithms/schema_generator';
-import { resolverGenerator } from '../algorithms/resolver_generator';
 import NodeList from './NodeList';
 import './schemavisualizer.scss'; // styles
 import GenerateTab from '../GenerateTabs/genTab';

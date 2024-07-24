@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react';
-import { Box, Typography, Paper } from '@mui/material';
+import Typography from '@mui/material/Typography';
 import { useDropzone } from 'react-dropzone';
 import SchemaVisualizer from '../NodeSchema/SchemaVisualizer';
 
@@ -54,7 +54,7 @@ const UploadSqlSchema = () => {
   });
 
   return (
-    <div className={`graph-container ${darkMode ? 'dark' : ''}`}>
+    <div className={`graph-container ${darkMode ? 'dark' : ''}`} style={{height: '100%', display: 'flex', flexDirection: 'column'}}>
       {/* Dropzone area for file uploads */}
       {/* The styling changes based on drag state and dark mode for better UX */}
       <div className={`drop-box ${isDragActive ? 'isDragActive' : ''} ${darkMode ? 'dark' : ''}`} {...getRootProps()}>
@@ -68,7 +68,7 @@ const UploadSqlSchema = () => {
       
       {/* SchemaVisualizer component to render the uploaded schema */}
       {/* This separation of concerns allows for modularity and easier maintenance */}
-      <SchemaVisualizer sqlContents={sqlContents} />
+      <SchemaVisualizer sqlContents={sqlContents} style={{flexGrow: 1}} />
     </div>
   );
 };
