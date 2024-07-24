@@ -33,6 +33,7 @@ describe('Main page', () => {
       </BrowserRouter>
     );
 
+    //select components on main page to test for correct rendering
     const mainHeader = screen.getByText(/Implementation in seconds/i);
     const homeLinkNav = screen.getByRole('link', { name: /Home/i });
     const homeLinkIcon = screen.getByAltText(/Small Logo/i);
@@ -43,6 +44,7 @@ describe('Main page', () => {
     const signupButtons = screen.getAllByRole('button', {name: /Sign Up/i });
     const mainImage = screen.getByAltText(/molecule image/i);
 
+    //verify selected fields are rendering properly
     expect(mainHeader).toBeInTheDocument();
     expect(homeLinkNav).toBeInTheDocument();
     expect(homeLinkIcon).toBeInTheDocument();

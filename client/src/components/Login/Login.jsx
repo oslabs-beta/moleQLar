@@ -30,7 +30,6 @@ function Login() {
 
   // useEffect to navigate to dashboard
   useEffect(() => {
-    console.log('login - authState.isAuth:', authState.isAuth);
     if (authState.isAuth) {
       navigate('/dashboard');
     }

@@ -1,19 +1,13 @@
 const pluralize = require('pluralize');
-// pluralize.() = plurarizing word
-// pluralize.singular() = singularize word
 
-// 1) Find a database to replicate
-// 2) Use pg-dump to create an output file
-// 3) Build an algorithm to traverse the output file and autobuild our node-graph
-
-// load schema dump file
-
+//parseSqlSchema function parses pg_dump file and returns nodes and edges objects for file generation and display
 export function parseSqlSchema(sql) {
   //declare objects to hold tables and relationships
   const tables = {};
   let currentTable;
   const relationships = [];
   let index = 0;
+
   //moreFields handles adding fields to GQL types
   let moreFields = false;
   //create mapping object to change SQL types to GQL types
@@ -26,22 +20,23 @@ export function parseSqlSchema(sql) {
     character: 'String',
   };
 
+  // Split dump file and parse line by line
   const lineArray = sql.split(/\r?\n/);
 
-  // Split dump file into each line
   lineArray.forEach((line) => {
-    // Add all tables to tables object
+    // 'CREATE TABLE public' lines denote beginning of SQL table information
     if (line.startsWith('CREATE TABLE public')) {
       // Grab table name
       let tableName = line.match(/CREATE TABLE (\w+\.)?(\w+)/)[2];
       currentTable = tableName;
-      // Add tableName to tables object
+      // Add tableName to tables object and assign template object to hold associated fields
       tables[currentTable] = { primaryKey: '', fields: [] };
       moreFields = true;
     } else if (moreFields) {
+      //if all fields have been added to table, set moreFields to false
       if (line.startsWith(')')) {
-        //if all fields have been added to table, set moreFields to false
         moreFields = false;
+        //while table still has more fields to add, continue adding
       } else {
         // Add each field to current table
         const lineArray = line.trim().split(' ');
@@ -58,13 +53,13 @@ export function parseSqlSchema(sql) {
               name: fieldName,
               type: fieldType,
               required: required,
+              isForeignKey: '',
             });
           }
-          //if line is primary key definition,
+          //if line is primary key definition, assign primary key to current node
           else {
             const match = line.match(/PRIMARY KEY \("?([^")]+)"?\)/);
             tables[currentTable].primaryKey = match[1];
-            console.log(tables[currentTable].primaryKey);
           }
         }
       }
@@ -100,6 +95,12 @@ export function parseSqlSchema(sql) {
             targetField,
           ] = matchRelationship;
 
+          //change foreign key property on source field
+          tables[sourceTable].fields.forEach((field) => {
+            if (field.name === sourceField)
+              field.isForeignKey = targetTable + '.' + targetField;
+          });
+
           //if both tables are public, push data onto relationships object
           if (sourceCheck === 'public.' && targetCheck === 'public.') {
             relationships.push({
@@ -109,6 +110,7 @@ export function parseSqlSchema(sql) {
               targetHandle: targetField,
             });
           }
+          //if line matches primary key template, assign primary key to current table
         } else if (matchPrimaryKey) {
           const [, tableCheck, tableName, pkField] = matchPrimaryKey;
 
@@ -121,7 +123,7 @@ export function parseSqlSchema(sql) {
     index++;
   });
 
-  // Calculate grid layout
+  // Calculate grid layout from created nodes
   const gridLayout = (nodes, columns = 3, width = 250, height = 300) => {
     return nodes.map((node, index) => {
       const column = index % columns;
@@ -136,19 +138,16 @@ export function parseSqlSchema(sql) {
     });
   };
 
-  // Create nodes for React Flow
+  // Create nodes for React Flow display from tables object parsed from pg_dump file
   const nodes = gridLayout(
     Object.entries(tables).map(([tableName, columns]) => ({
-      //changed tableName to this
       id: pluralize
         .singular(tableName)
         .replace(/^./, tableName[0].toUpperCase()),
       type: 'table',
-      //added sqlTableName
       dbTableName: tableName,
       primaryKey: columns.primaryKey,
       data: {
-        //changed tableName to this
         label: pluralize
           .singular(tableName)
           .replace(/^./, tableName[0].toUpperCase()),
@@ -157,9 +156,9 @@ export function parseSqlSchema(sql) {
     }))
   );
 
-  // Create edges for React Flow
-  const edges = relationships.map((rel, index) => ({
-    id: `e${index}`,
+  // Create edges for React Flow display from relationships object parsed from pg_dump file
+  const edges = relationships.map((rel) => ({
+    id: crypto.randomUUID(),
     source: pluralize
       .singular(rel.source)
       .replace(/^./, rel.source[0].toUpperCase()),

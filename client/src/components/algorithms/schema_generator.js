@@ -1,5 +1,6 @@
 import pluralize from 'pluralize';
 
+//schemaGenerator function generates GraphQL typeDefs from current nodes and edges objects
 export default function schemaGenerator(nodes, edges) {
   if (!nodes) {
     return 'No data available to generate schema.';
@@ -18,7 +19,7 @@ export default function schemaGenerator(nodes, edges) {
     if (oneToManyRelationships[edge.target] === undefined) {
       oneToManyRelationships[edge.target] = [];
     }
-    //push each connection onto aux objects
+    //push each connection onto aux objects (node to node)
     manyToOneRelationships[edge.source].push(edge.target);
     oneToManyRelationships[edge.target].push(edge.source);
   });
@@ -27,13 +28,12 @@ export default function schemaGenerator(nodes, edges) {
 
   let query_string = `  type Query {\n`;
 
-  //for each node in nodes argument
+  //for each node in current nodes object
   nodes.forEach((node) => {
     //select primary key field for query by primary key
     const primaryKeyField = node.data.columns.fields.filter(
       (field) => field.name === node.primaryKey
     );
-    console.log(primaryKeyField);
     //if plural/singular versions of id are the same, add 'All' to plural version
     const pluralIsSingular =
       pluralize(node.id) === pluralize.singular(node.id) ? '_all' : '';
@@ -45,7 +45,7 @@ export default function schemaGenerator(nodes, edges) {
       .singular(node.id)
       .replace(/^./, node.id[0].toUpperCase())}]\n`;
 
-    //query for one element in type (by ID - singular form)
+    //query for one element in type (by primary key - singular form)
     const required = primaryKeyField[0].required ? '!' : '';
     query_string += `    ${pluralize
       .singular(node.id)
@@ -89,10 +89,9 @@ export default function schemaGenerator(nodes, edges) {
     gql_schema += `  }\n`;
   });
   query_string += `  }\n`;
+  
+  //add query string to base schema and output as array for display and copying
   gql_schema += query_string;
-
   const testSchema = gql_schema.split('\n');
-  //return final schema
   return testSchema;
 }
-

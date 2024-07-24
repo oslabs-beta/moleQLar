@@ -69,9 +69,7 @@ userController.createUser = async (req, res, next) => {
 userController.loginUser = async (req, res, next) => {
   const { username, password } = req.body; // Extract username and password from request body
   const loginQuery = `SELECT * FROM users WHERE username = '${username}'`; // Define SQL query string
-  console.log("username:", username);
-  console.log("password:", password);
-
+  
   // Error checking for missing username or password
   if (!username || !password) {
     return next({

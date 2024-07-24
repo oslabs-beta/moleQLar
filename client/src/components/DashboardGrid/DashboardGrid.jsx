@@ -21,7 +21,6 @@ const DashboardGrid = ({ handleModalOpen, handleModalClose }) => {
             try {
                 const response = await axios.get(`/api/graph/${userId}`, config);
                 // success
-                // console.log('graphList response:', response);
                 setGraphList(response.data.graphList);
             } catch(err) {
                 if (err.reponse) {

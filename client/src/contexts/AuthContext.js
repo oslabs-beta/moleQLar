@@ -8,7 +8,7 @@ export const AuthProvider = ({ children }) => {
   // const navigate = useNavigate();
   const [authState, setAuthState] = useState({
     isAuth: false,
-    username: "",
+    username: '',
     userId: null,
     loading: true, // Add loading state
   });
@@ -16,7 +16,7 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     async function verifyUser() {
       // check local storage
-      const token = localStorage.getItem("token");
+      const token = localStorage.getItem('token');
 
       if (!token) {
         setAuthState((prev_state) => ({ ...prev_state, loading: false }));
@@ -41,7 +41,7 @@ export const AuthProvider = ({ children }) => {
           );
           setAuthState({
             isAuth: false,
-            username: "",
+            username: '',
             userId: null,
             loading: false, // Set loading to false when done
           });
@@ -49,9 +49,9 @@ export const AuthProvider = ({ children }) => {
         } else {
           // successful login
           const data = response.data;
-          localStorage.setItem("username", data.username);
-          localStorage.setItem("userId", data.userId);
-          localStorage.setItem("token", response.headers['authorization']);
+          localStorage.setItem('username', data.username);
+          localStorage.setItem('userId', data.userId);
+          localStorage.setItem('token', response.headers['authorization']);
           setAuthState({
             isAuth: true,
             username: data.username,
@@ -67,14 +67,13 @@ export const AuthProvider = ({ children }) => {
             console.log('Error verifying user token');
             setAuthState({
               isAuth: false,
-              username: "",
+              username: '',
               userId: null,
               loading: false,
             });
-            localStorage.removeItem("username");
-            localStorage.removeItem("userId");
+            localStorage.removeItem('username');
+            localStorage.removeItem('userId');
             localStorage.removeItem('token');
-            
           }
           console.log('Error response data:', err.response.data);
           console.log('Error response status:', err.response.status);
