@@ -177,7 +177,6 @@ const SchemaVisualizer = ({ sqlContents, handleUploadBtn }) => {
   useEffect(() => {
     const fetchGraphData = async () => {
       // fetch from server
-      // console.log(`/graph/${userId}/${graphId}`);
       const config = {
         headers: { authorization: localStorage.getItem('token') },
       };
@@ -195,7 +194,7 @@ const SchemaVisualizer = ({ sqlContents, handleUploadBtn }) => {
           ? (serverEdges = [])
           : (serverEdges = JSON.parse(response.data.edges));
 
-        //set initial node and edge state from database stored graph
+        //set initial node and edge states from database stored graph
         await setGraphName(response.data.graphName);
         await setNodes(serverNodes);
         await setEdges(serverEdges);
