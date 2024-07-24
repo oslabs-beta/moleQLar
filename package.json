@@ -12,5 +12,10 @@
   },
   "dependencies": {
     "webpack-cli": "^5.1.4"
+  },
+  "devDependencies": {
+    "image-webpack-loader": "^8.1.0",
+    "mini-css-extract-plugin": "^2.9.0",
+    "webpack-bundle-analyzer": "^4.10.2"
   }
 }
