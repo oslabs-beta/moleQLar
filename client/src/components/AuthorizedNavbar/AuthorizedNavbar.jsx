@@ -34,12 +34,12 @@ const AuthorizedNavbar = () => {
           <div className="logo">moleQLar</div>
         </div>
       </NavLink>
-      <ul className="nav-links">
+      <ul className="auth-nav-links">
         <li>
-          <NavLink to="/dashboard" className="nav-link">Dashboard</NavLink>
+          <NavLink to="/dashboard" className="auth-nav-link">Dashboard</NavLink>
         </li>
         <li>
-          <NavLink to="/" className="nav-link" onClick={handleLogOut}>
+          <NavLink to="/" className="auth-nav-link" onClick={handleLogOut}>
             Logout
           </NavLink>
         </li>
