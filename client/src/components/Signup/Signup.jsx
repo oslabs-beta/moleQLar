@@ -13,6 +13,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import heroImg from '../../assets/logos/hero-img.png';
 import Navbar from '../Navbar/Navbar';
 import { useAuth } from '../../contexts/AuthContext';
+import './signup.scss';
 
 // Defining Default Theme
 const theme = createTheme({
@@ -130,7 +131,7 @@ function Signup() {
 
       <ThemeProvider theme={theme}>
         <div className='login-div'>
-          <div className='hero-img'>
+          <div className='signup-hero-img'>
             <img src={heroImg} alt='Main Graphic' />
           </div>
 

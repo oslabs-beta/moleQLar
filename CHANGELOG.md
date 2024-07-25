@@ -7,8 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Added
-- Placeholder for future features and improvements
+- Increase test coverage
+- OAuth integration with Github / Google
+- Media Queries for authorized pages
+- More descriptive error handling in file generation
+- Create refresh tokens
+- Store images of saved graphs on dashboard
+- Additional SQL database types (RDS, MySQL)
+- MongoDB/DynamoDB integration
 
 ## [1.0.0] - 2024-07-24
 

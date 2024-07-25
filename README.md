@@ -1,9 +1,11 @@
 # MoleQLar
 
 ## Description
+
 MoleQLar is a full-stack application that automatically generates GraphQL typedefs and resolver definitions for PostgreSQL databases. It provides a visual interface for uploading database schemas and modifying GraphQL types.
 
 ## Problem
+
 Database schema analysis and GraphQL implementation currently face several challenges:
 
 1. Database Complexity: Analyzing and understanding database structures can be complex and time-consuming.
@@ -11,6 +13,7 @@ Database schema analysis and GraphQL implementation currently face several chall
 3. Lack of Visualization: It's difficult to visualize schema structures and the relationships between data, which can hinder understanding and development.
 
 ## Solution
+
 MoleQLar addresses these challenges through the following features:
 
 1. Node-Based GUI: Provides an intuitive interface for interacting with database schemas.
@@ -23,6 +26,7 @@ MoleQLar addresses these challenges through the following features:
 These solutions aim to simplify the process of working with database schemas and implementing GraphQL, making development more efficient and less error-prone.
 
 ## Features
+
 - User authentication (signup, login, logout)
 - Database schema upload and visualization
 - Interactive node graph editing
@@ -31,6 +35,7 @@ These solutions aim to simplify the process of working with database schemas and
 - Light/Dark mode settings
 
 ## Technologies Used
+
 - Frontend: React, React Flow Renderer, MUI, SCSS
 - Backend: Node.js, Express
 - Database: PostgreSQL (with plans to migrate to MongoDB)
@@ -41,16 +46,19 @@ These solutions aim to simplify the process of working with database schemas and
 ## Usage
 
 1. **Login/Sign Up**
+
    - Visit the MoleQLar website
    - If you're a new user, click "Sign Up" to create a new account
    - If you already have an account, log in
 
 2. **Upload Database Schema**
+
    - After logging in, click the "Upload Schema" button
-   - Select your PostgreSQL database schema SQL file 
+   - Select your PostgreSQL database schema SQL file
    - The system will automatically parse your schema and generate a visual node graph
 
 3. **View and Edit Node Graph**
+
    - In the generated node graph, you can see your database tables and their relationships
    - Click on any node to view detailed information
    - Use the editing tools to modify node names or fields
@@ -58,6 +66,7 @@ These solutions aim to simplify the process of working with database schemas and
    ![Edit Nodes Demo](./client/src/assets/gif/editNodes.gif)
 
 4. **Generate GraphQL TypeDefs and Resolvers**
+
    - After editing the node graph, click the "Generate GraphQL" button
    - The system will automatically generate corresponding GraphQL TypeDefs and Resolvers
    - You can copy the generated code or download it as a file
@@ -65,6 +74,7 @@ These solutions aim to simplify the process of working with database schemas and
    ![Generate TypeDefs and Resolvers Demo](./client/src/assets/gif/generateTypedefsAndResolver.gif)
 
 5. **Save Project**
+
    - Name your project
    - Click the "Save Project" button to save your node graph and generated GraphQL code
    - You can return and continue editing your saved project at any time
@@ -129,8 +139,14 @@ We welcome contributions to MoleQLar! If you'd like to contribute, please follow
 ### Setting Up the Development Environment
 
 1. Ensure you have Node.js and npm installed.
-2. Install dependencies: `npm install`
-3. Start the development server: `npm start`
+2. Navigate to the client folder and install dependencies:
+   `cd client`
+   `npm install`
+3. Start the server in the client folder: `npm start`
+4. Navigate to the server folder and install dependencies:
+   `cd ../server`
+   `npm install`
+5. Start the server in the server folder: `npm start`
 
 ### Running Tests
 
@@ -143,6 +159,7 @@ If you find a bug, please open an issue on GitHub with a clear description of th
 We appreciate your contributions to making MoleQLar better!
 
 ## Contact
+
 For any questions or feedback about MoleQLar, please feel free to reach out to our team:
 
 - Brian Yang: jibriyang91@gmail.com
